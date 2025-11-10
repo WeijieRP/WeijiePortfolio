@@ -1,0 +1,126 @@
+:root{
+  --sd2-ink:#e6edf3;
+  --sd2-muted:#cfd9ec;
+  --sd2-bgcolor:#05070d;
+  --sd2-card: rgba(255,255,255,.07);
+  --sd2-line: rgba(255,255,255,.18);
+  --sd2-a:#67d3ff;
+  --sd2-b:#ff4da6;
+
+  --sd2-dur:.65s;
+  --sd2-ease:cubic-bezier(.22,.61,.36,1);
+}
+
+/* Stage with background */
+.sd2-stage{
+  position:relative;
+  color:var(--sd2-ink);
+  overflow:hidden;
+  isolation:isolate;
+}
+.sd2-stage::before{
+  content:"";
+  position:absolute; inset:0;
+  background: var(--sd2-bgcolor);
+  background-image: var(--sd2-bg);
+  background-size: cover;
+  background-position: center;
+  filter: brightness(.85) contrast(1.05) saturate(1.06);
+  z-index:0;
+}
+.sd2-stage::after{
+  content:"";
+  position:absolute; inset:0; z-index:1;
+  background:
+    radial-gradient(1200px 600px at 40% 14%, rgba(0,0,0,.24), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.78));
+}
+
+/* Grid */
+.sd2-grid{
+  position:relative; z-index:2;
+  width:min(1140px,92%);
+  margin:0 auto;
+  padding: clamp(60px,6vw,120px) 0;
+  display:grid;
+  grid-template-columns: 1.05fr .95fr;
+  gap: clamp(22px,4.4vw,56px);
+  align-items: center;
+}
+
+/* Card */
+.sd2-card{
+  background: linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.04));
+  border: 1px solid var(--sd2-line);
+  border-radius: 18px;
+  padding: clamp(18px, 2.6vw, 30px);
+  box-shadow: 0 16px 44px rgba(0,0,0,.46), 0 0 0 1px rgba(255,255,255,.03) inset;
+  backdrop-filter: blur(8px);
+}
+.sd2-eyebrow{
+  margin:0 0 8px;
+  text-transform:uppercase;
+  letter-spacing:.28em;
+  font-size:12px;
+  color:var(--sd2-muted);
+  opacity:.95;
+}
+.sd2-title{
+  margin:0 0 12px;
+  font-size: clamp(32px,4.8vw,58px);
+  line-height:1.06;
+  font-weight:900;
+  background: linear-gradient(90deg, var(--sd2-a), var(--sd2-b));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.sd2-desc{
+  margin:0;
+  color:var(--sd2-muted);
+  font-size: clamp(14px,1.45vw,18px);
+  line-height:1.75;
+}
+
+/* Single visual on the right */
+.sd2-figure{
+  margin:0;
+  background: rgba(0,0,0,.38);
+  border:1px solid var(--sd2-line);
+  border-radius:18px;
+  overflow:clip;
+  box-shadow: 0 16px 36px rgba(0,0,0,.46);
+  align-self: stretch;               /* balances height with the card */
+  display:flex; flex-direction:column;
+}
+.sd2-image{
+  width:100%;
+  height: min(58vh, 560px);
+  object-fit: cover;
+  display:block;
+}
+.sd2-cap{
+  margin:0;
+  padding:10px 12px;
+  font-size:12px;
+  color:var(--sd2-muted);
+  border-top:1px solid var(--sd2-line);
+  text-align:center;
+}
+
+/* Slide-only reveal */
+.sd-reveal{
+  will-change: transform, opacity;
+  opacity:0;
+  transform: translateY(16px);
+  transition: transform var(--sd2-dur) var(--sd2-ease) var(--delay, 0ms),
+              opacity var(--sd2-dur) var(--sd2-ease) var(--delay, 0ms);
+}
+.sd-slide-left{  transform: translateX(-50px); }
+.sd-slide-right{ transform: translateX( 50px); }
+.is-in{          opacity:1; transform: none; }
+
+/* Responsive */
+@media (max-width: 980px){
+  .sd2-grid{ grid-template-columns: 1fr; }
+  .sd2-image{ height: min(44vh, 420px); }
+}

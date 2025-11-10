@@ -1,0 +1,209 @@
+/* herosection.css — same layout/behavior, with metallic lavender title styling */
+
+:root{
+  --ink:#e6edf3;
+  --muted:#cfd9ec;
+  --bg:#000;
+  --accentA:#67d3ff;
+  --accentB:#ff4da6;
+
+  /* CTA theme */
+  --ctaA:#7b5cff;
+  --ctaB:#35d0ff;
+  --ctaShadow: rgba(53,208,255,.42);
+
+  /* Metallic lavender spectrum for title */
+  --titleA:#c9b6ff;  /* highlight */
+  --titleB:#a78eff;  /* mid */
+  --titleC:#8e72e8;  /* deep edge */
+  --titleD:#d6b8ff;  /* return highlight */
+}
+
+html,body{margin:0;background:var(--bg);color:var(--ink);}
+*{box-sizing:border-box;}
+
+/* ===== HERO ===== */
+.bm-hero{
+  position:relative;
+  isolation:isolate;
+  min-height:100vh; width:100vw;
+  display:grid; place-items:center;
+  overflow:hidden; text-align:center;
+  filter:none !important;
+}
+
+/* BG */
+.bm-hero-bg{
+  --bg-scale:1.04; --bg-ty:0px;
+  position:absolute; inset:0;
+  background-size:cover; background-position:center;
+  filter:brightness(.9) contrast(1.05) saturate(1.02);
+  transform:translate3d(0,var(--bg-ty),0) scale(var(--bg-scale));
+  will-change:transform; transition:transform .18s ease-out;
+  z-index:0; backface-visibility:hidden;
+}
+
+/* Overlay — light, no blur plates */
+.bm-hero-overlay{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:
+    radial-gradient(60rem 36rem at 50% 16%, rgba(0,0,0,.18), transparent 60%),
+    linear-gradient(180deg, rgba(0,0,0,.20) 0%, rgba(0,0,0,.12) 40%, rgba(0,0,0,.35) 100%);
+  backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  mix-blend-mode:normal;
+}
+
+/* Content */
+.bm-hero-inner{
+  position:relative; z-index:5 !important;
+  padding:clamp(40px,6vw,96px) clamp(20px,6vw,72px);
+  width:100%; filter:none !important; contain:paint;
+}
+.bm-head{max-width:1000px; margin:0 auto;}
+
+.bm-eyebrow{
+  margin:0 0 8px; letter-spacing:.28em; text-transform:uppercase;
+  font-size:clamp(10px,1.1vw,12px); color:#e8dfcf; opacity:.95;
+  text-shadow:0 1px 2px rgba(0,0,0,.45);
+}
+/* ===== Metallic lavender title (filled, embossed, NO white sheen/overlay) ===== */
+.bm-title {
+  margin: 0;
+  line-height: 1.04;
+  font-weight: 900;
+  font-size: clamp(32px, 8vw, 88px);
+}
+
+.bm-title > span {
+  position: relative;
+  display: inline-block;
+
+  /* gradient fill only — no white overlay */
+  background: linear-gradient(
+    90deg,
+    var(--titleA) 0%,
+    var(--titleB) 35%,
+    var(--titleC) 65%,
+    var(--titleD) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+
+  /* soft violet shadow instead of white gloss */
+  text-shadow:
+    0 2px 4px rgba(10, 14, 22, 0.5),
+    0 6px 12px rgba(10, 14, 22, 0.4);
+
+  /* crisp outline for contrast */
+  -webkit-text-stroke: 0.5px rgba(0, 0, 0, 0.3);
+}
+
+/* Removed ::after sheen completely */
+.bm-title > span::after {
+  content: none;
+}
+
+@keyframes bmSheen{
+  0%{ transform:translateX(-30%); opacity:.75 }
+  50%{ transform:translateX(30%); opacity:.38 }
+  100%{ transform:translateX(-30%); opacity:.75 }
+}
+
+.bm-sub{
+  margin:14px auto 22px; color:var(--muted); font-weight:700;
+  line-height:1.55; font-size:clamp(14px,2.1vw,18px); max-width:1000px;
+  text-shadow:0 1px 2px rgba(0,0,0,.35);
+}
+
+/* ===== CTA BAR ===== */
+.bm-ctas{
+  position:relative; z-index:6 !important;
+  display:flex; gap:14px; justify-content:center; flex-wrap:wrap;
+  margin-top:26px; pointer-events:auto !important;
+  padding:10px 12px; border-radius:999px;
+  backdrop-filter:none !important; -webkit-backdrop-filter:none !important;
+  filter:none !important; mix-blend-mode:normal; contain:paint;
+}
+
+/* Buttons */
+.bm-btn{
+  position:relative; z-index:7 !important;
+  display:inline-flex; align-items:center; justify-content:center;
+  min-height:44px; padding:12px 22px;
+  border-radius:999px; text-decoration:none; font-weight:900; font-size:16px;
+  letter-spacing:.02em; user-select:none; cursor:pointer;
+  color:#fff !important;
+  background:linear-gradient(90deg,var(--ctaA),var(--ctaB)) !important;
+  border:none !important;
+  box-shadow:
+    0 12px 28px var(--ctaShadow),
+    inset 0 0 0 1px rgba(255,255,255,.16);
+  transition:transform .16s ease, filter .16s ease, box-shadow .22s ease;
+  backdrop-filter:none !important; filter:none !important;
+  text-shadow:0 1px 0 rgba(0,0,0,.7);
+}
+.bm-btn:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.08);
+  box-shadow:
+    0 16px 36px rgba(53,208,255,.55),
+    inset 0 0 0 1px rgba(255,255,255,.22);
+}
+.bm-btn:focus-visible{
+  outline:none;
+  box-shadow:
+    0 0 0 3px rgba(53,208,255,.75),
+    0 12px 28px rgba(53,208,255,.35);
+}
+
+/* Secondary */
+.bm-btn.ghost{
+  background:rgba(10,14,22,.92) !important;
+  color:#eaf6ff !important;
+  border:1px solid rgba(255,255,255,.55) !important;
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.5),
+    inset 0 0 0 1px rgba(255,255,255,.08);
+}
+.bm-btn.ghost:hover{ background:rgba(10,14,22,1) !important; }
+
+/* Pills (optional) */
+.bm-pills{list-style:none; padding:0; margin:10px auto 14px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;}
+.bm-pills li{
+  padding:8px 12px; border-radius:999px;
+  background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.14);
+  font-weight:750; font-size:12px; color:var(--ink);
+}
+
+/* Reveal */
+[data-reveal]{opacity:1; transform:translateY(16px);}
+.is-shown{animation:bm-in .6s cubic-bezier(.22,.61,.36,1) forwards;}
+@keyframes bm-in{from{opacity:1; transform:translateY(16px);} to{opacity:1; transform:translateY(0);}}
+
+/* Float */
+.float{display:inline-block; animation:floatY 6s ease-in-out infinite;}
+@keyframes floatY{0%{transform:translateY(0);}50%{transform:translateY(-6px);}100%{transform:translateY(0);}}
+
+/* Responsive */
+@media (max-width:640px){
+  .bm-title{font-size:clamp(28px,10vw,64px);}
+  .bm-sub{font-size:clamp(13px,3.4vw,16px);}
+  .bm-ctas{gap:10px; flex-direction:column; border-radius:16px;}
+}
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce){
+  .bm-hero-bg{transition:none !important; transform:none !important;}
+  [data-reveal]{opacity:1 !important; transform:none !important; animation:none !important;}
+  .float{animation:none !important;}
+}
+
+/* Nuclear anti-blur for anything that could affect the buttons */
+.bm-hero *, .bm-ctas, .bm-ctas *{
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+  filter:none !important;
+  mix-blend-mode:normal !important;
+  pointer-events:auto !important;
+}

@@ -1,0 +1,140 @@
+:root{
+  --bg:#070b13;
+  --ink:#ecf3ff;
+
+  --glass: rgba(10,14,20,.55);
+  --glass-strong: rgba(10,14,20,.75);
+  --stroke: rgba(255,255,255,.12);
+  --glow: 0 10px 22px rgba(0,0,0,.42);
+
+  --line-w: 3.5px;
+
+  /* gradient stops for the title */
+  --title-grad-a:#5aaabc;  /* teal */
+  --title-grad-b:#7d8fe6;  /* lavender/blue */
+  --title-grad-c:#a45a87;  /* magenta/purple */
+}
+
+/* section */
+.exp{
+  position:relative; background:var(--bg); color:var(--ink);
+  min-height:100vh; overflow:hidden;
+}
+
+/* background */
+.exp-bg{
+  position:absolute; inset:-12vh -8vw;
+  background-size:cover; background-position:center;
+  opacity:.32; z-index:0;
+}
+
+/* stage (all layout happens inside) */
+.stage{
+  position:relative; z-index:1;
+  width:min(1200px, 96vw);
+  margin:0 auto;
+  padding:140px 0 160px;
+  min-height:820px;
+}
+
+/* central circle */
+.core{
+  position:absolute; left:50%; top:50%;
+  transform:translate(-50%,-50%);
+  width: clamp(320px, 32vw, 420px);
+  aspect-ratio:1/1; z-index:2;
+}
+.core-disc{
+  position:absolute; inset:0; border-radius:50%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  background:
+    radial-gradient(120% 100% at 50% 45%, rgba(110,160,255,.22), rgba(20,45,100,.34)),
+    var(--glass);
+  border:1px solid var(--stroke);
+  text-align:center; padding:22px;
+  box-shadow: var(--glow);
+  backdrop-filter: blur(6px);
+}
+
+/* ✨ Galaxy title (like “Basic Express Web App”) */
+.exp-title--galaxy{
+  margin:0 0 6px;
+  font-size:clamp(22px,3vw,30px);
+  font-weight:900;
+  line-height:1.06;
+
+  background: linear-gradient(90deg,
+    var(--title-grad-a) 0%,
+    var(--title-grad-b) 52%,
+    var(--title-grad-c) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+
+  /* crisp, subtle outline */
+  -webkit-text-stroke: 1px rgba(0,0,0,.22);
+  text-shadow:
+    0 2px 0 rgba(0,0,0,.35),
+    0 8px 10px rgba(0,0,0,.18);
+}
+
+.core-disc p { margin:0; font-size:clamp(12px,1.4vw,15px); opacity:.92; }
+
+/* connectors under panels */
+.arrows{
+  position:absolute; inset:0;
+  pointer-events:none; z-index:1;
+}
+.arrow-path{
+  stroke-width: var(--line-w);
+  stroke-linecap: round; fill:none;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,.55));
+  mix-blend-mode: screen;
+}
+
+/* ===== Glass Panels (four corners) ===== */
+.panel{
+  position:absolute; transform:translate(-50%,-50%);
+  z-index:3;
+  width: clamp(280px, 32vw, 420px);
+  margin-left: -150px;
+  margin-top: -50px;
+}
+.panel-card{
+  background:
+    radial-gradient(110% 120% at 0% 0%, rgba(120,155,255,.18), rgba(120,155,255,0) 48%),
+    var(--glass-strong);
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  box-shadow: var(--glow);
+  backdrop-filter: blur(12px);
+  padding: 18px;
+}
+.panel:hover .panel-card{ background:
+  radial-gradient(110% 120% at 0% 0%, rgba(120,155,255,.24), rgba(120,155,255,0) 48%),
+  var(--glass-strong);
+}
+
+/* panel content */
+.panel-head{ display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+.tool{ width:54px; height:54px; object-fit:contain; }
+.caption{ margin:0; font-weight:800; font-size:18px; letter-spacing:.01em; }
+.copy{ margin:0; font-size:14px; line-height:1.45; opacity:.94; }
+
+/* reveal */
+.reveal{
+  opacity:0;
+  will-change: transform, opacity;
+  transition: opacity .55s ease, transform .65s cubic-bezier(.22,.8,.18,1);
+}
+.reveal{ transform: translateY(18px); }
+.reveal.is-inview{ transform: translateY(0); opacity:1; }
+
+/* mobile: stack panels (no connectors) */
+@media (max-width: 760px){
+  .stage{ padding:90px 0 120px; min-height:unset; }
+  .core{ position:relative; top:0; left:50%; transform:translateX(-50%); margin:16px 0 12px; }
+  .arrows{ display:none; }
+  .panel{ position:relative; transform:none; left:auto; top:auto; width: min(640px, 94%); margin:16px auto 0; }
+}

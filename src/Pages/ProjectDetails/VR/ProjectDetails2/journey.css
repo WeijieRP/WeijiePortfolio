@@ -1,0 +1,182 @@
+/* journey.css */
+:root{
+  --ink:#e6edf3;
+  --muted:#cfd9ec;
+  --accent:#67d3ff;
+  --accentA:#67d3ff;
+  --accentB:#ff4da6;
+  --glass: rgba(8,12,18,.18);
+  --line: rgba(255,255,255,.16);
+}
+
+/* SECTION */
+.tf-stage {
+  position: relative;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  padding: clamp(56px, 7vw, 90px) 0;
+  color: var(--ink);
+  overflow: hidden;
+  isolation: isolate;
+
+  /* ensure BG shows even if CSS var is missing */
+  background-image: var(--tf-bg, none);
+  background-size: cover !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+
+  /* give it space so you actually see the photo */
+  min-height: clamp(560px, 82vh, 1200px);
+
+  /* never let a background shorthand elsewhere wipe this */
+  background-color: #05080f;
+}
+
+/* CONTENT CONTAINER */
+.tf-container {
+  position: relative;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 clamp(20px, 6vw, 64px);
+  text-align: center;
+  text-shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+
+/* HEADINGS */
+.tf-title {
+  background: linear-gradient(90deg, var(--accentA), var(--accentB));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  font-size: clamp(30px, 5vw, 48px);
+  font-weight: 900;
+  letter-spacing: .2px;
+  margin: 0;
+}
+.tf-sub {
+  color: var(--muted);
+  font-weight: 600;
+  margin: 8px auto 24px;
+  max-width: 820px;
+}
+
+/* VIEWPORT / TRACK */
+.tf-viewport{
+  position:relative;
+  overflow:hidden;
+  border-radius: 20px;
+  border:1px solid var(--line);
+
+  /* make sure BG behind is visible */
+  background: transparent;
+  box-shadow: 0 22px 48px rgba(0,0,0,.35);
+  backdrop-filter: none;
+}
+.tf-track {
+  display: flex;
+  transition: transform .75s cubic-bezier(.22,.61,.36,1);
+  will-change: transform;
+}
+
+/* SLIDE CARD */
+.tf-card {
+  min-width: 100%;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 14px;
+  padding: clamp(18px, 3.6vw, 28px);
+  text-align: left;
+  background: transparent; /* keep slides clear of opaque fills */
+}
+
+/* header inside card */
+.tf-head{ display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; }
+.tf-week {
+  font-size: .95rem;
+  font-weight: 900;
+  color: var(--accent);
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(103,211,255,.12);
+  border:1px solid rgba(103,211,255,.28);
+}
+.tf-card-title {
+  font-size: clamp(18px,2.3vw,22px);
+  font-weight: 900;
+  margin: 0;
+}
+
+/* badges row */
+.tf-badges{
+  display:flex; flex-wrap:wrap; gap:10px;
+  padding:0; margin:0; list-style:none;
+}
+.tf-badge{
+  font-weight:800; font-size:.86rem; letter-spacing:.02em;
+  padding:8px 12px; border-radius:999px;
+  background: rgba(255,255,255,.10);
+  border:1px solid rgba(255,255,255,.18);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* checklist */
+.tf-list { padding:0; margin:0; list-style:none; }
+.tf-list li {
+  position:relative;
+  margin: .5rem 0;
+  padding-left: 22px;
+  color: var(--muted);
+  font-weight: 600;
+}
+.tf-list li::before{
+  content:"";
+  position:absolute; left:0; top:.55em;
+  width:9px; height:9px; border-radius:50%;
+  background: radial-gradient(circle at 30% 30%, #fff, #7ec3ff);
+  box-shadow: 0 0 12px rgba(103,211,255,.45);
+}
+
+/* controls */
+.tf-controls {
+  display:flex; align-items:center; justify-content:center;
+  gap:14px; margin-top: 16px;
+}
+.tf-btn {
+  padding:10px 16px; border-radius:12px; font-weight:900;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.08);
+  color:var(--ink); cursor:pointer;
+  transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+}
+.tf-btn:hover {
+  background:rgba(103,211,255,.15);
+  transform: translateY(-1px);
+  box-shadow:0 0 20px rgba(103,211,255,.2);
+}
+
+/* dots */
+.tf-dots{ display:flex; gap:8px; align-items:center; }
+.tf-dot{
+  width:10px; height:10px; border-radius:50%;
+  background: rgba(255,255,255,.28);
+  border:1px solid rgba(255,255,255,.35);
+  cursor:pointer;
+  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+}
+.tf-dot.is-active{
+  background: var(--accent);
+  box-shadow: 0 0 16px rgba(103,211,255,.5);
+  transform: scale(1.08);
+}
+
+/* responsive */
+@media (max-width: 560px){
+  .tf-viewport{ border-radius:14px; }
+}
+
+/* motion preferences */
+@media (prefers-reduced-motion: reduce){
+  .tf-track{ transition: none; }
+}

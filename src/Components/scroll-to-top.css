@@ -1,0 +1,42 @@
+.scroll-top-btn{
+  position: fixed;
+  right: 24px; bottom: 24px;
+  width: 50px; height: 50px;
+  border: none; border-radius: 999px;
+  display: grid; place-items: center;
+  color: #fff;
+  cursor: pointer;
+margin: 20px;
+  background: linear-gradient(135deg, #ff8a5c, #ff3cac);
+  box-shadow: 0 8px 24px rgba(255, 138, 92, 0.35), 0 0 24px rgba(255, 60, 172, 0.25);
+  opacity: 0; transform: translateY(40px) scale(.92);
+  pointer-events: none;
+  transition: opacity .35s ease, transform .35s ease, box-shadow .2s ease, filter .2s ease;
+  z-index: 2147483647;
+}
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 0 14px rgba(0,224,255,.3); }
+  50% { box-shadow: 0 0 24px rgba(138,46,255,.5); }
+}
+.scroll-top-btn.show {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+.scroll-top-btn.show{
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.scroll-top-btn:hover{
+  filter: brightness(1.12);
+  box-shadow: 0 14px 32px rgba(0,0,0,.36), 0 0 30px rgba(103,211,255,.34);
+}
+
+.scroll-top-btn:active{ transform: translateY(0) scale(.95); }
+
+@media (max-width:640px){
+  .scroll-top-btn{ right: 16px; bottom: 16px; width: 46px; height: 46px; }
+}
+
+/* optional: smooth browser scroll for anchor/keyboard */
+html { scroll-behavior: smooth; }

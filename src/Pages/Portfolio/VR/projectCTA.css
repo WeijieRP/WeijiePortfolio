@@ -1,0 +1,147 @@
+:root {
+  --ink: #f3f9ff;
+  --muted: #c9d6e6;
+  --gradA: #56ccf2;   /* cyan */
+  --gradB: #2f80ed;   /* deep blue */
+}
+
+/* ===== Section ===== */
+.cta-section {
+  position: relative;
+  min-height: 86vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  color: var(--ink);
+  background: #000; /* fallback */
+}
+
+/* Background image with gentle parallax */
+.cta-bg {
+  position: absolute;
+  inset: -14vh -10vw;
+  background-position: center;
+  background-size: cover;
+  will-change: transform;
+  filter: brightness(1.0) contrast(1.05) saturate(1.04);
+  z-index: 0;
+}
+
+/* Cinematic overlay for readability */
+.cta-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    radial-gradient(1200px 600px at 50% 24%, rgba(0,0,0, .12), transparent 58%),
+    linear-gradient(180deg, rgba(0,0,0, .18) 0%, rgba(0,0,0, .46) 55%, rgba(0,0,0, .62) 100%);
+}
+
+/* Content */
+.cta-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  padding: clamp(16px, 4vw, 48px);
+  max-width: min(960px, 92vw);
+}
+
+/* Title */
+.cta-title {
+  margin: 0 0 .7rem;
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: .02em;
+  font-size: clamp(2.2rem, 6vw, 4rem);
+  text-shadow: 0 1px 0 rgba(0,0,0,.35), 0 8px 28px rgba(0,0,0,.35);
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .7s ease, transform .7s cubic-bezier(.22,.61,.36,1);
+}
+.cta-title.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Subtitle */
+.cta-sub {
+  margin: .5rem auto 2rem;
+  color: var(--muted);
+  font-weight: 600;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity .75s .06s ease, transform .75s .06s cubic-bezier(.22,.61,.36,1);
+}
+.cta-sub.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Buttons row */
+.cta-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Buttons (no jumpy hover) */
+.cta-btn {
+  display: inline-block;
+  padding: .95rem 1.9rem;
+  font-size: clamp(1rem, 2vw, 1.15rem);
+  font-weight: 800;
+  border-radius: 14px;
+  text-decoration: none;
+  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+  opacity: 0;
+  transform: translateY(28px);
+}
+
+/* Reveal timings */
+.cta-btn.visible:nth-of-type(1),
+.cta-buttons .cta-btn:nth-of-type(1).visible {
+  transition: opacity .75s .12s, transform .75s .12s;
+  opacity: 1;
+  transform: translateY(0);
+}
+.cta-btn.visible:nth-of-type(2),
+.cta-buttons .cta-btn:nth-of-type(2).visible {
+  transition: opacity .75s .2s, transform .75s .2s;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Primary */
+.cta-btn.primary {
+  color: #061018;
+  background: linear-gradient(90deg, var(--gradA), var(--gradB));
+}
+.cta-btn.primary:hover {
+  filter: brightness(1.05); /* subtle, no translateY */
+}
+
+/* Secondary */
+.cta-btn.secondary {
+  color: #fff;
+  border: 2px solid var(--gradB);
+  background: rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+}
+.cta-btn.secondary:hover {
+  filter: brightness(1.05); /* subtle, no translateY */
+}
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce) {
+  .cta-title,
+  .cta-sub,
+  .cta-btn {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

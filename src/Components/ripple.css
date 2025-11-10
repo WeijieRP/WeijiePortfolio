@@ -1,0 +1,41 @@
+:root {
+  --ripple-color: rgba(157, 112, 255, 0.25); /* purple-blue glow */
+  --ripple-size: 320px;
+  --ripple-blur: 90px;
+  --ripple-fade: 0.8s;
+}
+
+/* host */
+.ripple-host {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* overlay follows mouse */
+.mouse-ripple {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background: radial-gradient(
+    circle var(--ripple-size) at var(--x, 50%) var(--y, 50%),
+    var(--ripple-color),
+    transparent 80%
+  );
+  opacity: 0;
+  transition:
+    background 0.2s ease-out,
+    opacity var(--ripple-fade) ease-out;
+  filter: blur(var(--ripple-blur));
+}
+
+/* visible while moving */
+.ripple-host:hover .mouse-ripple {
+  opacity: 1;
+}
+
+/* accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .mouse-ripple { transition: none; opacity: 0 !important; }
+}

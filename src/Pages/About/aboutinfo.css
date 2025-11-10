@@ -1,0 +1,129 @@
+:root{
+  --ink:#e9faff;
+  --muted:#9eb8c7;
+  --accent1:#00eaff;      /* neon cyan */
+  --accent2:#4d9eff;      /* electric blue */
+  --accent3:#38ffaa;      /* mint green */
+  --indent: clamp(24px, 9vw, 160px);
+}
+
+.about-intro.has-bg{
+  position:relative;
+  min-height:90svh;
+  overflow:hidden;
+  color:var(--ink);
+  background:#050b12;
+  isolation:isolate;
+}
+
+/* Background */
+.intro-bg{
+  position:absolute;
+  inset:-6rem -2rem -2rem -2rem;
+  background-size:cover;
+  background-position:50% 18%;
+  transform:translate3d(0,0,0) scale(1.02);
+  filter:saturate(1.1) contrast(1.15) brightness(.9);
+  z-index:0;
+}
+.intro-vignette{
+  position:absolute; inset:0;
+  background:
+    radial-gradient(1300px 700px at 50% 80%, rgba(0,255,194,.15), transparent 60%),
+    linear-gradient(180deg, rgba(4,10,16,.75), rgba(4,10,16,.30));
+  z-index:1;
+}
+.intro-glow{
+  position:absolute; inset:-2rem;
+  background:radial-gradient(60rem 28rem at 50% 115%, rgba(0,255,210,.10), transparent);
+  mix-blend-mode:screen;
+  z-index:1;
+}
+.intro-sweep{
+  position:absolute; inset:-20%;
+  background:
+    conic-gradient(from 210deg at 70% 30%, rgba(0,238,255,.18), transparent 30%),
+    radial-gradient(900px 520px at 75% 20%, rgba(0,255,170,.10), transparent);
+  animation:sweepRotate 22s linear infinite;
+  mix-blend-mode:screen;
+  opacity:.55;
+  z-index:1;
+}
+@keyframes sweepRotate{ to{ transform:rotate(360deg) } }
+
+/* Content */
+.intro-inner{
+  position:relative; z-index:2;
+  min-height:90svh;
+  display:grid; align-content:center;
+  gap: clamp(28px, 4vw, 40px);
+  padding: clamp(40px, 6vw, 72px) 16px 96px;
+  will-change: transform;
+}
+.intro-title{
+  max-width:1200px;
+  margin:0 auto;
+  padding-left: var(--indent);
+  text-align:left;
+  font-size: clamp(40px, 8vw, 88px);
+  font-weight:800;
+  letter-spacing:.5px;
+  text-shadow:0 0 24px rgba(0,225,255,.5);
+}
+.intro-copy{
+  max-width:1050px;
+  margin:auto;
+  text-align:center;
+  display:grid;
+  gap:12px;
+}
+.intro-line{
+  margin:0;
+  font-size:clamp(18px,2.2vw,32px);
+  font-weight:600;
+}
+
+/* Accent gradient text */
+.accent{
+  background: linear-gradient(90deg, var(--accent1), var(--accent2), var(--accent3));
+  -webkit-background-clip:text; background-clip:text;
+  color:transparent;
+}
+
+/* ===== PURE SLIDE SYSTEM (no opacity) =====
+   Uses CSS variables for strong off-screen offsets so it's obvious. */
+[data-reveal]{
+  /* starting offsets (overridden by [data-anim]) */
+  --rx: 0;
+  --ry: 0;
+  transform: translate3d(var(--rx), var(--ry), 0);
+  transition: transform .9s cubic-bezier(.22,.8,.18,1);
+  will-change: transform;
+}
+
+/* Start off-screen */
+[data-reveal][data-anim="left"]  { --rx: -20vw; --ry: 0; }
+[data-reveal][data-anim="right"] { --rx:  20vw; --ry: 0; }
+[data-reveal][data-anim="up"]    { --rx:   0;   --ry: 8vh; }
+
+/* When visible, snap into place (slides in) */
+.is-inview{
+  --rx: 0 !important;
+  --ry: 0 !important;
+}
+
+/* Slide back out when leaving viewport — use scroll direction
+   so it returns toward its origin side */
+.dir-down [data-reveal].was-shown:not(.is-inview)[data-anim="left"]  { --rx: -20vw; }
+.dir-down [data-reveal].was-shown:not(.is-inview)[data-anim="right"] { --rx:  20vw; }
+.dir-down [data-reveal].was-shown:not(.is-inview)[data-anim="up"]    { --ry:  8vh; }
+
+.dir-up   [data-reveal].was-shown:not(.is-inview)[data-anim="left"]  { --rx: -20vw; }
+.dir-up   [data-reveal].was-shown:not(.is-inview)[data-anim="right"] { --rx:  20vw; }
+.dir-up   [data-reveal].was-shown:not(.is-inview)[data-anim="up"]    { --ry:  8vh; }
+
+/* Motion safety */
+@media (prefers-reduced-motion:reduce){
+  .intro-sweep{ animation:none !important; }
+  [data-reveal]{ transition:none !important; transform:none !important; }
+}

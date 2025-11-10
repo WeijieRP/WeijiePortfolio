@@ -1,0 +1,148 @@
+:root{
+  --ink:#e6edf3;
+  --muted:#cfd9ec;
+  --bg:#05070d;
+  --card: rgba(255,255,255,.06);
+  --line: rgba(255,255,255,.18);
+  --accentA:#67d3ff;
+  --accentB:#ff4da6;
+
+  --radius:16px;
+  --pad:18px;
+}
+
+/* SECTION */
+.bms-stage{
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+  position:relative;
+  overflow:hidden;
+  color:var(--ink);
+}
+
+/* Overlay: NO BLUR. Light vignette so the image is clearly visible */
+.bms-overlay{
+  position:absolute; inset:0; pointer-events:none;
+  /* gentle edges + subtle darkening for text contrast */
+  background:
+    radial-gradient(120% 90% at 50% 20%, transparent 40%, rgba(0,0,0,.22) 80%),
+    linear-gradient(180deg, rgba(0,0,0,.18), rgba(0,0,0,.38));
+  /* removed backdrop-filter: blur(...) */
+}
+
+/* GRID (balanced visual weight) */
+.bms-inner{
+  position:relative; z-index:2;
+  width:min(1100px,92%);
+  margin:auto;
+  padding: clamp(60px,6vw,120px) 0;
+  display:grid;
+  grid-template-columns: 1fr 1fr; /* equal columns for balance */
+  gap:clamp(24px,4vw,48px);
+  align-items:center;            /* vertical balance */
+}
+
+/* CARD PANEL */
+.bms-card{
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: clamp(16px, 2.6vw, 28px);
+  box-shadow: 0 14px 40px rgba(0,0,0,.35);
+  color: var(--ink);
+}
+
+/* TEXT */
+.bms-eyebrow{
+  text-transform:uppercase;
+  font-size:12px;
+  letter-spacing:.28em;
+  opacity:.85;
+  margin: 0 0 6px;
+}
+.bms-title{
+  margin: 0 0 8px;
+  font-size: clamp(28px,4vw,44px);
+  font-weight:900;
+  background:linear-gradient(90deg,var(--accentA),var(--accentB));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.bms-sub{
+  color:var(--muted);
+  font-size: clamp(14px,2vw,18px);
+  margin: 0 0 14px;
+}
+
+/* (Optional) bullets styles kept in case you reuse them elsewhere */
+.bms-points{
+  margin: 0 0 14px 0;
+  padding: 0 0 0 18px;
+  color: var(--ink);
+  font-size: clamp(14px,1.8vw,17px);
+  line-height: 1.7;
+}
+.bms-points li{ margin: 4px 0; }
+
+/* One-liner reinforcement */
+.bms-desc-card{
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:12px 14px;
+  color:var(--muted);
+  font-size: clamp(13px,1.7vw,16px);
+  line-height:1.6;
+  margin-bottom:12px;
+}
+
+/* Chips */
+.bms-meta{ display:flex; flex-wrap:wrap; gap:8px; }
+.chip{
+  font-size:12px;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  padding: 6px 10px;
+  border-radius: 999px;
+}
+
+/* IMAGE */
+.bms-col-right{ width:100%; }
+.bms-img{
+  width:100%;
+  aspect-ratio:4/3;
+  border-radius:var(--radius);
+  background-size:cover;
+  background-position:center;
+  border:1px solid var(--line);
+  box-shadow:0 14px 40px rgba(0,0,0,.45);
+  transform: translateZ(0); /* keep crisp */
+}
+.bms-cap{
+  text-align:center;
+  color:var(--muted);
+  font-size:12px;
+  margin-top:6px;
+}
+
+/* ANIMATIONS (reveal) */
+[data-ani]{
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .6s ease, transform .6s ease;
+}
+.in-view{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .bms-inner{
+    grid-template-columns:1fr;
+    align-items:start;
+  }
+  .bms-img{ aspect-ratio:16/9; }
+}

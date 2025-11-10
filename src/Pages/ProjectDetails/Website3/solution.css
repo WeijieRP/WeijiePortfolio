@@ -1,0 +1,175 @@
+:root {
+  --ink:#e6edf3;
+  --muted:#cfd9ec;
+  --accent:#67d3ff;
+  --line: rgba(103,211,255,.45);
+  --bg:#000;
+
+  --reveal-dur:.55s;
+  --reveal-ease:cubic-bezier(.22,.61,.36,1);
+}
+
+html, body { background: var(--bg); color: var(--ink); }
+* { box-sizing: border-box; }
+
+/* ========== Stage ========== */
+.sol-stage{
+  position:relative;
+  isolation:isolate;
+  padding: clamp(40px, 6vw, 96px) clamp(16px, 5vw, 6vw);
+  overflow:hidden;
+}
+
+/* ========== Background (no blur) ========== */
+.sol-backdrop{
+  position:absolute; inset:-2% 0;
+  background-size:cover;
+  background-position:50% 50%;
+  transform:none !important;
+  filter:none !important;
+  z-index:0;
+}
+.sol-backdrop-overlay{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:none !important;
+  filter:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+
+/* ========== Grid Layout ========== */
+.sol-grid{
+  position:relative; z-index:2;
+  display:grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: clamp(20px, 4vw, 48px);
+  align-items: stretch;
+}
+
+/* ========== Left Card (no blur) ========== */
+.sol-glass{
+  background: rgba(10,14,22,.72);
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:18px;
+  padding: clamp(16px, 3vw, 28px) clamp(16px, 3.6vw, 32px);
+  box-shadow: 0 14px 36px rgba(0,0,0,.45);
+  text-align:left;
+  filter:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+.sol-eyebrow{
+  margin:0 0 10px;
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  font-size: clamp(10px,1.1vw,12px);
+  color:#e8dfcf;
+  opacity:.9;
+}
+.sol-title{
+  margin:0 0 12px;
+  line-height:1.05;
+  font-size: clamp(22px, 3.8vw, 40px);
+  font-weight: 900;
+  text-shadow:none;
+  /* gradient like your challenge title */
+  background: linear-gradient(90deg, #6bd3ff 0%, #9aa8ff 52%, #c76ccf 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  -webkit-text-stroke: 0.5px rgba(0,0,0,.25);
+}
+.sol-desc{
+  margin: 6px 0 12px;
+  color: var(--ink);
+  font-size: clamp(14px, 1.8vw, 18px);
+  line-height: 1.65;
+  opacity:1;
+  max-width: 70ch;
+}
+
+/* ========== Right Visual (screenshot) ========== */
+.sol-visual{
+  position:relative;
+  min-height: 420px;
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.10);
+  background: transparent;
+  filter:none !important;
+  backdrop-filter:none !important;
+  -webkit-backdrop-filter:none !important;
+}
+.sol-img{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit: contain;      /* show the full screenshot (no black band) */
+  object-position: center;
+  image-rendering: auto;
+  background: transparent;
+}
+.sol-visual::after{
+  content:"";
+  position:absolute; inset:0;
+  border-radius:16px;
+  outline:1px solid rgba(255,255,255,.06);
+  pointer-events:none;
+}
+
+/* ========== Meteors ========== */
+.sol-meteors{ position:absolute; inset:0; pointer-events:none; }
+.sol-meteor{
+  position:absolute; left:-22vw; width:36vw; height:2px;
+  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.9), rgba(255,255,255,0));
+  transform: rotate(-16deg);
+  filter: drop-shadow(0 0 6px rgba(255,255,255,.45));
+  opacity:0;
+  animation: sol-meteorFly linear infinite;
+}
+@keyframes sol-meteorFly{
+  0%{ transform:translate3d(0,0,0) rotate(-16deg); opacity:0; }
+  8%{ opacity:.95; }
+  100%{ transform:translate3d(130vw,-40vh,0) rotate(-16deg); opacity:0; }
+}
+
+/* ========== Scroll Reveal (slide L/R) ========== */
+[data-reveal]{
+  opacity:0;
+  transform: translateX(var(--from-x,0)) translateY(var(--from-y,14px));
+  transition:
+    opacity var(--reveal-dur) var(--reveal-ease),
+    transform var(--reveal-dur) var(--reveal-ease);
+  transition-delay: var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+.is-in[data-reveal]{ 
+  opacity:1; 
+  transform: translateX(0) translateY(0);
+}
+.is-out[data-reveal]{ 
+  opacity:0; 
+  transform: translateX(var(--from-x,0)) translateY(var(--from-y,18px));
+}
+
+/* ========== Anti-blur safety ========== */
+#solution-foresight,
+#solution-foresight *{
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-rendering: optimizeLegibility;
+  transform: translateZ(0);
+}
+
+/* ========== Responsive ========== */
+@media (max-width: 980px){
+  .sol-grid{ grid-template-columns: 1fr; }
+  .sol-visual{ min-height: 340px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .sol-meteor{ animation:none !important; }
+  [data-reveal]{ transition:none !important; opacity:1 !important; transform:none !important; }
+}

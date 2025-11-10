@@ -1,0 +1,186 @@
+:root{
+  --bg:#0a0f18;
+  --panel:#0f1724;
+  --ink:#cfe6ff;
+  --muted:#9bb0c6;
+  --brand:#57a6ff;
+  --card:#111a29;
+  --white:#fff;
+}
+
+/* ===== Base ===== */
+html, body, #root{
+  margin:0 !important;
+  padding:0 !important;
+  width:100%;
+  height:100%;
+  overflow-x:hidden;
+  background:#000; /* fallback */
+}
+*{ box-sizing:border-box; }
+body{
+  font-family: Inter, ui-sans-serif, system-ui, Segoe UI, Roboto, Arial;
+  color:var(--ink);
+  background:var(--bg);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+.muted{ color:var(--muted); }
+
+/* ===== HERO (crisp, de-hazed) ===== */
+.hero{
+  position:relative;
+  min-height:100vh;
+  width:100vw;
+  overflow:hidden;
+  /* subtle vignette + solid base (no milky wash) */
+  background:
+    radial-gradient(1000px 520px at 50% 18%, rgba(11,32,53,.35), transparent 60%),
+    #070d16;
+}
+.hero__bg,
+.hero__moon,
+.hero__clouds,
+.hero__astro{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+}
+
+/* let the artwork carry the scene (much less dim) */
+.hero__bg{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:.88;                 /* was .55 */
+  filter:none;                 /* ensure no blur on text descendants */
+  z-index:0;
+}
+
+/* moon stays bright and sharp */
+.hero__moon{
+  top:4vh; left:50%;
+  translate:-50% 0;
+  width:min(46vw,720px);
+  height:auto;
+  object-fit:contain;
+  opacity:.95;
+  z-index:1;
+}
+
+/* clouds: no blend/blur; controlled with opacity only */
+.hero__clouds{
+  left:50%; top:22vh; translate:-50% 0;
+  width:min(92vw,1500px);
+  height:auto;
+  mix-blend-mode:normal;       /* was screen */
+  filter:none;                 /* was blur(.2px) */
+  opacity:.55;                 /* gentle, not milky */
+  z-index:1;
+}
+
+/* astronaut over clouds */
+.hero__astro{
+  left:50%; bottom:-6vh; translate:-50% 0;
+  width:min(36vw,560px);
+  height:auto;
+  z-index:2;
+}
+
+/* headline: brighter + crisp edge (no glow) */
+.hero__title{
+  position:absolute; left:8vw; top:16vh; margin:0;
+  font-size:clamp(44px,12vw,160px);
+  letter-spacing:.02em;
+  color:#d9ecff;               /* brighter */
+  text-shadow:0 2px 12px rgba(0,0,0,.35);
+  z-index:3;
+}
+
+/* body copy panel left */
+.hero__left{
+  position:absolute; left:6vw; bottom:18vh; max-width:520px;
+  z-index:3;
+}
+.hero__left h2{ margin:0 0 8px; font-size:clamp(22px,3vw,36px); }
+.hero__left p{ margin:0 0 12px; color:rgba(203,220,245,.92); }
+
+/* ===== Sections ===== */
+.section{
+  padding:96px 24px;
+  display:flex;
+  justify-content:center;
+}
+.section.bg--dim{
+  background: linear-gradient(180deg,#0a0f18,#0d1422);
+}
+.section.bg--image{
+  background: url("/assets/tech-bg.jpg") center/cover fixed no-repeat;
+}
+.section__inner{ width:min(1100px,92vw); }
+.section__title{ margin:0 0 24px; font-size:clamp(26px,3.6vw,40px); }
+
+/* ===== Cards ===== */
+.cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:18px;
+}
+.card{
+  background:var(--card);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:16px;
+  padding:14px;
+  transition:transform .25s ease, box-shadow .25s ease;
+  will-change: transform, box-shadow;
+}
+.card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 14px 50px rgba(0,0,0,.35);
+}
+.card__thumb{
+  height:140px;
+  background:linear-gradient(180deg,#1b2a44,#122036);
+  border-radius:10px;
+  margin-bottom:10px;
+}
+.card__title{ font-weight:700; margin-bottom:4px; }
+.card__meta{ color:var(--muted); font-size:14px; }
+
+/* ===== Pills ===== */
+.grid{ display:flex; flex-wrap:wrap; gap:12px; }
+.pill{
+  background:linear-gradient(180deg,#122036,#0b1628);
+  border:1px solid rgba(255,255,255,.07);
+  padding:10px 14px;
+  border-radius:999px;
+  font-size:14px;
+}
+
+/* ===== CTAs ===== */
+.cta{ display:flex; gap:12px; flex-wrap:wrap; }
+.cta a{
+  background: linear-gradient(180deg,#2b80ff,#1b5ed1);
+  color:var(--white);
+  padding:10px 14px;
+  border-radius:12px;
+  font-weight:600;
+  border:1px solid rgba(255,255,255,.15);
+  text-decoration:none;
+}
+.cta a:hover{ filter:brightness(1.05); }
+
+/* ===== Footer ===== */
+.footer{
+  text-align:center;
+  color:#98abc1;
+  padding:56px 16px 80px;
+  border-top:1px solid rgba(255,255,255,.06);
+}
+
+/* ===== Responsive ===== */
+@media (max-width:900px){
+  .hero__left{ left:6vw; bottom:14vh; max-width:80vw; }
+  .hero__title{ left:6vw; top:12vh; font-size:clamp(36px,12vw,106px); }
+}

@@ -1,0 +1,214 @@
+:root{
+  --ink:#eaf6ff;
+  --muted:#bcd5e8;
+  --chip:#0b1220;
+  --chipEdge:rgba(255,255,255,.12);
+  --gradA:#7ee7ff;
+  --gradB:#ffb86b;
+  --link:#9bf3ff;
+
+  /* motion */
+  --slideDist: 38px;
+  --revealDur: .55s;
+  --revealEase: cubic-bezier(.2,.7,.2,1);
+}
+
+/* ===== Stage (keeps your alive background) ===== */
+.fd-min{
+  position:relative;
+  padding:6rem 1.2rem 6.5rem;
+  color:var(--ink);
+  isolation:isolate;
+  overflow:hidden;
+  text-align:center;
+}
+
+/* background layers (same as before) */
+.fd-bg{
+  position:absolute; inset:-26vh -12vw;
+  background:center/cover no-repeat;
+  transform:translateY(0) scale(1.03);
+  filter:brightness(.92) contrast(1.06) saturate(1.06);
+  z-index:0; will-change:transform;
+}
+.fd-vignette{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:
+    radial-gradient(1200px 600px at 50% 18%, rgba(255,255,255,.10), transparent 55%),
+    linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.7) 70%, rgba(0,0,0,.85));
+}
+.fd-stars{
+  position:absolute; inset:0; z-index:2; pointer-events:none;
+  background-image:
+    radial-gradient(2px 2px at 22% 30%, rgba(255,255,255,.7) 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 70% 55%, rgba(255,255,255,.62) 60%, transparent 61%),
+    radial-gradient(1.4px 1.4px at 40% 80%, rgba(255,255,255,.62) 60%, transparent 61%);
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.42}to{opacity:.85}}
+.fd-fog{
+  position:absolute; inset:-22% -12%; z-index:3; pointer-events:none;
+  background:
+    radial-gradient(60% 40% at 30% 70%, rgba(255,255,255,.06), transparent 70%),
+    radial-gradient(65% 50% at 70% 30%, rgba(255,255,255,.06), transparent 70%);
+  filter:blur(42px); mix-blend-mode:screen; opacity:.42;
+}
+
+/* header */
+.fd-head{ position:relative; z-index:4; margin-bottom:1.4rem; }
+.fd-head h2{
+  margin:0; font-weight:900; line-height:1.05;
+  font-size:clamp(2.1rem,5vw,3rem);
+  text-shadow:0 0 26px rgba(0,229,255,.28);
+}
+.fd-head h2 span{ color:#c7f3ff; }
+.fd-head p{ margin:.6rem auto 2rem; color:var(--muted); font-weight:600; }
+
+/* grid */
+.fd-cards{
+  position:relative; z-index:5;
+  width:min(1100px,95%); margin-inline:auto;
+  display:grid; gap:1.2rem;
+  grid-template-columns:repeat(2,1fr);
+}
+@media (max-width: 980px){ .fd-cards{ grid-template-columns:1fr; } }
+
+/* ===== Minimal Hover Card ===== */
+.min-card{
+  position:relative;
+  aspect-ratio: 16 / 10;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 14px 34px rgba(0,0,0,.45);
+  background:#0a0f16;
+  outline:none;
+
+  /* stacking contexts */
+  z-index:0;
+
+  /* reveal base state */
+  opacity:0;
+  transform: translateX(0) translateY(0);
+  transition:
+    transform var(--revealDur) var(--revealEase),
+    opacity   var(--revealDur) var(--revealEase);
+}
+.min-card.is-in{
+  opacity:1;
+  transform: translateX(0) translateY(0);
+}
+
+/* dimming scrim on hover/focus to boost text contrast */
+.min-card::before{
+  content:"";
+  position:absolute; inset:0;
+  background: radial-gradient(60% 70% at 50% 70%, rgba(0,0,0,.0), rgba(0,0,0,.55));
+  opacity:0;
+  transition: opacity .35s ease;
+  z-index:2; /* sits above the image, below text layers */
+}
+.min-card:hover::before,
+.min-card:focus::before,
+.min-card:focus-within::before{ opacity:1; }
+
+/* image */
+.min-img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  transform:scale(1.03);
+  filter:brightness(.96) contrast(1.05);
+  transition: transform .55s ease, filter .35s ease;
+  z-index:1;
+}
+.min-card:hover .min-img,
+.min-card:focus .min-img{
+  transform:scale(1.08);
+  filter:brightness(.8) contrast(1.05); /* slightly dim for legibility */
+}
+
+/* top strip with title (always visible) */
+.min-top{
+  position:absolute; inset:12px 12px auto 12px;
+  display:flex; gap:.6rem; align-items:center; justify-content:flex-start;
+  z-index:4; /* above scrim + image */
+}
+.min-badge{
+  background:linear-gradient(90deg, var(--gradA), var(--gradB));
+  color:#061018; font-weight:900; font-size:.82rem;
+  padding:.42rem .7rem; border-radius:999px; white-space:nowrap;
+  box-shadow:0 8px 18px rgba(0,0,0,.35);
+}
+.min-title{
+  margin:0; padding:.42rem .7rem;
+  font-weight:900; font-size: clamp(1rem, 2vw, 1.25rem);
+  color:#f7fbff;
+  background:rgba(0,0,0,.55);
+  border:1px solid var(--chipEdge);
+  border-radius:10px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+
+/* slide-up overlay (short & crisp) */
+.min-overlay{
+  position:absolute; inset:auto 0 0 0; height:42%;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(6,10,16,.92) 50%),
+    linear-gradient(0deg, rgba(0,0,0,.0), rgba(0,0,0,.0));
+  padding:14px 16px 16px;
+  display:flex; flex-direction:column; justify-content:flex-end; gap:.6rem;
+  transform:translateY(100%);
+  transition: transform .35s ease;
+  z-index:4; /* above scrim + image */
+}
+.min-card:hover .min-overlay,
+.min-card:focus .min-overlay,
+.min-card:focus-within .min-overlay{ transform:translateY(0); }
+
+.min-desc{
+  margin:0; color:#e9f6ff; font-size:.98rem; line-height:1.38;
+  text-shadow: 0 1px 2px rgba(0,0,0,.6);
+}
+.min-tags{ display:flex; gap:.5rem; flex-wrap:wrap; }
+.min-tags span{
+  font-size:.78rem; font-weight:800; padding:.28rem .5rem; border-radius:999px;
+  background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18);
+  color:#f6fbff; text-shadow: 0 1px 1px rgba(0,0,0,.5);
+}
+.min-link{
+  width:max-content; font-weight:900; font-size:.92rem;
+  color:var(--link); text-decoration:none; border-bottom:2px solid rgba(155,243,255,.45);
+  padding-bottom:2px; transition:.2s;
+}
+.min-link:hover{ color:#fff; border-color:#fff; }
+
+/* keyboard focus ring */
+.min-card:focus-visible{
+  box-shadow:0 0 0 3px rgba(126,231,255,.6), 0 14px 34px rgba(0,0,0,.45);
+}
+
+/* ===== Direction-aware slide-ins (scroll up vs down) ===== */
+/* When scrolling DOWN: left cards slide from left, right cards from right. */
+.fd-min[data-scroll="down"] .min-card[data-dir="left"]:not(.is-in){
+  transform: translateX(calc(-1 * var(--slideDist)));
+  opacity: 0;
+}
+.fd-min[data-scroll="down"] .min-card[data-dir="right"]:not(.is-in){
+  transform: translateX(var(--slideDist));
+  opacity: 0;
+}
+
+/* When scrolling UP: reverse the offsets (they slide out the other way). */
+.fd-min[data-scroll="up"] .min-card[data-dir="left"]:not(.is-in){
+  transform: translateX(var(--slideDist));
+  opacity: 0;
+}
+.fd-min[data-scroll="up"] .min-card[data-dir="right"]:not(.is-in){
+  transform: translateX(calc(-1 * var(--slideDist)));
+  opacity: 0;
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .min-card{ transition:none; opacity:1; transform:none; }
+}

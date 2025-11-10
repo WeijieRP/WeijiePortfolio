@@ -1,0 +1,260 @@
+:root{
+  --ink:#eaf6ff;
+  --muted:#bcd5e8;
+  --chip:#0b1220;
+  --chipEdge:rgba(255,255,255,.12);
+  --gradA:#7ee7ff;
+  --gradB:#ffb86b;
+  --link:#9bf3ff;
+
+  --slideDist: 38px;
+  --revealDur: .55s;
+  --revealEase: cubic-bezier(.2,.7,.2,1);
+
+  /* Metallic lavender → pink */
+  --tA:#9aa8ff;
+  --tB:#b79bff;
+  --tC:#c19af9;
+  --tD:#e7b3cc;
+}
+
+/* ===== Stage ===== */
+.fd-min{
+  position:relative;
+  padding:6rem 1.2rem 6.5rem;
+  color:var(--ink);
+  isolation:isolate;
+  overflow:hidden;
+  text-align:center;
+}
+
+/* Background layers */
+.fd-bg{
+  position:absolute; inset:-26vh -12vw;
+  background:center/cover no-repeat;
+  transform:translateY(0) scale(1.03);
+  filter:brightness(.92) contrast(1.06) saturate(1.06);
+  z-index:0; will-change:transform;
+}
+.fd-vignette{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:
+    radial-gradient(1200px 600px at 50% 18%, rgba(255,255,255,.10), transparent 55%),
+    linear-gradient(180deg, rgba(0,0,0,.15), rgba(0,0,0,.7) 70%, rgba(0,0,0,.85));
+}
+.fd-stars{
+  position:absolute; inset:0; z-index:2; pointer-events:none;
+  background-image:
+    radial-gradient(2px 2px at 22% 30%, rgba(255,255,255,.7) 60%, transparent 61%),
+    radial-gradient(1.6px 1.6px at 70% 55%, rgba(255,255,255,.62) 60%, transparent 61%),
+    radial-gradient(1.4px 1.4px at 40% 80%, rgba(255,255,255,.62) 60%, transparent 61%);
+  animation: twinkle 6s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.42}to{opacity:.85}}
+.fd-fog{
+  position:absolute; inset:-22% -12%; z-index:3; pointer-events:none;
+  background:
+    radial-gradient(60% 40% at 30% 70%, rgba(255,255,255,.06), transparent 70%),
+    radial-gradient(65% 50% at 70% 30%, rgba(255,255,255,.06), transparent 70%);
+  filter:blur(42px); mix-blend-mode:screen; opacity:.42;
+}
+
+/* Header layered above bg */
+.fd-head{ position:relative; z-index:4; }
+
+/* Title: solid by default so it never disappears */
+.fd-title-aurora{
+  margin:0 0 .6rem;
+  font-weight:1000;
+  letter-spacing:.02em;
+  font-size:clamp(2.4rem, 6.4vw, 4.2rem);
+  line-height:1.02;
+
+  color:#eaf6ff; /* fallback fill */
+  -webkit-text-stroke:1px rgba(26,34,54,.45);
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.18),
+    0 2px 0 rgba(26,34,54,.55),
+    0 6px 12px rgba(10,14,22,.55);
+  position:relative;
+}
+
+/* Only when the section has .has-clip (JS-detected support), use metallic gradient */
+.has-clip .fd-title-aurora{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,0) 35%),
+    linear-gradient(90deg, var(--tA), var(--tB), var(--tC), var(--tD));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:transparent;
+}
+
+/* optional sheen */
+.has-clip .fd-title-aurora::after{
+  content:"";
+  position:absolute; inset:0 0 .1em 0;
+  background:radial-gradient(120% 60% at 0% 0%,rgba(255,255,255,.22),transparent 40%);
+  mix-blend-mode:screen;
+  pointer-events:none;
+  animation:titleSheen 8s linear infinite;
+}
+@keyframes titleSheen{
+  0%{transform:translateX(-15%) translateY(-6%)}
+  50%{transform:translateX(15%) translateY(0%)}
+  100%{transform:translateX(-15%) translateY(-6%)}
+}
+
+/* Gold subtitle */
+.fd-sub{
+  margin:.6rem auto 2rem;
+  max-width: 760px;
+  font-weight:700;
+  font-size:clamp(14px,1.8vw,18px);
+  background: linear-gradient(90deg,#fff4c7 0%,#ffe08a 35%,#ffc766 65%,#ffb86b 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color: transparent;
+  text-shadow:
+    0 1px 0 rgba(255,255,255,0.18),
+    0 2px 8px rgba(255,184,107,0.18);
+}
+
+/* Grid */
+.fd-cards{
+  position:relative; z-index:5;
+  width:min(1100px,95%); margin-inline:auto;
+  display:grid; gap:1.2rem;
+  grid-template-columns:repeat(2,1fr);
+}
+@media (max-width:980px){.fd-cards{grid-template-columns:1fr;}}
+
+/* Card */
+.min-card{
+  position:relative;
+  aspect-ratio:16/10;
+  border-radius:18px;
+  overflow:hidden;
+  box-shadow:0 14px 34px rgba(0,0,0,.45);
+  background:#0a0f16;
+  outline:none;
+  opacity:0;
+  transform:translateX(0) translateY(0);
+  transition:transform var(--revealDur) var(--revealEase),
+             opacity var(--revealDur) var(--revealEase);
+}
+.min-card.is-in{opacity:1;transform:translateX(0);}
+
+.min-img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transform:scale(1.03);
+  filter:brightness(.92) contrast(1.05);
+  transition:transform .55s ease,filter .35s ease;
+}
+.min-card:hover .min-img{transform:scale(1.08);filter:brightness(1);}
+
+.min-top{
+  position:absolute;inset:12px 12px auto 12px;
+  display:flex;gap:.6rem;align-items:center;z-index:3;
+}
+.min-badge{
+  background:linear-gradient(90deg,var(--gradA),var(--gradB));
+  color:#061018;font-weight:900;font-size:.82rem;
+  padding:.42rem .7rem;border-radius:999px;
+  box-shadow:0 8px 18px rgba(0,0,0,.35);
+}
+.min-title{
+  margin:0;padding:.42rem .7rem;
+  font-weight:900;font-size:clamp(1rem,2vw,1.25rem);
+  color:#f7fbff;background:rgba(0,0,0,.55);
+  border:1px solid var(--chipEdge);
+  border-radius:10px;backdrop-filter:blur(6px);
+}
+
+.min-overlay{
+  position:absolute;inset:auto 0 0 0;height:42%;
+  background:linear-gradient(180deg,rgba(0,0,0,0) 0%,rgba(6,10,16,.92) 50%);
+  padding:14px 16px 16px;display:flex;flex-direction:column;
+  justify-content:flex-end;gap:.6rem;transform:translateY(100%);
+  transition:transform .35s ease;z-index:2;
+}
+.min-card:hover .min-overlay{transform:translateY(0);}
+.min-desc{margin:0;color:#d7e7f4;font-size:.98rem;line-height:1.35;}
+.min-tags{display:flex;gap:.5rem;flex-wrap:wrap;}
+.min-tags span{
+  font-size:.78rem;font-weight:800;padding:.28rem .5rem;
+  border-radius:999px;background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.12);
+}
+.min-link{
+  width:max-content;font-weight:900;font-size:.92rem;
+  color:var(--link);text-decoration:none;
+  border-bottom:2px solid rgba(155,243,255,.45);
+  padding-bottom:2px;transition:.2s;
+}
+.min-link:hover{color:#fff;border-color:#fff;}
+
+.min-card:focus-visible{
+  box-shadow:0 0 0 3px rgba(126,231,255,.6),0 14px 34px rgba(0,0,0,.45);
+}
+
+/* Scroll-direction animations */
+.fd-min[data-scroll="down"] .min-card[data-dir="left"]:not(.is-in){transform:translateX(calc(-1 * var(--slideDist)));opacity:0;}
+.fd-min[data-scroll="down"] .min-card[data-dir="right"]:not(.is-in){transform:translateX(var(--slideDist));opacity:0;}
+.fd-min[data-scroll="up"]   .min-card[data-dir="left"]:not(.is-in){transform:translateX(var(--slideDist));opacity:0;}
+.fd-min[data-scroll="up"]   .min-card[data-dir="right"]:not(.is-in){transform:translateX(calc(-1 * var(--slideDist)));opacity:0;}
+
+@media (prefers-reduced-motion:reduce){
+  .min-card{transition:none!important;opacity:1!important;transform:none!important;}
+}
+/* force header above all bg layers */
+.fd-head{ position:relative; z-index: 10; }
+
+/* layered title: gradient (behind) + solid (always visible) */
+.fd-title-layered{
+  position: relative;
+  display: inline-block;
+  margin: 0 0 .6rem;
+  line-height: 1.02;
+  font-weight: 1000;
+  letter-spacing: .02em;
+  font-size: clamp(2.4rem, 6.4vw, 4.2rem);
+}
+
+/* gradient clone */
+.fd-title-gradient{
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 1;
+}
+
+/* solid text (always visible) */
+.fd-title-solid{
+  position: relative;
+  color: #eaf6ff;                      /* ALWAYS visible */
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.18),
+    0 2px 0 rgba(26,34,54,.55),
+    0 6px 12px rgba(10,14,22,.55);
+  -webkit-text-stroke: 1px rgba(26,34,54,.45);
+}
+
+/* only if clip is supported, paint gradient on the back layer */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .fd-title-gradient{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,.18), rgba(255,255,255,0) 35%),
+      linear-gradient(90deg, #9aa8ff, #b79bff, #c19af9, #e7b3cc);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+}
+
+/* nuclear override in case some other rule made titles transparent */
+.fd-title-layered, .fd-title-layered *{
+  text-decoration: none;
+}
+.fd-title-layered{ filter: drop-shadow(0 0 0 rgba(0,0,0,0)); }
