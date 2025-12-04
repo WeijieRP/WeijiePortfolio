@@ -31,11 +31,15 @@ export default function VRHero({
   titleTop = "FEATURED",
   titleBottom = "PROJECTS",
 
-  // Plain-English subtitle (“I built …”)
   subtitle = "A collection of AR/VR experiences I built — focused on clear interaction, player comfort, and immersive moments.",
 
+  // primary CTA (left)
   ctaText = "View VR Demo",
   ctaHref = "#vr-demo",
+
+  // secondary CTA (right)
+  secondaryText = "View Project Details",
+  secondaryHref = "#vr-details",
 }) {
   const rootRef = useRef(null);
 
@@ -83,7 +87,9 @@ export default function VRHero({
     const targets = el.querySelectorAll("[data-hp-reveal]");
     const io = new IntersectionObserver(
       (entries) =>
-        entries.forEach((e) => e.target.classList.toggle("is-shown", e.isIntersecting)),
+        entries.forEach((e) =>
+          e.target.classList.toggle("is-shown", e.isIntersecting)
+        ),
       { threshold: 0.18 }
     );
 
@@ -92,34 +98,56 @@ export default function VRHero({
   }, []);
 
   return (
-    <section className="hp-hero" id={id} ref={rootRef} aria-label="Featured Projects — Hero">
+    <section
+      className="hp-hero"
+      id={id}
+      ref={rootRef}
+      aria-label="Featured Projects — Hero"
+    >
       <div
         className="hp-hero__bg"
         style={{ backgroundImage: `url(${bgImage})` }}
         aria-hidden="true"
       />
 
-      {/* Very light vignette; no black plate over text */}
+      {/* Light vignette only */}
       <div className="hp-hero__shade" aria-hidden="true">
         <div className="hp-hero__overlay" />
       </div>
 
       <div className="hp-hero__content">
         <div className="hp-hero__stack" data-hp-reveal>
-          <h1 className="hp-title metallic">
-            <span className="hp-title-line">
-              <HPFloatWords text={titleTop} />
-            </span>
-            <span className="hp-title-line">
-              <HPFloatWords text={titleBottom} startDelay={180} />
-            </span>
-          </h1>
+          {/* Glass panel wrapping title + subtitle + buttons */}
+          <div className="hp-panel">
+            <h1 className="hp-title">
+              <span className="hp-title-line">
+                <HPFloatWords text={titleTop} />
+              </span>
+              <span className="hp-title-line">
+                <HPFloatWords text={titleBottom} startDelay={180} />
+              </span>
+            </h1>
 
-          <p className="hp-sub">{subtitle}</p>
+            <p className="hp-sub">{subtitle}</p>
 
-          <a href={ctaHref} className="hp-btn" aria-label="Watch gameplay video">
-            {ctaText}
-          </a>
+            <div className="hp-actions">
+              <a
+                href={ctaHref}
+                className="hp-btn primary"
+                aria-label="Watch gameplay video"
+              >
+                {ctaText}
+              </a>
+
+              <a
+                href={secondaryHref}
+                className="hp-btn secondary"
+                aria-label="View project details"
+              >
+                {secondaryText}
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

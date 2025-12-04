@@ -4,20 +4,22 @@ import Layout from "./Layout";
 import Home from "./Pages/Home/Home";
 import Abouts from "./Pages/About/Abouts";
 import Contact from "./Pages/Contact/Contact";
-import Portfolio from "./Pages/Portfolio/Portfolio";
+import Portfolio from "./Pages/Portfolio/Portfolio/Portfolio";
 import PortfolioWebsite from "./Pages/Portfolio/Web/PortfolioWebsite";
 import PortfolioDesign from "./Pages/Portfolio/Design/PortfolioDesign";
 import VirtualRelality from "./Pages/Portfolio/VR/VirtualRelality";
-import ProjectWebsite1 from "./Pages/ProjectDetails/Website/ProjectWebsite1";
+import ProjectWebsite1 from "./Pages/ProjectDetails/Website/Web2/ProjectWebsite1";
 import ProjectDetailsWebsite2 from "./Pages/ProjectDetails/Website/Website1/ProjectDetailsWebsite2";
-import GeekOutProject from "./Pages/ProjectDetails/Website3/GeekOutProject";
+import GeekOutProject from "./Pages/ProjectDetails/Website/Website3/GeekOutProject";
 import DesignProject from "./Pages/ProjectDetails/Design/Designdetail1/DesignProject";
 import ProjectDesign2 from "./Pages/ProjectDetails/Design/Designdetail2/ProjectDesign2";
-import VRProjectDetails1 from "./Pages/ProjectDetails/VR/VRProjectDetails1";
+import VRProjectDetails1 from "./Pages/ProjectDetails/VR/ProjectDetails1/VRProjectDetails1";
 import ProjectDetail2VR from "./Pages/ProjectDetails/VR/ProjectDetails2/ProjectDetail2VR";
-import Mobile from "./Pages/Portfolio/Mobile/Mobile";
+
+import Mobile from "./Pages/Portfolio/Mobile/Mobile"
 import MoblieProjectDetails1 from "./Pages/ProjectDetails/Moblie1/MoblieProjectDetails1";
 import Moblie2ProjectDetails2 from "./Pages/ProjectDetails/Moblie2/Moblie2ProjectDetails2";
+import SnapScrollLayout from "./Components/SnapScrollLayout";
 
 export default function App() {
   const browserRouter = createBrowserRouter([
@@ -73,7 +75,12 @@ export default function App() {
           path: "/portfolio/Mobile/projectdetail2",
           element: <Moblie2ProjectDetails2/>,
           errorElement: <>404 not found page</>
-        }
+        },
+        {
+  path: "/snapscroll",
+  element: <SnapScrollLayout />,
+  errorElement: <>404 not found page</>
+}
         ,{
           path:"/portfolio/web/projectdetail1",
           element:<ProjectWebsite1/>,

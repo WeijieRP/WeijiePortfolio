@@ -86,8 +86,8 @@ export default function ChallengeSection({
             {/* Glass hero card with title + summary */}
             <div className="ch-hero-card" data-reveal="title">
               {eyebrow && <p className="ch-eyebrow">{eyebrow}</p>}
-              <h2 className="ch-title">{title}</h2>
-              <p className="ch-summary">{summary}</p>
+              <h2 className="">{title}</h2>
+              <p className="">{summary}</p>
             </div>
           </div>
 

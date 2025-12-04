@@ -1,15 +1,17 @@
-/* journey.css — Timeframe Carousel */
-:root{
-  --ink:#fff4e6;
-  --muted:#fcd8b0;
-  --glass:rgba(255,255,255,.06);
-  --line:rgba(255,255,255,.14);
-  --accent:#f6a96c;
+/* journey.css — Design Journey Carousel (uses global styles.css tokens) */
 
-  /* warm peach title like rl-title */
-  --title-peach:#ffc58e;
-  --title-shadow: rgba(0,0,0,.55);
-  --title-soft: rgba(0,0,0,.28);
+/* Section-scoped tokens (NO :root override) */
+.tf-stage {
+  --tf-ink: var(--body-ink);
+  --tf-muted: var(--body-muted);
+  --tf-bg: #050816;
+
+  --tf-card-bg: rgba(5, 7, 20, 0.92);
+  --tf-card-border: rgba(255, 255, 255, 0.14);
+
+  --tf-accent: #f6a96c;
+
+  --tf-ease-main: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 /* ===== FULL-SECTION with IMAGE BACKGROUND ===== */
@@ -17,11 +19,13 @@
   position: relative;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  color: var(--ink);
+  color: var(--tf-ink);
   overflow: hidden;
   padding: clamp(56px, 7vw, 90px) 0;
   isolation: isolate;
-  background: #0b0f16;
+  background: var(--tf-bg);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .tf-bg {
@@ -29,14 +33,21 @@
   inset: 0;
   background-size: cover;
   background-position: center;
-  /* Clear + vivid; no blur, no heavy darkening */
-  filter: brightness(.9) contrast(1.06) saturate(1.08);
-  transform: none;
+  filter: brightness(0.9) contrast(1.06) saturate(1.08); /* crisp, no blur */
   z-index: 0;
 }
 
-/* overlay REMOVED */
-/* .tf-overlay { } */
+/* subtle dark overlay so text is readable */
+.tf-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.78)
+  );
+  z-index: 1;
+}
 
 /* ===== CONTENT CONTAINER ===== */
 .tf-container {
@@ -48,40 +59,53 @@
   text-align: center;
 }
 
-/* === Warm-peach flat title (matches rl-title style) === */
-.tf-title {
-  font-size: clamp(30px,5vw,50px);
-  font-weight: 900;
-  letter-spacing:.01em;
-  margin: 0;
-
-  color: var(--title-peach);
-  -webkit-text-stroke: 0 transparent;
-  text-shadow:
-    0 2px 2px var(--title-shadow),
-    0 8px 18px var(--title-soft);
+/* === Title block === */
+.tf-hero {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
+/* Solid dark panel (NO blur glass) */
+.tf-hero-panel {
+  display: block;
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto 10px;
+  padding: clamp(14px, 2.2vw, 20px) clamp(16px, 2.6vw, 24px);
+  border-radius: 18px;
+  background: rgba(5, 7, 20, 0.96);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
+}
+
+/* Title uses global .title-aurora for gradient + size */
+.tf-title {
+  margin: 0;
+  font-weight: 900;
+}
+
+/* Subtitle uses global body-muted colour */
 .tf-sub {
-  color: var(--muted);
-  font-weight:600;
-  margin: 6px auto 24px;
+  color: var(--tf-muted);
+  font-weight: 600;
+  margin: 6px auto 0;
   max-width: 780px;
 }
 
 /* ===== VIEWPORT/SLIDES ===== */
-.tf-viewport{
-  position:relative;
-  overflow:hidden;
+.tf-viewport {
+  position: relative;
+  overflow: hidden;
   border-radius: 20px;
-  border:1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.05);
-  box-shadow: 0 22px 48px rgba(0,0,0,.45);
+  background: rgba(2, 4, 12, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
 }
 
 .tf-track {
   display: flex;
-  transition: transform .75s cubic-bezier(.22,.61,.36,1);
+  transition: transform 0.75s var(--tf-ease-main);
   will-change: transform;
 }
 
@@ -95,103 +119,153 @@
   text-align: left;
 }
 
-/* header inside card */
-.tf-head{
-  display:flex; align-items:baseline; gap:12px; flex-wrap:wrap;
+/* Header inside slide */
+.tf-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
 }
+
 .tf-week {
-  font-size: .95rem;
+  font-size: 0.95rem;
   font-weight: 900;
-  color: #f6a96c;
+  color: var(--tf-accent);
   padding: 6px 10px;
   border-radius: 999px;
-  background: rgba(246,169,108,.12);
-  border:1px solid rgba(246,169,108,.28);
+  background: rgba(246, 169, 108, 0.12);
+  border: 1px solid rgba(246, 169, 108, 0.28);
 }
+
 .tf-card-title {
-  font-size: clamp(18px,2.3vw,22px);
+  font-size: clamp(18px, 2.3vw, 22px);
   font-weight: 900;
   margin: 0;
+  color: var(--tf-ink);
 }
 
 /* badges row */
-.tf-badges{
-  display:flex; flex-wrap:wrap; gap:10px;
-  padding:0; margin:0;
-  list-style:none;
+.tf-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
-.tf-badge{
-  font-weight:800; font-size:.86rem; letter-spacing:.02em;
-  padding:8px 12px; border-radius:999px;
-  background: rgba(255,255,255,.08);
-  border:1px solid rgba(255,255,255,.18);
-  color: var(--ink);
+
+.tf-badge {
+  font-weight: 800;
+  font-size: 0.86rem;
+  letter-spacing: 0.02em;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--tf-ink);
   white-space: nowrap;
 }
 
 /* checklist */
 .tf-list {
-  padding:0;
-  margin:0;
-  list-style:none;
-}
-.tf-list li {
-  position:relative;
-  margin: .48rem 0;
-  padding-left: 22px;
-  color: var(--muted);
-  font-weight: 600;
-}
-.tf-list li::before{
-  content:"";
-  position:absolute; left:0; top:.55em;
-  width:9px; height:9px; border-radius:50%;
-  background: radial-gradient(circle at 30% 30%, #fff, #f6a96c);
-  box-shadow: 0 0 12px rgba(246,169,108,.35);
+  padding: 0;
+  margin: 0;
+  list-style: none;
 }
 
-/* controls */
+.tf-list li {
+  position: relative;
+  margin: 0.48rem 0;
+  padding-left: 22px;
+  color: var(--tf-muted);
+  font-weight: 600;
+}
+
+.tf-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff, var(--tf-accent));
+  box-shadow: 0 0 12px rgba(246, 169, 108, 0.35);
+}
+
+/* ===== CONTROLS ===== */
 .tf-controls {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
   margin-top: 16px;
 }
+
 .tf-btn {
-  padding:10px 16px;
-  border-radius:12px;
-  font-weight:900;
-  border:1px solid var(--line);
-  background:rgba(255,255,255,.06);
-  color:var(--ink);
-  cursor:pointer;
-  transition: background .2s ease, transform .2s ease, box-shadow .2s ease;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-weight: 900;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--tf-ink);
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
 .tf-btn:hover {
-  background:rgba(246,169,108,.16);
+  background: rgba(246, 169, 108, 0.16);
   transform: translateY(-1px);
-  box-shadow:0 0 20px rgba(246,169,108,.22);
+  box-shadow: 0 0 20px rgba(246, 169, 108, 0.22);
 }
 
 /* dots */
-.tf-dots{
-  display:flex; gap:8px; align-items:center;
+.tf-dots {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
-.tf-dot{
-  width:10px; height:10px; border-radius:50%;
-  background: rgba(255,255,255,.28);
-  border:1px solid rgba(255,255,255,.35);
-  cursor:pointer;
-  transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+
+.tf-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.28);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
 }
-.tf-dot.is-active{
-  background: #f6a96c;
-  box-shadow: 0 0 16px rgba(246,169,108,.45);
+
+.tf-dot.is-active {
+  background: var(--tf-accent);
+  box-shadow: 0 0 16px rgba(246, 169, 108, 0.45);
   transform: scale(1.08);
 }
 
-/* responsive */
-@media (max-width: 560px){
-  .tf-viewport{ border-radius:14px; }
+/* ===== RESPONSIVE ===== */
+@media (max-width: 560px) {
+  .tf-viewport {
+    border-radius: 14px;
+  }
+
+  .tf-hero-panel {
+    border-radius: 14px;
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .tf-track {
+    transition: none;
+  }
+  .tf-btn,
+  .tf-dot {
+    transition: none;
+  }
 }

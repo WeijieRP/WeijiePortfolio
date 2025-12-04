@@ -1,14 +1,15 @@
-import React, { useEffect, useRef, useState } from "react";
-import "./tools.css";
+// ToolsSection.jsx
+import React, { useEffect, useRef } from "react";
+import "./toolskit.css";
 
 export default function ToolsSection() {
   const rootRef = useRef(null);
-  const [active, setActive] = useState(null);
 
-  // Scroll reveal (slides in from left/right)
+  // Scroll reveal
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
+
     const els = root.querySelectorAll(".reveal");
     const io = new IntersectionObserver(
       (entries) =>
@@ -18,6 +19,7 @@ export default function ToolsSection() {
         }),
       { threshold: 0.2 }
     );
+
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
@@ -25,16 +27,20 @@ export default function ToolsSection() {
   // Gentle float on the diamonds
   useEffect(() => {
     const cards = rootRef.current?.querySelectorAll(".tool-diamond") || [];
-    let t = 0, raf;
+    let t = 0;
+    let raf;
+
     const animate = () => {
       t += 0.015;
       cards.forEach((card, i) => {
         const x = Math.sin(t + i) * 3;
         const y = Math.cos(t + i * 0.7) * 3;
-        card.style.transform = `translate(${x}px, ${y}px) rotate(45deg)`;
+        card.style.setProperty("--dx", `${x.toFixed(2)}px`);
+        card.style.setProperty("--dy", `${y.toFixed(2)}px`);
       });
       raf = requestAnimationFrame(animate);
     };
+
     raf = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(raf);
   }, []);
@@ -42,19 +48,19 @@ export default function ToolsSection() {
   const tools = [
     {
       name: "GitHub",
-      logo: "/assets/Web_Icons/icons8-github-48.png",
+      logo: "/assets/Web_Icons/icons8-github-96.png",
       desc:
         "I keep my code here, open pull requests for reviews, and let Actions run tests and builds before I ship.",
     },
     {
       name: "VS Code",
-      logo: "/assets/Web_Icons/icons8-vs-code-48.png",
+      logo: "/assets/Web_Icons/icons8-vs-code-96.png",
       desc:
         "My main editor. I write code, format it automatically, and debug both frontend and backend in one place.",
     },
     {
       name: "Git",
-      logo: "/assets/Web_Icons/icons8-git-48.png",
+      logo: "/assets/Web_Icons/icons8-git-96.png",
       desc:
         "I use Git to save each change safely. I branch for new features, merge when ready, and roll back if needed.",
     },
@@ -66,7 +72,7 @@ export default function ToolsSection() {
     },
     {
       name: "React",
-      logo: "/assets/Web_Icons/icons8-react-js-48.png",
+      logo: "/assets/Web_Icons/icons8-react-js-96.png",
       desc:
         "I build the UI with components and hooks. It keeps pages fast, tidy, and easy to update as the app grows.",
     },
@@ -77,7 +83,10 @@ export default function ToolsSection() {
       {/* Background */}
       <div
         className="tools-bg"
-        style={{ backgroundImage: 'url("/assets/HomeBackgroundImage/fields-9906765.jpg")' }}
+        style={{
+          backgroundImage:
+            'url("/assets/HomeBackgroundImage/fields-9906765.jpg")',
+        }}
         aria-hidden="true"
       />
 
@@ -96,44 +105,44 @@ export default function ToolsSection() {
       </div>
 
       <div className="tools-wrap">
-        {/* ⬇️ Galaxy-styled title */}
-        <h2 className="tools-title--galaxy reveal" data-anim="down">
-          My Everyday Dev Stack
-        </h2>
-
-        <p className="subtitle reveal" data-anim="up">
-          Tools I use to write code, test features, and publish stable apps.
-        </p>
+        {/* Glass wrapper around heading + subtitle */}
+        <div
+          className="tools-head-glass reveal"
+          data-anim="down"
+          role="group"
+          aria-roledescription="panel"
+        >
+          <h2 className="tools-title">My Everyday Dev Stack</h2>
+          <p className="tools-subtitle">
+            Tools I use to write code, test features, and publish stable apps.
+          </p>
+        </div>
 
         <div className="zigzag-grid">
           {tools.map((t, i) => {
-            const isActive = active === i;
             const from = i % 2 === 0 ? "left" : "right";
+
             return (
               <div
                 key={i}
-                className={`tool-block ${i % 2 === 0 ? "up" : "down"} reveal`}
+                className={`tool-block ${
+                  i % 2 === 0 ? "up" : "down"
+                } reveal`}
                 data-anim={from}
-                onMouseEnter={() => setActive(i)}
-                onMouseLeave={() => setActive(null)}
               >
                 <button
                   className="tool-diamond"
-                  onFocus={() => setActive(i)}
-                  onBlur={() => setActive(null)}
                   aria-describedby={`tool-info-${i}`}
                 >
                   <img src={t.logo} alt={`${t.name} logo`} />
                 </button>
 
-                <h4 style={{marginTop:20}}>{t.name}</h4>
+                <h4 style={{margin:20}}>{t.name}</h4>
 
-                {/* Hover/focus info card */}
                 <div
                   id={`tool-info-${i}`}
                   className="tool-info"
                   role="note"
-                  aria-hidden={!isActive}
                 >
                   <p className="tool-desc">{t.desc}</p>
                   <span className="info-arrow" aria-hidden="true" />

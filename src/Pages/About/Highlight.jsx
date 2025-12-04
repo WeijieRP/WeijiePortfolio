@@ -5,7 +5,7 @@ export default function StatsSection() {
   const sectionRef = useRef(null);
   const [scrollDir, setScrollDir] = useState("down");
 
-  // Track scroll direction
+  // Detect scroll direction
   useEffect(() => {
     let lastY = window.scrollY || 0;
     const onScroll = () => {
@@ -17,7 +17,7 @@ export default function StatsSection() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Reveal on scroll (title + cards)
+  // Reveal animation observer
   useEffect(() => {
     const root = sectionRef.current;
     if (!root) return;
@@ -27,7 +27,7 @@ export default function StatsSection() {
         entries.forEach((e) => {
           const el = e.target;
           if (e.isIntersecting) {
-            el.dataset.dir = scrollDir;      // decide slide-from side
+            el.dataset.dir = scrollDir;
             el.classList.add("in-view");
           } else {
             el.classList.remove("in-view");
@@ -40,27 +40,28 @@ export default function StatsSection() {
     return () => io.disconnect();
   }, [scrollDir]);
 
+  // Content
   const items = [
     {
       icon: "/assets/Icons/icons8-projects-48.png",
       value: "10+",
       title: "Projects Completed",
       desc:
-        "Over ten shipped builds — from web systems to VR — merging clean code and thoughtful design.",
+        "I have completed over 10 projects, creating useful and easy-to-use solutions for everyone.",
     },
     {
       icon: "/assets/Icons/icons8-skills-48.png",
       value: "5+",
       title: "Core Skills I Use",
       desc:
-        "React, Node.js, MySQL, and UI/UX — combining usability with solid engineering.",
+        "React.js, Node.js, Express.js, Python, CSS, HTML, and JavaScript are my main skills.",
     },
     {
       icon: "/assets/Icons/icons8-goals-64.png",
       value: "1 Goal",
       title: "Make Things That Help People",
       desc:
-        "I build tools and experiences that solve real problems and feel great to use.",
+        "My goal is to create projects that improve people’s experiences, combining my skills and projects to always focus on the user.",
     },
   ];
 
@@ -68,7 +69,6 @@ export default function StatsSection() {
 
   return (
     <section ref={sectionRef} className="stats-section no-blur">
-      {/* Background (no filters, no overlays) */}
       <div
         className="stats-bg"
         style={{ backgroundImage: `url(${bgImage})` }}
@@ -77,12 +77,23 @@ export default function StatsSection() {
 
       <div className="stats-inner">
         <header className="stats-header" data-reveal>
-          <h2 className="stats-heading galaxy-title--soft">
-            Here Are Some Highlights
-          </h2>
-          <p className="stats-sub">
-            A glimpse of my journey — design × code × creativity coming together.
-          </p>
+          {/* Glass panel wrapper for title + subtitle (no blur) */}
+          <div
+            className="stats-header-glass"
+            role="group"
+            aria-roledescription="panel"
+          >
+            {/* 🔹 Title uses global gradient */}
+            <h2 className="stats-heading title-aurora">
+              Here Are Some Highlights
+            </h2>
+
+            {/* 🔹 Subtitle uses global section-subtitle */}
+            <p className="stats-sub section-subtitle">
+              A glimpse of my journey — design × code × creativity coming
+              together.
+            </p>
+          </div>
         </header>
 
         <div className="stats-grid">

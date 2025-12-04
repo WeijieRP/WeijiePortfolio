@@ -1,7 +1,6 @@
 // ProjectCTA.jsx
 import React, { useEffect, useRef } from "react";
-import "./projectCTA.css";
-import { Link } from "react-router-dom";
+import "./hero.css";
 
 export default function ProjectCTA({
   id = "project-cta",
@@ -16,7 +15,7 @@ export default function ProjectCTA({
 }) {
   const sectionRef = useRef(null);
 
-  // Gentle parallax on the background
+  // Background parallax
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -25,34 +24,46 @@ export default function ProjectCTA({
 
     let raf = 0;
     const tick = () => {
-      const r = el.getBoundingClientRect();
-      const vh = Math.max(1, window.innerHeight);
-      const p = 1 - Math.min(1, Math.abs(r.top / vh)); // 0..1
-      const scale = 1 + p * 0.035;
-      const ty = p * -12;
-      bg.style.transform = `translateY(${ty.toFixed(1)}px) scale(${scale.toFixed(3)})`;
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || 1;
+      const p = 1 - Math.min(1, Math.abs(rect.top / vh)); // 0..1
+
+      const scale = 1 + p * 0.03;
+      const ty = p * -8;
+
+      bg.style.transform = `translateY(${ty.toFixed(1)}px) scale(${scale.toFixed(
+        3
+      )})`;
       raf = requestAnimationFrame(tick);
     };
+
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // Reveal on intersect (title, sub, buttons)
+  // Reveal animation
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
+
     const items = el.querySelectorAll(".cta-title, .cta-sub, .cta-btn");
+
     const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => e.target.classList.toggle("visible", e.isIntersecting)),
+      (entries) => {
+        entries.forEach((e) =>
+          e.target.classList.toggle("visible", e.isIntersecting)
+        );
+      },
       { threshold: 0.18 }
     );
-    items.forEach((n) => io.observe(n));
+
+    items.forEach((node) => io.observe(node));
     return () => io.disconnect();
   }, []);
 
   return (
     <section className="cta-section" id={id} ref={sectionRef}>
+      {/* Background image */}
       <div
         className="cta-bg"
         style={{ backgroundImage: `url("${bgImage}")` }}
@@ -60,28 +71,41 @@ export default function ProjectCTA({
       />
       <div className="cta-overlay" aria-hidden="true" />
 
-      <div className="cta-content" role="region" aria-labelledby={`${id}-title`}>
-        <h2 id={`${id}-title`} className="cta-title">
-          <span>{titleTop}</span>
-          <br />
-          <span>{titleBottom}</span>
-        </h2>
+      {/* Content */}
+      <div
+        className="cta-content"
+        role="region"
+        aria-labelledby={`${id}-title`}
+      >
+        {/* Glass panel (soft) */}
+        <div className="cta-panel">
+          <h2 id={`${id}-title`} className="cta-title title-aurora">
+            <span>{titleTop}</span>
+            <br />
+            <span>{titleBottom}</span>
+          </h2>
 
-        <p className="cta-sub">{subtitle}</p>
+          <p className="cta-sub section-subtitle">{subtitle}</p>
 
-        <div className="cta-buttons">
-          <Link to={leftBtnLink} className="cta-btn primary">
-            {leftBtnText}
-          </Link>
+          <div className="cta-buttons">
+            <a
+              href={leftBtnLink}
+              className="cta-btn primary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {leftBtnText}
+            </a>
 
-          <Link
-            to={rightBtnLink}
-            className="cta-btn secondary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {rightBtnText}
-          </Link>
+            <a
+              href={rightBtnLink}
+              className="cta-btn secondary"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {rightBtnText}
+            </a>
+          </div>
         </div>
       </div>
     </section>

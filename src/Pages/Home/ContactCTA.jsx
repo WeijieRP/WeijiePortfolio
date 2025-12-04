@@ -1,5 +1,6 @@
+// ContactCTA.jsx
 import React, { useEffect, useRef } from "react";
-import "./contactHome.css";
+import "./cta.css";
 
 export default function ContactCTA({
   bgImage = "/assets/HomeBackgroundImage/fantasy-3664586.jpg",
@@ -13,14 +14,14 @@ export default function ContactCTA({
 
   useEffect(() => {
     const root = rootRef.current;
-    if (!root) return;
+    if (!root || typeof window === "undefined") return;
 
-    const reduce =
+    const reduceMotion =
       window.matchMedia &&
       window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const targets = root.querySelectorAll(".reveal");
-    if (reduce) {
+    if (reduceMotion) {
       targets.forEach((el) => el.classList.add("is-inview"));
       return;
     }
@@ -41,7 +42,7 @@ export default function ContactCTA({
 
   return (
     <section className="cta-section" ref={rootRef}>
-      {/* Background */}
+      {/* Background image */}
       <div
         className="cta-bg"
         style={{ backgroundImage: `url(${bgImage})` }}
@@ -49,16 +50,16 @@ export default function ContactCTA({
       />
       <div className="cta-overlay" aria-hidden="true" />
 
-      {/* Card */}
-      <div className="cta-card">
-        <h1 className="cta-title cta-title--galaxy reveal" data-anim="left">
-          {heading}
-        </h1>
-        <p className="cta-sub reveal" data-anim="right">
-          {sub}
-        </p>
+      {/* Single glass panel */}
+      <div className="cta-card reveal" data-anim="up">
+        {/* 🔹 Title uses global gradient (title-aurora) */}
+        <h1 className="title-aurora">{heading}</h1>
+
+        {/* 🔹 Subtitle uses global section-subtitle */}
+        <p className="section-subtitle">{sub}</p>
 
         <div className="cta-grid">
+          {/* LinkedIn */}
           <a
             className="cta-btn btn-half btn--linkedin reveal"
             data-anim="left"
@@ -66,14 +67,17 @@ export default function ContactCTA({
             target="_blank"
             rel="noreferrer"
           >
-            <img
-              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg"
-              alt="LinkedIn"
-              className="cta-ico"
-            />
-            LinkedIn
+            <span className="cta-inner">
+              <img
+                src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/linkedin.svg"
+                alt="LinkedIn"
+                className="cta-ico"
+              />
+              <span className="cta-label">LinkedIn</span>
+            </span>
           </a>
 
+          {/* GitHub */}
           <a
             className="cta-btn btn-half btn--github reveal"
             data-anim="right"
@@ -81,25 +85,30 @@ export default function ContactCTA({
             target="_blank"
             rel="noreferrer"
           >
-            <img
-              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg"
-              alt="GitHub"
-              className="cta-ico"
-            />
-            GitHub
+            <span className="cta-inner">
+              <img
+                src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/github.svg"
+                alt="GitHub"
+                className="cta-ico"
+              />
+              <span className="cta-label">GitHub</span>
+            </span>
           </a>
 
+          {/* Email */}
           <a
             className="cta-btn btn-full btn--outlook reveal"
             data-anim="up"
             href={email}
           >
-            <img
-              src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/microsoftoutlook.svg"
-              alt="Email"
-              className="cta-ico"
-            />
-            Email Me
+            <span className="cta-inner">
+              <img
+                src="https://cdn.jsdelivr.net/gh/simple-icons/simple-icons/icons/microsoftoutlook.svg"
+                alt="Email"
+                className="cta-ico"
+              />
+              <span className="cta-label">Email Me</span>
+            </span>
           </a>
         </div>
       </div>

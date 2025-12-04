@@ -1,3 +1,4 @@
+// ReflectionLearning.jsx
 import React, { useEffect, useRef } from "react";
 import "./learning.css";
 
@@ -18,7 +19,7 @@ export default function ReflectionLearning({
     "An icon set drafted with AI, then cleaned and finalised as precise vectors in Illustrator.",
     "Clear visual hierarchy driven by a simple grid and a dependable spacing system.",
     "A friendly tone expressed through rounded UI, soft gradients, and small glow accents.",
-    "A direct portfolio flow — Hero → About → Work → Contact — that’s fast to scan."
+    "A direct portfolio flow — Hero → About → Work → Contact — that’s fast to scan.",
   ];
   const winsText = wins.join(" ");
 
@@ -28,7 +29,7 @@ export default function ReflectionLearning({
     "Keeping a steady rhythm of spacing and alignment across all sections.",
     "Turning rough AI icon drafts into crisp, scalable vectors without visual noise.",
     "Balancing decoration with legibility so text stays readable at every size.",
-    "Managing time sensibly while other modules were running in parallel."
+    "Managing time sensibly while other modules were running in parallel.",
   ];
   const challengesText = challenges.join(" ");
 
@@ -37,14 +38,9 @@ export default function ReflectionLearning({
     "AI is great for starting ideas, but human judgment and vector polish finish the work.",
     "Micro-interactions should clarify what to do next, not steal attention.",
     "A strong type scale and good contrast beat heavy effects every time.",
-    "Locking direction with a moodboard early saves a lot of rework later."
+    "Locking direction with a moodboard early saves a lot of rework later.",
   ];
   const learningsText = learnings.join(" ");
-
-  const quote = {
-    text: "AI sped up exploration, but design judgment shaped the final outcome.",
-    by: "Portfolio notes"
-  };
 
   // track scroll direction
   useEffect(() => {
@@ -63,7 +59,15 @@ export default function ReflectionLearning({
     if (!root) return;
     const targets = root.querySelectorAll("[data-reveal]");
 
-    const setVars = (el, fromX, fromY, toX, toY, fromScale = 0.96, toScale = 1) => {
+    const setVars = (
+      el,
+      fromX,
+      fromY,
+      toX,
+      toY,
+      fromScale = 0.96,
+      toScale = 1
+    ) => {
       el.style.setProperty("--from-x", fromX);
       el.style.setProperty("--from-y", fromY);
       el.style.setProperty("--to-x", toX);
@@ -89,12 +93,16 @@ export default function ReflectionLearning({
 
     const leave = (el, side, dir) => {
       if (dir === "down") {
-        if (side === "left") setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
-        else if (side === "right") setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
+        if (side === "left")
+          setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
+        else if (side === "right")
+          setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
         else setVars(el, "0px", "0px", "0px", "18px", 1, 0.96);
       } else {
-        if (side === "left") setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
-        else if (side === "right") setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
+        if (side === "left")
+          setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
+        else if (side === "right")
+          setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
         else setVars(el, "0px", "0px", "0px", "18px", 1, 0.96);
       }
       el.classList.add("reveal", "is-out");
@@ -129,9 +137,17 @@ export default function ReflectionLearning({
     <section className="rl-stage" id={id} ref={rootRef}>
       <div className="rl-bg" style={{ backgroundImage: `url(${bgImage})` }} />
 
-      <header className="rl-head" data-reveal data-side="center" data-stagger>
-        <p className="rl-eyebrow">{eyebrow}</p>
-        <h2 className="rl-title">{title}</h2>
+      {/* Header: solid panel, gradient title from global .title-aurora */}
+      <header
+        className="rl-head"
+        data-reveal
+        data-side="center"
+        data-stagger
+      >
+        <div className="rl-hero-panel">
+          <p className="rl-eyebrow">{eyebrow}</p>
+          <h2 className="">{title}</h2>
+        </div>
       </header>
 
       {/* Metrics */}
@@ -154,7 +170,7 @@ export default function ReflectionLearning({
         </li>
       </ul>
 
-      {/* Two narrative cards as prose */}
+      {/* Two narrative cards */}
       <div className="rl-grid">
         <div className="rl-card" data-reveal data-side="left" data-stagger>
           <h3 className="rl-card-title">Wins</h3>
@@ -169,13 +185,17 @@ export default function ReflectionLearning({
         </div>
       </div>
 
-      {/* Key learnings as a single card (no accordion) */}
-      <div className="rl-card" data-reveal data-side="left" data-stagger style={{ marginTop: 16 }}>
+      {/* Key learnings */}
+      <div
+        className="rl-card rl-learn"
+        data-reveal
+        data-side="left"
+        data-stagger
+        style={{ marginTop: 16 }}
+      >
         <h3 className="rl-card-title">Key learnings</h3>
         <p className="rl-lead">{learningsText}</p>
       </div>
-
-   
     </section>
   );
 }

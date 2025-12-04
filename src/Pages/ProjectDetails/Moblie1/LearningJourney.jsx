@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from "react";
-import { CheckCircle2, AlertTriangle, GraduationCap, StarIcon } from "lucide-react";
+import { CheckCircle2, AlertTriangle, GraduationCap } from "lucide-react";
 import "./learning.css";
 
 export default function ReflectionLearning({
   id = "reflection-learning",
   eyebrow = "What I learned from this project",
   title = "How building the GPA Calculator App helped me grow",
+  subtitle = "A short reflection on what worked well, what was challenging, and what I learned while building this app.",
   bgImage = "/assets/PortfolioMobileProjectDetails1BackgroundImage/lara-bellens-Vto8N2P8urQ-unsplash.jpg",
 }) {
   const rootRef = useRef(null);
@@ -39,7 +40,15 @@ export default function ReflectionLearning({
     if (!root) return;
 
     const targets = root.querySelectorAll("[data-reveal]");
-    const setVars = (el, fromX, fromY, toX, toY, fromScale = 0.96, toScale = 1) => {
+    const setVars = (
+      el,
+      fromX,
+      fromY,
+      toX,
+      toY,
+      fromScale = 0.96,
+      toScale = 1
+    ) => {
       el.style.setProperty("--from-x", fromX);
       el.style.setProperty("--from-y", fromY);
       el.style.setProperty("--to-x", toX);
@@ -64,12 +73,16 @@ export default function ReflectionLearning({
 
     const leave = (el, side, dir) => {
       if (dir === "down") {
-        if (side === "left") setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
-        else if (side === "right") setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
+        if (side === "left")
+          setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
+        else if (side === "right")
+          setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
         else setVars(el, "0px", "0px", "0px", "18px", 1, 0.96);
       } else {
-        if (side === "left") setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
-        else if (side === "right") setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
+        if (side === "left")
+          setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
+        else if (side === "right")
+          setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
         else setVars(el, "0px", "0px", "0px", "18px", 1, 0.96);
       }
       el.classList.add("reveal", "is-out");
@@ -102,16 +115,28 @@ export default function ReflectionLearning({
   return (
     <section className="rl-stage" id={id} ref={rootRef}>
       {/* Background */}
-      <div className="rl-bg" style={{ backgroundImage: `url(${bgImage})` }} />
+      <div
+        className="rl-bg"
+        style={{ backgroundImage: `url(${bgImage})` }}
+        aria-hidden="true"
+      />
 
-      {/* Header */}
-      <header className="rl-head" data-reveal data-side="center" data-stagger>
-        <p className="rl-eyebrow">{eyebrow}</p>
-        <h2 className="rl-title">{title}</h2>
+      {/* Header with glass panel */}
+      <header className="rl-head">
+        <div
+          className="rl-headGlass reveal"
+          data-reveal
+          data-side="center"
+          data-stagger
+        >
+          <p className="rl-eyebrow">{eyebrow}</p>
+          <h2 className="rl-title">{title}</h2>
+          <p className="rl-subtitle">{subtitle}</p>
+        </div>
       </header>
 
       {/* Metrics */}
-      <ul className="rl-metrics" data-reveal data-side="center" data-stagger>
+      <ul className="rl-metrics reveal" data-reveal data-side="center" data-stagger>
         <li className="rl-metric">
           <span className="rl-metric-value">1</span>
           <span className="rl-metric-label">Mobile App</span>
@@ -132,25 +157,30 @@ export default function ReflectionLearning({
 
       {/* Reflection Cards */}
       <div className="rl-grid">
-        <div className="rl-card" data-reveal data-side="left" data-stagger>
+        <div className="rl-card reveal" data-reveal data-side="left" data-stagger>
           <h3 className="rl-card-title">
-            <CheckCircle2 size={18} style={{ marginRight: 8, verticalAlign: "-3px" }} />
+            <CheckCircle2 size={18} style={{ marginRight: 8 }} />
             What went well
           </h3>
           <p className="rl-copy">{winsText}</p>
         </div>
 
-        <div className="rl-card" data-reveal data-side="right" data-stagger>
+        <div className="rl-card reveal" data-reveal data-side="right" data-stagger>
           <h3 className="rl-card-title">
-            <AlertTriangle size={18} style={{ marginRight: 8, verticalAlign: "-3px" }} />
+            <AlertTriangle size={18} style={{ marginRight: 8 }} />
             What was challenging
           </h3>
           <p className="rl-copy">{challengesText}</p>
         </div>
 
-        <div className="rl-card wide" data-reveal data-side="center" data-stagger>
+        <div
+          className="rl-card wide reveal"
+          data-reveal
+          data-side="center"
+          data-stagger
+        >
           <h3 className="rl-card-title">
-            <GraduationCap size={18} style={{ marginRight: 8, verticalAlign: "-3px" }} />
+            <GraduationCap size={18} style={{ marginRight: 8 }} />
             What I learned
           </h3>
           <p className="rl-copy">{learningsText}</p>

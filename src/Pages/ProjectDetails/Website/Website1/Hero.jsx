@@ -1,27 +1,21 @@
 import React, { useEffect, useRef } from "react";
 import "./hero.css";
 
-export default function PortfolioHero(
-
-
-  {
+export default function PortfolioHero({
   id = "hero",
-  // Use a reliable, high-res default so the BG always shows
   bgImage = "/assets/PortfolioWebProjectDetail2BackgroundImage/johnny-kaufman-rVJ9P6KtX_I-unsplash.jpg",
 
-  eyebrow = "Music Tracker Web App",
-  title   = "Music Tracker Playlists",
-subtitle = "I built this app to make it easy to add songs, tag moods/genres, track listening, and manage playlists in one place.",
-  primaryBtn   = "View Live Demo",
-  primaryLink  = "https://musictracker-568127751634.asia-southeast1.run.app/",
-  secondaryBtn = "View GitHub Repo",
-  secondaryLink= "https://github.com/WebDeveloper1299",
-}
+  title = "Music Tracker Playlists",
+  subtitle = "I built this app to make it easy to add songs, tag moods/genres, track listening, and manage playlists in one place.",
 
-) {
+  primaryBtn = "View Live Demo",
+  primaryLink = "https://musictracker-568127751634.asia-southeast1.run.app/",
+  secondaryBtn = "View GitHub Repo",
+  secondaryLink = "https://github.com/WebDeveloper1299",
+}) {
   const bgRef = useRef(null);
 
-  // Parallax zoom + drift using CSS vars
+  /* -------- Parallax BG -------- */
   useEffect(() => {
     const el = bgRef.current;
     if (!el) return;
@@ -31,13 +25,15 @@ subtitle = "I built this app to make it easy to add songs, tag moods/genres, tra
 
     const onScroll = () => {
       if (raf) return;
+
       raf = requestAnimationFrame(() => {
         const y = window.scrollY || 0;
         const vh = window.innerHeight || 1;
         const p = clamp(y / (vh * 2), 0, 1);
         const eased = p * (2 - p);
-        const scale = 1.04 + eased * 0.12; // 1.04 → 1.16
-        const ty = eased * 18;             // slight vertical drift
+
+        const scale = 1.04 + eased * 0.08;
+        const ty = eased * 12;
 
         el.style.setProperty("--bg-scale", String(scale));
         el.style.setProperty("--bg-ty", `${ty}px`);
@@ -56,11 +52,13 @@ subtitle = "I built this app to make it easy to add songs, tag moods/genres, tra
     };
   }, []);
 
-  // Reveal-on-scroll for headline, sub, and CTAs
+  /* -------- Reveal Animation -------- */
   useEffect(() => {
     const section = document.getElementById(id);
-    const targets = section?.querySelectorAll("[data-reveal]");
-    if (!targets?.length) return;
+    if (!section) return;
+
+    const targets = section.querySelectorAll("[data-reveal]");
+    if (!targets.length) return;
 
     const io = new IntersectionObserver(
       (entries) =>
@@ -75,32 +73,39 @@ subtitle = "I built this app to make it easy to add songs, tag moods/genres, tra
   }, [id]);
 
   return (
-    <section className="bm-hero" id={id} aria-label="Hero – Music Tracker Web Application">
+    <section className="bm-hero" id={id}>
       <div
         className="bm-hero-bg"
         ref={bgRef}
         style={{ backgroundImage: `url(${bgImage})` }}
         aria-hidden="true"
       />
-      <div className="bm-hero-overlay" aria-hidden="true" />
 
       <div className="bm-hero-inner">
         <header className="bm-head">
-          <p className="bm-eyebrow" data-reveal>
-            <span className="float">{eyebrow}</span>
-          </p>
+          {/* Glass panel wraps title + subtitle + CTAs */}
+          <div className="bm-panel" data-reveal>
+            <h1 className="bm-title">{title}</h1>
+            <p className="bm-sub">{subtitle}</p>
 
-          <h1 className="bm-title" data-reveal>
-            <span>{title}</span>
-          </h1>
-
-          <p className="bm-sub" data-reveal>
-            <span>{subtitle}</span>
-          </p>
-
-          <div className="bm-ctas" data-reveal>
-            <a className="bm-btn" href={primaryLink}>{primaryBtn}</a>
-            <a className="bm-btn ghost" href={secondaryLink}>{secondaryBtn}</a>
+            <div className="bm-ctas">
+              <a
+                className="bm-btn"
+                href={primaryLink}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {primaryBtn}
+              </a>
+              <a
+                className="bm-btn ghost"
+                href={secondaryLink}
+                target="_blank"
+                rel="noreferrer"
+              >
+                {secondaryBtn}
+              </a>
+            </div>
           </div>
         </header>
       </div>

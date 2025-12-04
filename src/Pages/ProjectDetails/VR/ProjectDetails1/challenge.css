@@ -1,0 +1,250 @@
+/* challenge.css — AR Name Card challenge section, standardised to global styles */
+
+/* Stage just ensures text colour and spacing */
+.ch-stage {
+  color: var(--body-ink);
+}
+
+/* Viewport */
+.ch-viewport {
+  position: relative;
+  min-height: 92vh;
+  isolation: isolate;
+  overflow: clip;
+}
+
+/* Background image (behind everything) */
+.ch-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: 50% 50%;
+  transform-origin: 50% 45%;
+  filter: saturate(1.05) contrast(1.05) brightness(0.92);
+  z-index: 0;
+}
+
+/* Subtle Ken-Burns + scroll scale (image only, not text) */
+.kb-layer {
+  --kb-scale: 1.04;
+  animation: ch-kb 18s ease-in-out infinite alternate;
+  transform: translate3d(0, var(--scroll-ty, 0px), 0)
+    scale(calc(var(--scroll-scale, 1) * var(--kb-scale)));
+}
+
+@keyframes ch-kb {
+  0% {
+    --kb-scale: 1.02;
+    background-position: 48% 52%;
+  }
+  50% {
+    --kb-scale: 1.07;
+    background-position: 52% 48%;
+  }
+  100% {
+    --kb-scale: 1.09;
+    background-position: 50% 50%;
+  }
+}
+
+/* Stars layer */
+.ch-stars {
+  position: absolute;
+  inset: -20%;
+  background-image:
+    radial-gradient(2px 2px at 22% 30%, rgba(255, 255, 255, 0.9), transparent 50%),
+    radial-gradient(1.6px 1.6px at 70% 70%, rgba(255, 255, 255, 0.7), transparent 50%),
+    radial-gradient(1.5px 1.5px at 85% 25%, rgba(255, 255, 255, 0.6), transparent 50%),
+    radial-gradient(1.9px 1.9px at 35% 80%, rgba(255, 255, 255, 0.8), transparent 50%),
+    radial-gradient(1.2px 1.2px at 10% 60%, rgba(255, 255, 255, 0.6), transparent 50%);
+  opacity: 0.33;
+  transform: translate(
+      var(--stars-tx, 0px),
+      var(--stars-ty, 0px)
+    )
+    rotate(var(--stars-rot, 0deg));
+  transition: transform 16ms linear;
+  z-index: 1;
+}
+
+/* Dark tint so text stays readable */
+.ch-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.55) 0%,
+      rgba(0, 0, 0, 0.2) 35%,
+      rgba(0, 0, 0, 0.7) 100%
+    );
+}
+
+/* ===== Layout ===== */
+.ch-inner {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: clamp(20px, 4.6vw, 56px);
+  align-items: start;
+  width: min(1140px, 92%);
+  margin: 0 auto;
+  padding: clamp(44px, 7vw, 108px)
+    clamp(16px, 5vw, 6vw);
+}
+
+.ch-left {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ch-right {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== Left hero card — crisp, no blur ===== */
+.ch-hero-card {
+  border-radius: 18px;
+  padding: clamp(16px, 2.4vw, 26px);
+  background: linear-gradient(
+    180deg,
+    rgba(5, 8, 22, 0.96),
+    rgba(7, 10, 25, 0.94)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  box-shadow:
+    0 10px 26px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+/* Ensure all text and icons here stay sharp */
+.ch-hero-card,
+.ch-hero-card * {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+/* Eyebrow */
+.ch-eyebrow {
+  margin: 0 0 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--body-muted);
+  opacity: 0.9;
+  font-size: clamp(0.65rem, 1.1vw, 0.85rem);
+}
+
+/* Title layout only (colour handled by .title-aurora) */
+.ch-title {
+  margin: 0.1em 0 0.4em;
+  line-height: 0.98;
+  font-weight: 900;
+  font-size: clamp(1.9rem, 5.2vw, 3rem);
+}
+
+/* Summary paragraphs */
+.ch-summary {
+  margin: 6px 0 0;
+  color: var(--body-muted);
+  font-weight: 500;
+  font-size: clamp(0.9rem, 1.3vw, 1.05rem);
+  line-height: 1.6;
+}
+
+/* ===== Right figure (no blur) ===== */
+.ch-figure {
+  width: 100%;
+  max-width: 640px;
+  border-radius: 18px;
+  overflow: clip;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.55);
+}
+
+.ch-figure,
+.ch-figure * {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+.ch-img {
+  width: 100%;
+  height: min(56vh, 520px);
+  object-fit: cover;
+  display: block;
+}
+
+.ch-cap {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--body-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
+}
+
+/* ===== Slide in/out ===== */
+[data-reveal] {
+  opacity: 0;
+  will-change: transform, opacity;
+  transition:
+    transform 0.64s cubic-bezier(0.22, 0.61, 0.36, 1),
+    opacity 0.64s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* Desktop: left/right slide */
+[data-reveal="title"],
+[data-reveal="summary"] {
+  transform: translate3d(-32px, 0, 0);
+}
+[data-reveal="figure"] {
+  transform: translate3d(32px, 0, 0);
+}
+
+/* Visible */
+.is-shown[data-reveal] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* Stack on mobile and slide up instead */
+@media (max-width: 980px) {
+  .ch-inner {
+    grid-template-columns: 1fr;
+  }
+  [data-reveal="title"],
+  [data-reveal="summary"],
+  [data-reveal="figure"] {
+    transform: translate3d(0, 22px, 0);
+  }
+}
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce) {
+  .kb-layer {
+    animation: none !important;
+    transform: none !important;
+  }
+  .ch-stars {
+    transition: none !important;
+    transform: none !important;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

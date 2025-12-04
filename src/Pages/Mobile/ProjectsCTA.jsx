@@ -1,3 +1,4 @@
+// ProjectCTA.jsx
 import React, { useEffect, useRef } from "react";
 import "./projectCTA.css";
 
@@ -17,29 +18,53 @@ export default function ProjectCTA({
   // Parallax + zoom background
   useEffect(() => {
     const el = sectionRef.current;
-    let raf;
+    if (!el) return;
+
+    let raf = 0;
+    const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+
     const animate = () => {
       const rect = el.getBoundingClientRect();
-      const vh = window.innerHeight;
-      const p = 1 - Math.abs(rect.top / vh);
+      const vh = Math.max(1, window.innerHeight);
+
+      // how much of the section is in view (0–1)
+      const p = clamp(1 - Math.abs(rect.top / vh), 0, 1);
+
       const scale = 1 + p * 0.06; // zoom intensity
       const ty = p * -20;
-      el.style.setProperty("--bg-scale", scale);
-      el.style.setProperty("--bg-ty", `${ty}px`);
+
+      el.style.setProperty("--bg-scale", scale.toFixed(3));
+      el.style.setProperty("--bg-ty", `${ty.toFixed(1)}px`);
+
       raf = requestAnimationFrame(animate);
     };
-    animate();
+
+    raf = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(raf);
   }, []);
 
   // Reveal slide-in
   useEffect(() => {
-    const elems = sectionRef.current.querySelectorAll(".cta-title, .cta-sub, .cta-buttons a");
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const elems = el.querySelectorAll(".cta-title, .cta-sub, .cta-btn");
+    const reduce =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+    if (reduce) {
+      elems.forEach((n) => n.classList.add("visible"));
+      return;
+    }
+
     const io = new IntersectionObserver(
       (entries) =>
-        entries.forEach((e) => e.target.classList.toggle("visible", e.isIntersecting)),
+        entries.forEach((e) =>
+          e.target.classList.toggle("visible", e.isIntersecting)
+        ),
       { threshold: 0.2 }
     );
+
     elems.forEach((n) => io.observe(n));
     return () => io.disconnect();
   }, []);
@@ -55,9 +80,11 @@ export default function ProjectCTA({
 
       <div className="cta-content">
         <h2 className="cta-title">
-          <span>{titleTop}</span><br />
+          <span>{titleTop}</span>
+          <br />
           <span>{titleBottom}</span>
         </h2>
+
         <p className="cta-sub">{subtitle}</p>
 
         <div className="cta-buttons">

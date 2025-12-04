@@ -14,7 +14,7 @@ export default function DesignJourneyCarousel({
         "Explore recent UI/UX work to understand warm and human visual styles.",
         "Select 3–5 reference brands for colour, spacing, and texture inspiration.",
         "Define five brand keywords: friendly, warm, crafted, clear, confident.",
-        "Identify target users and what they want to get from the site quickly."
+        "Identify target users and what they want to get from the site quickly.",
       ],
     },
     {
@@ -25,7 +25,7 @@ export default function DesignJourneyCarousel({
         "Gather images featuring peach and cream warmth with soft lighting.",
         "Experiment with subtle paper and fabric textures for a tactile feel.",
         "Lock in the core colour palette and export swatches for design tools.",
-        "Build a one-page moodboard to unify tone, lighting, and texture direction."
+        "Build a one-page moodboard to unify tone, lighting, and texture direction.",
       ],
     },
     {
@@ -36,7 +36,7 @@ export default function DesignJourneyCarousel({
         "Sketch simple logo ideas that stay readable at small sizes.",
         "Create icons using a 24px grid with rounded strokes for a friendly look.",
         "Export crisp SVGs and preview them in the browser.",
-        "Test visual clarity at favicon and social-icon sizes (16–24px)."
+        "Test visual clarity at favicon and social-icon sizes (16–24px).",
       ],
     },
     {
@@ -47,7 +47,7 @@ export default function DesignJourneyCarousel({
         "Structure a clear flow: headline → short pitch → primary action button.",
         "Add soft glow and dotted paper textures for depth and warmth.",
         "Use simple shapes to subtly guide attention toward the CTA.",
-        "Check contrast levels to ensure readable text and accessible buttons."
+        "Check contrast levels to ensure readable text and accessible buttons.",
       ],
     },
     {
@@ -58,7 +58,7 @@ export default function DesignJourneyCarousel({
         "Arrange key sections in a logical order: hero → skills → brand message.",
         "Apply a consistent spacing and corner-radius system across components.",
         "Add gentle scroll-reveal animations for a polished feel.",
-        "Test layout responsiveness across desktop, tablet, and mobile."
+        "Test layout responsiveness across desktop, tablet, and mobile.",
       ],
     },
     {
@@ -69,7 +69,7 @@ export default function DesignJourneyCarousel({
         "Craft a concise personal introduction that feels warm and genuine.",
         "Design an education and experience timeline with clear icon markers.",
         "Use friendly, simple language instead of technical jargon.",
-        "Include a portrait or visual badge styled to match the brand."
+        "Include a portrait or visual badge styled to match the brand.",
       ],
     },
     {
@@ -80,7 +80,7 @@ export default function DesignJourneyCarousel({
         "Set up a balanced grid with consistent radiuses, shadows, and spacing.",
         "Apply light hover effects to emphasise content without distraction.",
         "Write short captions explaining what each piece represents and why it matters.",
-        "Refine thumbnails for clean cropping and cohesive colour tone."
+        "Refine thumbnails for clean cropping and cohesive colour tone.",
       ],
     },
     {
@@ -91,7 +91,7 @@ export default function DesignJourneyCarousel({
         "Use clear labels and generous spacing to keep the form effortless to scan.",
         "Add friendly focus, error, and success indicators for confidence.",
         "Style email and social icons with consistent sizing and alignment.",
-        "Maintain a welcoming tone that encourages collaboration and conversation."
+        "Maintain a welcoming tone that encourages collaboration and conversation.",
       ],
     },
     {
@@ -102,10 +102,10 @@ export default function DesignJourneyCarousel({
         "Export final design assets in clean folders (SVG/PNG/fonts).",
         "Review spacing, copy, links, and accessibility across pages.",
         "Create simple slides summarising the journey and key decisions.",
-        "Compile files, polish presentation notes, and finalise submission package."
+        "Compile files, polish presentation notes, and finalise submission package.",
       ],
     },
-  ]
+  ],
 }) {
   const [index, setIndex] = useState(0);
   const trackRef = useRef(null);
@@ -139,6 +139,7 @@ export default function DesignJourneyCarousel({
     startX.current = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
     deltaX.current = 0;
   };
+
   const onPointerMove = (e) => {
     if (!isDown.current || !trackRef.current) return;
     const x = e.clientX ?? e.touches?.[0]?.clientX ?? startX.current;
@@ -148,6 +149,7 @@ export default function DesignJourneyCarousel({
     const percentShift = (deltaX.current / trackRef.current.clientWidth) * 100;
     trackRef.current.style.transform = `translateX(calc(${base}% + ${percentShift}%))`;
   };
+
   const onPointerUp = () => {
     if (!trackRef.current) return;
     trackRef.current.style.transition = "";
@@ -159,13 +161,26 @@ export default function DesignJourneyCarousel({
   };
 
   return (
-    <section className="tf-stage" id={id} aria-label="Design journey timeline">
+    <section
+      className="tf-stage"
+      id={id}
+      aria-label="Design journey timeline"
+    >
       <div className="tf-bg" style={{ backgroundImage: `url(${bgImage})` }} />
-      {/* overlay removed */}
+      <div className="tf-overlay" aria-hidden="true" />
 
       <div className="tf-container">
-        <h2 className="tf-title">Design Journey From Concept to Launch</h2>
-        <p className="tf-sub">A week-by-week view of how the brand and site came together.</p>
+        {/* Title + subtitle panel (no blur, uses global gradient title) */}
+        <div className="tf-hero">
+          <div className="tf-hero-panel">
+            <h2 className="tf-title title-aurora">
+              Design Journey From Concept to Launch
+            </h2>
+            <p className="tf-sub">
+              A week-by-week view of how the brand and site came together.
+            </p>
+          </div>
+        </div>
 
         <div
           className="tf-viewport"
@@ -179,7 +194,12 @@ export default function DesignJourneyCarousel({
         >
           <div className="tf-track" ref={trackRef}>
             {items.map((w, i) => (
-              <article className="tf-card" key={i} role="group" aria-roledescription="slide">
+              <article
+                className="tf-card"
+                key={i}
+                role="group"
+                aria-roledescription="slide"
+              >
                 <header className="tf-head">
                   <span className="tf-week">{w.week}</span>
                   <h3 className="tf-card-title">{w.title}</h3>
@@ -187,7 +207,9 @@ export default function DesignJourneyCarousel({
 
                 <ul className="tf-badges">
                   {w.badges.map((b, j) => (
-                    <li className="tf-badge" key={j}>{b}</li>
+                    <li className="tf-badge" key={j}>
+                      {b}
+                    </li>
                   ))}
                 </ul>
 
@@ -202,7 +224,9 @@ export default function DesignJourneyCarousel({
         </div>
 
         <div className="tf-controls">
-          <button className="tf-btn" onClick={prev} aria-label="Previous slide">←</button>
+          <button className="tf-btn" onClick={prev} aria-label="Previous slide">
+            ←
+          </button>
           <div className="tf-dots" role="tablist" aria-label="Slide dots">
             {items.map((_, i) => (
               <button
@@ -215,7 +239,9 @@ export default function DesignJourneyCarousel({
               />
             ))}
           </div>
-          <button className="tf-btn" onClick={next} aria-label="Next slide">→</button>
+          <button className="tf-btn" onClick={next} aria-label="Next slide">
+            →
+          </button>
         </div>
       </div>
     </section>

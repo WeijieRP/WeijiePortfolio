@@ -1,6 +1,6 @@
 // FinalCTA.jsx
 import React, { useEffect, useRef } from "react";
-import "./projectCTA.css";
+import "./projectCTA.css";   // keep this filename as your CTA styles
 import { Link } from "react-router-dom";
 
 export default function FinalCTA({
@@ -31,6 +31,7 @@ export default function FinalCTA({
     // Reveal with stagger
     const items = root.querySelectorAll(".fcta-snap");
     items.forEach((el, i) => el.style.setProperty("--i", i.toString()));
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
@@ -40,6 +41,7 @@ export default function FinalCTA({
       },
       { rootMargin: "0px 0px -10% 0px", threshold: 0.15 }
     );
+
     items.forEach((el) => io.observe(el));
 
     return () => {
@@ -50,7 +52,12 @@ export default function FinalCTA({
   }, []);
 
   return (
-    <section ref={rootRef} className="fcta-stage" id={id} aria-label="Final call to action">
+    <section
+      ref={rootRef}
+      className="fcta-stage"
+      id={id}
+      aria-label="Final call to action"
+    >
       {/* Background */}
       <div
         className="fcta-bg"
@@ -61,8 +68,12 @@ export default function FinalCTA({
 
       {/* Content */}
       <div className="fcta-content">
-        <h2 className="fcta-heading fcta-snap">{heading}</h2>
-        <p className="fcta-tagline fcta-snap">{tagline}</p>
+        {/* Glass wrapper for heading + tagline */}
+        <div className="fcta-glass-head fcta-snap">
+          {/* h2 uses GLOBAL gradient + styles from styles.css */}
+          <h2>{heading}</h2>
+          <p className="fcta-tagline">{tagline}</p>
+        </div>
 
         <div className="fcta-actions fcta-snap">
           <Link to={contactHref} className="fcta-btn fcta-btn--primary">

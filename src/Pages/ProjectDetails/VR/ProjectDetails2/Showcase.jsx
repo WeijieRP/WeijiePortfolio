@@ -36,7 +36,15 @@ export default function EscapeRoomVRDemo({
     if (!root) return;
     const targets = root.querySelectorAll("[data-reveal]");
 
-    const setVars = (el, fromX, fromY, toX, toY, fromScale = 0.96, toScale = 1) => {
+    const setVars = (
+      el,
+      fromX,
+      fromY,
+      toX,
+      toY,
+      fromScale = 0.96,
+      toScale = 1
+    ) => {
       el.style.setProperty("--from-x", fromX);
       el.style.setProperty("--from-y", fromY);
       el.style.setProperty("--to-x", toX);
@@ -62,12 +70,16 @@ export default function EscapeRoomVRDemo({
 
     const leave = (el, side, dir) => {
       if (dir === "down") {
-        if (side === "left") setVars(el, "0", "0", "-48px", "16px", 1, 0.96);
-        else if (side === "right") setVars(el, "0", "0", "48px", "16px", 1, 0.96);
+        if (side === "left")
+          setVars(el, "0", "0", "-48px", "16px", 1, 0.96);
+        else if (side === "right")
+          setVars(el, "0", "0", "48px", "16px", 1, 0.96);
         else setVars(el, "0", "0", "0", "18px", 1, 0.96);
       } else {
-        if (side === "left") setVars(el, "0", "0", "48px", "16px", 1, 0.96);
-        else if (side === "right") setVars(el, "0", "0", "-48px", "16px", 1, 0.96);
+        if (side === "left")
+          setVars(el, "0", "0", "48px", "16px", 1, 0.96);
+        else if (side === "right")
+          setVars(el, "0", "0", "-48px", "16px", 1, 0.96);
         else setVars(el, "0", "0", "0", "18px", 1, 0.96);
       }
       el.classList.add("reveal", "is-out");
@@ -106,26 +118,53 @@ export default function EscapeRoomVRDemo({
   };
 
   return (
-    <section className="arc-section" id={id} ref={rootRef} aria-label="Escape Archive VR — Gameplay Demo">
-      <div className="arc-bg" style={{ backgroundImage: `url(${bgImage})` }} />
-      <div className="arc-overlay" />
+    <section
+      className="arc-section"
+      id={id}
+      ref={rootRef}
+      aria-label="Escape Archive VR — Gameplay Demo"
+    >
+      <div
+        className="arc-bg"
+        style={{ backgroundImage: `url(${bgImage})` }}
+        aria-hidden="true"
+      />
+      <div className="arc-overlay" aria-hidden="true" />
 
-      <header className="arc-head" data-reveal data-side="center">
-        <h2 className="arc-title">{title}</h2>
-        <p className="arc-sub">
-          Solve emotion-themed rooms, unlock the path, and step into the Exit — sky, wind, and freedom.
-        </p>
+      {/* 🔶 Glass panel wraps title + subtitle */}
+      <header className="arc-head">
+        <div
+          className="arc-headGlass"
+          data-reveal
+          data-side="center"
+          data-stagger
+        >
+          {/* h2 gets aurora gradient from your global rules */}
+          <h2 className="arc-title">{title}</h2>
+          <p className="arc-sub">
+            Solve emotion-themed rooms, unlock the path, and step into the Exit —
+            sky, wind, and freedom.
+          </p>
+        </div>
       </header>
 
       {/* Screenshots (click to zoom) */}
       <div className="arc-cards" data-reveal data-side="left" data-stagger>
         <figure className="arc-card" onClick={() => setShowImg(shotA)}>
-          <img src={shotA} className="arc-img" alt="Curiosity Room — first clues" />
+          <img
+            src={shotA}
+            className="arc-img"
+            alt="Curiosity Room — first clues"
+          />
           <figcaption>Curiosity — follow the light and symbols</figcaption>
         </figure>
 
         <figure className="arc-card" onClick={() => setShowImg(shotB)}>
-          <img src={shotB} className="arc-img" alt="Acceptance Room — final reveal" />
+          <img
+            src={shotB}
+            className="arc-img"
+            alt="Acceptance Room — final reveal"
+          />
           <figcaption>Acceptance — align paths, unlock truth</figcaption>
         </figure>
       </div>
@@ -151,7 +190,12 @@ export default function EscapeRoomVRDemo({
                 />
               </div>
             ) : (
-              <video className="arc-video" controls playsInline preload="metadata">
+              <video
+                className="arc-video"
+                controls
+                playsInline
+                preload="metadata"
+              >
                 <source src={mp4Src} type="video/mp4" />
               </video>
             )}
@@ -162,34 +206,88 @@ export default function EscapeRoomVRDemo({
 
       {/* Actions → open modals */}
       <div className="arc-actions" data-reveal data-side="right" data-stagger>
-        <button className="arc-btn primary" onClick={() => setShowHints(true)}>Puzzle Hints</button>
-        <button className="arc-btn outline" onClick={() => setShowSteps(true)}>Build Steps</button>
+        <button
+          className="arc-btn primary"
+          onClick={() => setShowHints(true)}
+        >
+          Puzzle Hints
+        </button>
+        <button
+          className="arc-btn outline"
+          onClick={() => setShowSteps(true)}
+        >
+          Build Steps
+        </button>
       </div>
 
       {/* Image Zoom Modal */}
       {showImg && (
-        <div className="arc-modal" onClick={closeOnBackdrop(setShowImg)} role="dialog" aria-modal="true">
+        <div
+          className="arc-modal"
+          onClick={closeOnBackdrop(setShowImg)}
+          role="dialog"
+          aria-modal="true"
+        >
           <div className="arc-modal-card">
-            <button className="arc-x" onClick={() => setShowImg(null)} aria-label="Close">×</button>
-            <img src={showImg} className="arc-modal-img" alt="Screenshot preview" />
+            <button
+              className="arc-x"
+              onClick={() => setShowImg(null)}
+              aria-label="Close"
+            >
+              ×
+            </button>
+            <img
+              src={showImg}
+              className="arc-modal-img"
+              alt="Screenshot preview"
+            />
           </div>
         </div>
       )}
 
       {/* Puzzle Hints Modal */}
       {showHints && (
-        <div className="arc-modal" onClick={closeOnBackdrop(setShowHints)} role="dialog" aria-modal="true">
-          <div className="arc-modal-card arc-modal-scroll" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="arc-modal"
+          onClick={closeOnBackdrop(setShowHints)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="arc-modal-card arc-modal-scroll"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="arc-modal-head">
               <h3>Escape Archive VR — Puzzle Hints</h3>
-              <button className="arc-x" onClick={() => setShowHints(false)} aria-label="Close">×</button>
+              <button
+                className="arc-x"
+                onClick={() => setShowHints(false)}
+                aria-label="Close"
+              >
+                ×
+              </button>
             </div>
             <ul className="arc-list">
-              <li><strong>Curiosity:</strong> Observe patterns first, then interact — the order matters.</li>
-              <li><strong>Doubt:</strong> Conflicting clues? Cross-reference symbols; one is a red herring.</li>
-              <li><strong>Fear:</strong> Audio and lights react to progress — listen for the “right” tone.</li>
-              <li><strong>Acceptance:</strong> Align objects so their shadows form a single motif.</li>
-              <li><strong>Exit:</strong> When leaves rise, the final path is already open — look up.</li>
+              <li>
+                <strong>Curiosity:</strong> Observe patterns first, then
+                interact — the order matters.
+              </li>
+              <li>
+                <strong>Doubt:</strong> Conflicting clues? Cross-reference
+                symbols; one is a red herring.
+              </li>
+              <li>
+                <strong>Fear:</strong> Audio and lights react to progress —
+                listen for the “right” tone.
+              </li>
+              <li>
+                <strong>Acceptance:</strong> Align objects so their shadows form
+                a single motif.
+              </li>
+              <li>
+                <strong>Exit:</strong> When leaves rise, the final path is
+                already open — look up.
+              </li>
             </ul>
           </div>
         </div>
@@ -197,19 +295,51 @@ export default function EscapeRoomVRDemo({
 
       {/* Build Steps Modal */}
       {showSteps && (
-        <div className="arc-modal" onClick={closeOnBackdrop(setShowSteps)} role="dialog" aria-modal="true">
-          <div className="arc-modal-card arc-modal-scroll" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="arc-modal"
+          onClick={closeOnBackdrop(setShowSteps)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="arc-modal-card arc-modal-scroll"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="arc-modal-head">
               <h3>Unity Build Steps (Escape Archive VR)</h3>
-              <button className="arc-x" onClick={() => setShowSteps(false)} aria-label="Close">×</button>
+              <button
+                className="arc-x"
+                onClick={() => setShowSteps(false)}
+                aria-label="Close"
+              >
+                ×
+              </button>
             </div>
             <ol className="arc-steps">
-              <li>Create Unity project (URP recommended). Set target platform and XR plugins.</li>
-              <li>Set up XR Rig/Origin, controllers, and interaction toolkit for grab/use.</li>
-              <li>Block out rooms (Curiosity/Doubt/Fear/Acceptance/Exit) with light probes & baked GI.</li>
-              <li>Add puzzle scripts (C#), triggers, and simple state machines per room.</li>
-              <li>Optimise: combine meshes, LODs, lightmaps, mobile-friendly shaders, occlusion culling.</li>
-              <li>Build & test on device. Profile frame time; reduce draw calls and overdraw where needed.</li>
+              <li>
+                Create Unity project (URP recommended). Set target platform and
+                XR plugins.
+              </li>
+              <li>
+                Set up XR Rig/Origin, controllers, and interaction toolkit for
+                grab/use.
+              </li>
+              <li>
+                Block out rooms (Curiosity/Doubt/Fear/Acceptance/Exit) with
+                light probes & baked GI.
+              </li>
+              <li>
+                Add puzzle scripts (C#), triggers, and simple state machines per
+                room.
+              </li>
+              <li>
+                Optimise: combine meshes, LODs, lightmaps, mobile-friendly
+                shaders, occlusion culling.
+              </li>
+              <li>
+                Build & test on device. Profile frame time; reduce draw calls
+                and overdraw where needed.
+              </li>
             </ol>
           </div>
         </div>

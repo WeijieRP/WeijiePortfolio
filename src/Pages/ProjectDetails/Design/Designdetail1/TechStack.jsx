@@ -1,10 +1,11 @@
-// TechStackSection.jsx  (style/animation unchanged; content replaced with DesignTechStack items)
+// TechStackSection.jsx
 import React, { useEffect, useRef, useState } from "react";
 import "./techstack.css";
 
 export default function TechStackSection({
   id = "techstack",
-  bgImage = "/assets/PortfolioDesignProjectDetail1BackgroundImage/matthew-stephenson-HHhDlTqwPfk-unsplash.jpg",          // design bg by default
+  // design bg by default
+  bgImage = "/assets/PortfolioDesignProjectDetail1BackgroundImage/matthew-stephenson-HHhDlTqwPfk-unsplash.jpg",
   fallbackImage = "/assets/PortfolioDesignProjectDetail1BackgroundImage/matthew-stephenson-HHhDlTqwPfk-unsplash.jpg",
 }) {
   const vpRef = useRef(null);
@@ -25,29 +26,29 @@ export default function TechStackSection({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Background parallax (background only)
+  // Background parallax (background only, NO scale → keep crisp)
   useEffect(() => {
     let raf = 0;
     const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+
     const tick = () => {
       const r = vpRef.current?.getBoundingClientRect();
       if (r && vpRef.current) {
         const vh = innerHeight || 1;
-        const enter = vh, leave = -r.height;
+        const enter = vh;
+        const leave = -r.height;
         const p = clamp((enter - r.top) / (enter - leave), 0, 1);
-        const d = Math.abs(p - 0.5) / 0.5;
-        const scale = 1 + (1 - d) * 0.02;  // 1 → 1.02 (keeps crisp)
-        const ty = (p - 0.5) * 30;         // -15 → +15
-        vpRef.current.style.setProperty("--bg-scale", scale.toFixed(3));
+        const ty = (p - 0.5) * 30; // -15 → +15
         vpRef.current.style.setProperty("--bg-ty", `${ty.toFixed(1)}px`);
       }
       raf = requestAnimationFrame(tick);
     };
+
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // IO reveal + settle (drop transforms after enter)
+  // IO reveal + settle
   useEffect(() => {
     const root = vpRef.current;
     if (!root) return;
@@ -78,11 +79,11 @@ export default function TechStackSection({
     const enter = (el, side, dir) => {
       el.classList.remove("settled");
       if (dir === "down") {
-        if (side === "left")  setVars(el, "-48px", "12px", "0px", "0px");
+        if (side === "left") setVars(el, "-48px", "12px", "0px", "0px");
         else if (side === "right") setVars(el, "48px", "12px", "0px", "0px");
         else setVars(el, "0px", "18px", "0px", "0px");
       } else {
-        if (side === "left")  setVars(el, "48px", "12px", "0px", "0px");
+        if (side === "left") setVars(el, "48px", "12px", "0px", "0px");
         else if (side === "right") setVars(el, "-48px", "12px", "0px", "0px");
         else setVars(el, "0px", "18px", "0px", "0px");
       }
@@ -94,11 +95,11 @@ export default function TechStackSection({
     const leave = (el, side, dir) => {
       el.classList.remove("settled");
       if (dir === "down") {
-        if (side === "left")  setVars(el, "0px", "0px", "-44px", "16px");
+        if (side === "left") setVars(el, "0px", "0px", "-44px", "16px");
         else if (side === "right") setVars(el, "0px", "0px", "44px", "16px");
         else setVars(el, "0px", "0px", "0px", "18px");
       } else {
-        if (side === "left")  setVars(el, "0px", "0px", "44px", "16px");
+        if (side === "left") setVars(el, "0px", "0px", "44px", "16px");
         else if (side === "right") setVars(el, "0px", "0px", "-44px", "16px");
         else setVars(el, "0px", "0px", "0px", "18px");
       }
@@ -135,33 +136,57 @@ export default function TechStackSection({
     };
   }, []);
 
-  // ====== DESIGN CONTENT (replaces your old stacks) ======
   const items = [
-    { name: "Pinterest",   icon: "/assets/Icons/Pinterest.png",
+    {
+      name: "Pinterest",
+      icon: "/assets/Icons/Pinterest.png",
       use: "I start with moodboards. Pin ideas, spot patterns, then decide the look and feel before I design.",
-      badge: "Inspiration" },
-    { name: "Dribbble",    icon: "/assets/Icons/icons8-dribble-96.png",
+      badge: "Inspiration",
+    },
+    {
+      name: "Dribbble",
+      icon: "/assets/Icons/icons8-dribble-96.png",
       use: "I study clean layouts, spacing, and small interactions to keep my UI crisp and lively.",
-      badge: "Inspiration" },
-    { name: "Photoshop",   icon: "/assets/Icons/Adobe-Photoshop.png",
+      badge: "Inspiration",
+    },
+    {
+      name: "Photoshop",
+      icon: "/assets/Icons/Adobe-Photoshop.png",
       use: "I polish assets — lighting, texture, clean-ups, plus fast variations with Generative Fill.",
-      badge: "Asset Making" },
-    { name: "Illustrator", icon: "/assets/Icons/Adobe_Illustrator.png",
+      badge: "Asset Making",
+    },
+    {
+      name: "Illustrator",
+      icon: "/assets/Icons/Adobe_Illustrator.png",
       use: "Logos and icons. Vectors stay sharp at any size, so the brand looks consistent everywhere.",
-      badge: "Vector Work" },
-    { name: "ChatGPT",     icon: "/assets/Icons/icons8-chatgpt-480.png",
+      badge: "Vector Work",
+    },
+    {
+      name: "ChatGPT",
+      icon: "/assets/Icons/icons8-chatgpt-480.png",
       use: "Brainstorms, UX microcopy, alt text, and naming. Helps me move faster without losing quality.",
-      badge: "AI Assist" },
-    { name: "Brand Palette", icon: "/assets/Icons/icons8-colors-58.png",
+      badge: "AI Assist",
+    },
+    {
+      name: "Brand Palette",
+      icon: "/assets/Icons/icons8-colors-58.png",
       use: "Warm glow oranges on deep blues — high contrast, readable, and memorable.",
-      badge: "Brand System" },
-    { name: "Typography",  icon: "/assets/Icons/icons8-typography-96.png",
+      badge: "Brand System",
+    },
+    {
+      name: "Typography",
+      icon: "/assets/Icons/icons8-typography-96.png",
       use: "Poppins for bold headings, Inter for body copy — clear hierarchy and smooth reading.",
-      badge: "Brand System" },
+      badge: "Brand System",
+    },
   ];
 
   return (
-    <section className="section-bg tech-section" id={id} aria-label="Design Tools & Creative Workflow">
+    <section
+      className="section-bg tech-section"
+      id={id}
+      aria-label="Design Tools & Creative Workflow"
+    >
       <div className="tech-viewport" ref={vpRef}>
         {/* Background */}
         <div className="bg-wrap" aria-hidden="true">
@@ -177,12 +202,21 @@ export default function TechStackSection({
 
         {/* Content */}
         <div className="tech-content">
-          <h2 className="tech-title" data-reveal data-side="center" data-stagger>
-            Tools I used to build my visual style
-          </h2>
-          <p className="tech-sub" data-reveal data-side="center" data-stagger>
-            Design tools, inspiration sources, and brand system pieces I rely on.
-          </p>
+          {/* Glass panel: title + description */}
+          <div
+            className="tech-glass"
+            data-reveal
+            data-side="center"
+            data-stagger
+          >
+            <h2 className="tech-title title-aurora">
+              Tools I used to build my visual style
+            </h2>
+            <p className="tech-sub">
+              Design tools, inspiration sources, and brand system pieces I rely
+              on.
+            </p>
+          </div>
 
           <div className="tech-grid" role="list">
             {items.map((t, i) => (

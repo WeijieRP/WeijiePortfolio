@@ -1,66 +1,69 @@
+// TimeframeCarousel.jsx
 import React, { useRef, useEffect, useState } from "react";
 import "./journey.css";
+
+const defaultItems = [
+  {
+    week: "Week 8",
+    title: "Set Up Repo & Schema",
+    badges: ["Repo", "EJS Layout", ".env", "ERD"],
+    tasks: [
+      "Create Git repo; protect main; branch workflow.",
+      "Bootstrap Express + EJS layout + partials.",
+      "Configure .env (DB creds, session secret).",
+      "Draft ERD: users, ccas, sessions, attendance, roles.",
+    ],
+  },
+  {
+    week: "Week 9",
+    title: "Build CRUD for CCAs & Sessions",
+    badges: ["Create", "Read", "Update", "Delete"],
+    tasks: [
+      "Write models/controllers for CCAs & sessions.",
+      "Ship EJS list/detail + create/edit forms.",
+      "Add server-side validation + flash states.",
+      "Test happy/error paths for CRUD routes.",
+    ],
+  },
+  {
+    week: "Week 10",
+    title: "Implement Auth & RBAC",
+    badges: ["bcrypt", "Sessions", "Role Guard"],
+    tasks: [
+      "Add register/login/logout with bcrypt + sessions.",
+      "Guard routes; enforce Student/Teacher/Admin roles.",
+      "Allow Teacher create/edit; Admin manage roles/users.",
+      "Handle expiry + unauthorized redirects.",
+    ],
+  },
+  {
+    week: "Week 11",
+    title: "Add Attendance & SQL Search",
+    badges: ["SQL WHERE", "Filters", "Attendance"],
+    tasks: [
+      "Search CCAs by name/type/teacher (SQL WHERE).",
+      "Add filters (day/level/status) with safe params.",
+      "Enable attendance mark/undo for sessions.",
+      "Cover edge cases: empty query, no results, paging.",
+    ],
+  },
+  {
+    week: "Week 12",
+    title: "Deploy & Demo",
+    badges: ["Render", "Online MySQL", "Slides"],
+    tasks: [
+      "Deploy app + DB; smoke-test all routes.",
+      "Seed Admin/Teacher/Student test accounts.",
+      "Polish Bootstrap tables/forms + messages.",
+      "Finalize README, slides, and demo script.",
+    ],
+  },
+];
 
 export default function TimeframeCarousel({
   id = "development-timeframe",
   bgImage = "/assets/PortfolioWebProjectDetail2BackgroundImage/nasa-hubble-space-telescope-ejrqpRYvjdM-unsplash.jpg",
-  items = [
-    {
-      week: "Week 8",
-      title: "Set Up Repo & Schema",
-      badges: ["Repo", "EJS Layout", ".env", "ERD"],
-      tasks: [
-        "Create Git repo; protect main; branch workflow.",
-        "Bootstrap Express + EJS layout + partials.",
-        "Configure .env (DB creds, session secret).",
-        "Draft ERD: users, ccas, sessions, attendance, roles.",
-      ],
-    },
-    {
-      week: "Week 9",
-      title: "Build CRUD for CCAs & Sessions",
-      badges: ["Create", "Read", "Update", "Delete"],
-      tasks: [
-        "Write models/controllers for CCAs & sessions.",
-        "Ship EJS list/detail + create/edit forms.",
-        "Add server-side validation + flash states.",
-        "Test happy/error paths for CRUD routes.",
-      ],
-    },
-    {
-      week: "Week 10",
-      title: "Implement Auth & RBAC",
-      badges: ["bcrypt", "Sessions", "Role Guard"],
-      tasks: [
-        "Add register/login/logout with bcrypt + sessions.",
-        "Guard routes; enforce Student/Teacher/Admin roles.",
-        "Allow Teacher create/edit; Admin manage roles/users.",
-        "Handle expiry + unauthorized redirects.",
-      ],
-    },
-    {
-      week: "Week 11",
-      title: "Add Attendance & SQL Search",
-      badges: ["SQL WHERE", "Filters", "Attendance"],
-      tasks: [
-        "Search CCAs by name/type/teacher (SQL WHERE).",
-        "Add filters (day/level/status) with safe params.",
-        "Enable attendance mark/undo for sessions.",
-        "Cover edge cases: empty query, no results, paging.",
-      ],
-    },
-    {
-      week: "Week 12",
-      title: "Deploy & Demo",
-      badges: ["Render", "Online MySQL", "Slides"],
-      tasks: [
-        "Deploy app + DB; smoke-test all routes.",
-        "Seed Admin/Teacher/Student test accounts.",
-        "Polish Bootstrap tables/forms + messages.",
-        "Finalize README, slides, and demo script.",
-      ],
-    },
-  ],
+  items = defaultItems,
 }) {
   const [index, setIndex] = useState(0);
   const trackRef = useRef(null);
@@ -100,15 +103,18 @@ export default function TimeframeCarousel({
     startX.current = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
     deltaX.current = 0;
   };
+
   const onPointerMove = (e) => {
     if (!isDown.current || !trackRef.current) return;
     const x = e.clientX ?? e.touches?.[0]?.clientX ?? startX.current;
     deltaX.current = x - startX.current;
     trackRef.current.style.transition = "none";
     const base = -index * 100;
-    const percentShift = (deltaX.current / trackRef.current.clientWidth) * 100;
+    const percentShift =
+      (deltaX.current / trackRef.current.clientWidth) * 100;
     trackRef.current.style.transform = `translateX(calc(${base}% + ${percentShift}%))`;
   };
+
   const onPointerUp = () => {
     if (!trackRef.current) return;
     trackRef.current.style.transition = "";
@@ -125,7 +131,9 @@ export default function TimeframeCarousel({
       const y = window.scrollY || 0;
       dirRef.current = y > lastY.current ? "down" : "up";
       lastY.current = y;
-      if (stageRef.current) stageRef.current.setAttribute("data-flow", dirRef.current);
+      if (stageRef.current) {
+        stageRef.current.setAttribute("data-flow", dirRef.current);
+      }
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -146,15 +154,32 @@ export default function TimeframeCarousel({
           const side = el.getAttribute("data-side") || "center";
 
           if (dir === "down") {
-            el.style.setProperty("--enter-x", side === "left" ? "-36px" : side === "right" ? "36px" : "24px");
-            el.style.setProperty("--exit-x",  side === "left" ? "36px"  : side === "right" ? "-36px" : "-24px");
+            el.style.setProperty(
+              "--enter-x",
+              side === "left" ? "-36px" : side === "right" ? "36px" : "24px"
+            );
+            el.style.setProperty(
+              "--exit-x",
+              side === "left" ? "36px" : side === "right" ? "-36px" : "-24px"
+            );
           } else {
-            el.style.setProperty("--enter-x", side === "left" ? "36px"  : side === "right" ? "-36px" : "-24px");
-            el.style.setProperty("--exit-x",  side === "left" ? "-36px" : side === "right" ? "36px"  : "24px");
+            el.style.setProperty(
+              "--enter-x",
+              side === "left" ? "36px" : side === "right" ? "-36px" : "-24px"
+            );
+            el.style.setProperty(
+              "--exit-x",
+              side === "left" ? "-36px" : side === "right" ? "36px" : "24px"
+            );
           }
 
-          if (e.isIntersecting) { el.classList.add("is-in");  el.classList.remove("is-out"); }
-          else                   { el.classList.add("is-out"); el.classList.remove("is-in");  }
+          if (e.isIntersecting) {
+            el.classList.add("is-in");
+            el.classList.remove("is-out");
+          } else {
+            el.classList.add("is-out");
+            el.classList.remove("is-in");
+          }
         });
       },
       { threshold: 0.16, rootMargin: "0px 0px -8% 0px" }
@@ -177,15 +202,14 @@ export default function TimeframeCarousel({
       data-flow="down"
     >
       <div className="tf-bg" style={{ backgroundImage: `url(${bgImage})` }} />
-      {/* overlay removed to keep background fully visible */}
 
       <div className="tf-container">
-        <h2 className="tf-title" data-reveal data-side="left">
-          CCA Tracker — Development Timeline
-        </h2>
-        <p className="tf-sub" data-reveal data-side="left">
-          From kickoff to deployment and demo
-        </p>
+        {/* GLASS PANEL (title + subtitle) */}
+        <div className="tf-glass-head" data-reveal data-side="left">
+          {/* h2 uses GLOBAL gradient heading styles */}
+          <h2>CCA Tracker — Development Timeline</h2>
+          <p className="tf-sub">From kickoff to deployment and demo</p>
+        </div>
 
         <div
           className="tf-viewport"
@@ -201,7 +225,12 @@ export default function TimeframeCarousel({
         >
           <div className="tf-track" ref={trackRef}>
             {items.map((w, i) => (
-              <article className="tf-card" key={i} role="group" aria-roledescription="slide">
+              <article
+                className="tf-card"
+                key={i}
+                role="group"
+                aria-roledescription="slide"
+              >
                 <header className="tf-head">
                   <span className="tf-week">{w.week}</span>
                   <h3 className="tf-card-title">{w.title}</h3>
@@ -209,7 +238,9 @@ export default function TimeframeCarousel({
 
                 <ul className="tf-badges">
                   {w.badges.map((b, j) => (
-                    <li className="tf-badge" key={j}>{b}</li>
+                    <li className="tf-badge" key={j}>
+                      {b}
+                    </li>
                   ))}
                 </ul>
 
@@ -224,7 +255,13 @@ export default function TimeframeCarousel({
         </div>
 
         <div className="tf-controls" data-reveal data-side="center">
-          <button className="tf-btn" onClick={prev} aria-label="Previous slide">←</button>
+          <button
+            className="tf-btn"
+            onClick={prev}
+            aria-label="Previous slide"
+          >
+            ←
+          </button>
           <div className="tf-dots" role="tablist" aria-label="Slide dots">
             {items.map((_, i) => (
               <button
@@ -237,7 +274,9 @@ export default function TimeframeCarousel({
               />
             ))}
           </div>
-          <button className="tf-btn" onClick={next} aria-label="Next slide">→</button>
+          <button className="tf-btn" onClick={next} aria-label="Next slide">
+            →
+          </button>
         </div>
       </div>
     </section>

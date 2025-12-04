@@ -1,18 +1,18 @@
-// TechStackSection.jsx  (style/animation unchanged; content replaced with your DesignTechStack items)
+// TechStackSection.jsx
 import React, { useEffect, useRef, useState } from "react";
 import "./techstack.css";
 
 export default function TechStackSection({
   id = "techstack",
-  bgImage = "/assets/PortfolioDesignProjectDetails2BackgroundImage/ally-griffin-jni920AGX7w-unsplash.jpg",          // design bg by default
+  bgImage = "/assets/PortfolioDesignProjectDetails2BackgroundImage/ally-griffin-jni920AGX7w-unsplash.jpg",
   fallbackImage = "/assets/PortfolioDesignProjectDetails2BackgroundImage/ally-griffin-jni920AGX7w-unsplash.jpg",
 }) {
   const vpRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(bgImage);
 
-  // Track scroll direction
+  // Track scroll direction for cards
   const lastY = useRef(typeof window !== "undefined" ? window.scrollY : 0);
-  const dirRef = useRef("down"); // "down" | "up"
+  const dirRef = useRef("down");
 
   useEffect(() => {
     const onScroll = () => {
@@ -29,25 +29,29 @@ export default function TechStackSection({
   useEffect(() => {
     let raf = 0;
     const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+
     const tick = () => {
-      const r = vpRef.current?.getBoundingClientRect();
-      if (r && vpRef.current) {
+      const node = vpRef.current;
+      const r = node?.getBoundingClientRect();
+      if (r && node) {
         const vh = innerHeight || 1;
-        const enter = vh, leave = -r.height;
+        const enter = vh;
+        const leave = -r.height;
         const p = clamp((enter - r.top) / (enter - leave), 0, 1);
         const d = Math.abs(p - 0.5) / 0.5;
-        const scale = 1 + (1 - d) * 0.02;  // 1 → 1.02 (keeps crisp)
-        const ty = (p - 0.5) * 30;         // -15 → +15
-        vpRef.current.style.setProperty("--bg-scale", scale.toFixed(3));
-        vpRef.current.style.setProperty("--bg-ty", `${ty.toFixed(1)}px`);
+        const scale = 1 + (1 - d) * 0.02; // 1 → 1.02
+        const ty = (p - 0.5) * 30;        // -15 → +15
+        node.style.setProperty("--bg-scale", scale.toFixed(3));
+        node.style.setProperty("--bg-ty", `${ty.toFixed(1)}px`);
       }
       raf = requestAnimationFrame(tick);
     };
+
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // IO reveal + settle (drop transforms after enter)
+  // IO reveal + settle (CARDS ONLY)
   useEffect(() => {
     const root = vpRef.current;
     if (!root) return;
@@ -57,7 +61,7 @@ export default function TechStackSection({
       el.style.setProperty("--from-y", fromY);
       el.style.setProperty("--to-x", toX);
       el.style.setProperty("--to-y", toY);
-      el.style.willChange = "transform";
+      el.style.willChange = "transform, opacity";
     };
 
     const settle = (el) => {
@@ -78,11 +82,11 @@ export default function TechStackSection({
     const enter = (el, side, dir) => {
       el.classList.remove("settled");
       if (dir === "down") {
-        if (side === "left")  setVars(el, "-48px", "12px", "0px", "0px");
+        if (side === "left") setVars(el, "-48px", "12px", "0px", "0px");
         else if (side === "right") setVars(el, "48px", "12px", "0px", "0px");
         else setVars(el, "0px", "18px", "0px", "0px");
       } else {
-        if (side === "left")  setVars(el, "48px", "12px", "0px", "0px");
+        if (side === "left") setVars(el, "48px", "12px", "0px", "0px");
         else if (side === "right") setVars(el, "-48px", "12px", "0px", "0px");
         else setVars(el, "0px", "18px", "0px", "0px");
       }
@@ -94,11 +98,11 @@ export default function TechStackSection({
     const leave = (el, side, dir) => {
       el.classList.remove("settled");
       if (dir === "down") {
-        if (side === "left")  setVars(el, "0px", "0px", "-44px", "16px");
+        if (side === "left") setVars(el, "0px", "0px", "-44px", "16px");
         else if (side === "right") setVars(el, "0px", "0px", "44px", "16px");
         else setVars(el, "0px", "0px", "0px", "18px");
       } else {
-        if (side === "left")  setVars(el, "0px", "0px", "44px", "16px");
+        if (side === "left") setVars(el, "0px", "0px", "44px", "16px");
         else if (side === "right") setVars(el, "0px", "0px", "-44px", "16px");
         else setVars(el, "0px", "0px", "0px", "18px");
       }
@@ -107,7 +111,8 @@ export default function TechStackSection({
       void el.offsetWidth;
     };
 
-    const targets = root.querySelectorAll("[data-reveal]");
+    // ✅ only cards are animated, NOT the header panel
+    const targets = root.querySelectorAll(".tech-card[data-reveal]");
     const io = new IntersectionObserver(
       (entries) => {
         const dir = dirRef.current;
@@ -122,9 +127,7 @@ export default function TechStackSection({
     );
 
     targets.forEach((el, i) => {
-      if (el.hasAttribute("data-stagger")) {
-        el.style.transitionDelay = `${120 + (i % 8) * 60}ms`;
-      }
+      el.style.transitionDelay = `${120 + (i % 8) * 60}ms`;
       el.addEventListener("transitionend", onEnd);
       io.observe(el);
     });
@@ -135,7 +138,6 @@ export default function TechStackSection({
     };
   }, []);
 
-  // ====== YOUR DESIGN CONTENT ======
   const items = [
     {
       name: "Pinterest",
@@ -188,12 +190,16 @@ export default function TechStackSection({
 
         {/* Content */}
         <div className="tech-content">
-          <h2 className="tech-title" data-reveal data-side="center" data-stagger>
-            Tools I used to build my visual style
-          </h2>
-          <p className="tech-sub" data-reveal data-side="center" data-stagger>
-            Design tools, inspiration sources, and brand system pieces I rely on.
-          </p>
+          {/* ✅ NO animation here, super crisp panel + title */}
+          <div className="tech-hero-glass">
+            <h2 className="tech-title title-aurora">
+              Tools I used to build my visual style
+            </h2>
+            <p className="tech-sub">
+              Design tools, inspiration sources, and brand system pieces I rely
+              on.
+            </p>
+          </div>
 
           <div className="tech-grid" role="list">
             {items.map((t, i) => (
@@ -202,7 +208,6 @@ export default function TechStackSection({
                 role="listitem"
                 key={t.name + i}
                 data-reveal
-                data-stagger
                 data-side={i % 2 === 0 ? "left" : "right"}
               >
                 <div className="tech-card-head">

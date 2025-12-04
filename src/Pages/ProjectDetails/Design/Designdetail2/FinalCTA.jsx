@@ -73,8 +73,11 @@ export default function FinalCTA({
 
       {/* Content */}
       <div className="fcta-content">
-        <h2 className="fcta-heading fcta-snap">{heading}</h2>
-        <p className="fcta-tagline fcta-snap">{tagline}</p>
+        {/* ✅ Glass panel ONLY around title + description */}
+        <div className="fcta-glass fcta-snap">
+          <h2 className="fcta-heading">{heading}</h2>
+          <p className="fcta-tagline">{tagline}</p>
+        </div>
 
         <div className="fcta-actions fcta-snap">
           <Link to={contactHref} className="fcta-btn fcta-btn--primary">

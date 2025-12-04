@@ -1,0 +1,239 @@
+/* projectcta.css */
+/* Project CTA – uses global styles.css tokens, scoped with .proj- */
+
+/* =============== SECTION WRAPPER =============== */
+.proj-cta-section {
+  position: relative;
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+
+  background: var(--body-bg, #050816);
+  color: var(--body-ink, #fbd2a0);
+  isolation: isolate;
+  padding: 72px 16px;
+
+  /* local tokens (scoped to this section via custom props) */
+  --proj-cta-bg: url("https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=2400&q=90");
+  --proj-cta-gradA: #a6b9ff;
+  --proj-cta-gradB: #4dd1ff;
+  --proj-cta-muted: var(--body-muted, #f6c28f);
+}
+
+/* ===== BACKGROUND IMAGE (PARALLAX) ===== */
+.proj-cta-bg,
+.proj-cta-bg-img {
+  position: absolute;
+  inset: 0;
+  background-image: var(--proj-cta-bg);
+  background-size: cover;
+  background-position: center;
+  transform: scale(var(--proj-bg-scale, 1))
+    translateY(var(--proj-bg-ty, 0));
+  z-index: 0;
+  /* slightly dim so glass & content pop, but not too dark */
+  filter: brightness(0.75) saturate(1.05);
+}
+
+.proj-cta-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Soft overlay (NO blur so text stays sharp) */
+.proj-cta-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      120% 140% at 10% 0%,
+      rgba(255, 255, 255, 0.07),
+      transparent 55%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.12),
+      rgba(0, 0, 0, 0.45)
+    );
+  z-index: 1;
+}
+
+/* =============== GLASS PANEL =============== */
+.proj-cta-panel {
+  position: relative;
+  z-index: 2;
+  width: min(880px, 96vw);
+  padding: clamp(30px, 4vw, 44px) clamp(20px, 4vw, 38px);
+  border-radius: 26px;
+
+  /* softer glass: more transparent + lower blur */
+  background:
+    radial-gradient(
+      120% 140% at 0% 0%,
+      rgba(255, 255, 255, 0.08),
+      transparent 55%
+    ),
+    rgba(8, 12, 24, 0.35);
+  border: 1px solid rgba(200, 220, 255, 0.22);
+  box-shadow:
+    0 18px 60px rgba(0, 0, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(4px); /* lowered blur */
+}
+
+/* inner content */
+.proj-cta-content {
+  text-align: center;
+}
+
+/* ===== TITLE (uses global .title-aurora gradient) ===== */
+.proj-cta-title {
+  margin: 0 0 1rem;
+  padding-bottom: 4px; /* extra breathing room so 'g' tails not clipped */
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  font-weight: 900;
+  line-height: 1.12;
+
+  /* let global .title-aurora gradient shine */
+  text-shadow: none;
+  -webkit-text-stroke: 0;
+  filter: none;
+
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.proj-cta-title.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== SUBTITLE (extends global .section-subtitle) ===== */
+.proj-cta-sub {
+  margin-top: 4px;
+  margin-bottom: 2rem;
+  color: var(--proj-cta-muted);
+  line-height: 1.5;
+
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.6s ease 0.1s,
+    transform 0.6s ease 0.1s;
+}
+
+.proj-cta-sub.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* =============== BUTTONS =============== */
+.proj-cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.proj-cta-btn {
+  min-width: 180px;
+  padding: 14px 28px;
+  border-radius: 999px;
+  border: none;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    background 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.proj-cta-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Primary */
+.proj-cta-btn.primary {
+  background: linear-gradient(
+    135deg,
+    var(--proj-cta-gradA),
+    var(--proj-cta-gradB)
+  );
+  color: #04101c;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+}
+.proj-cta-btn.primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.55);
+}
+
+/* Secondary */
+.proj-cta-btn.secondary {
+  background: rgba(5, 11, 20, 0.92);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  color: var(--body-ink, #fbd2a0);
+}
+.proj-cta-btn.secondary:hover {
+  background: rgba(10, 18, 30, 0.98);
+  transform: translateY(-3px);
+}
+
+/* Stagger button reveal */
+.proj-cta-buttons .proj-cta-btn:nth-child(1).visible {
+  transition-delay: 0.16s;
+}
+.proj-cta-buttons .proj-cta-btn:nth-child(2).visible {
+  transition-delay: 0.24s;
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 640px) {
+  .proj-cta-section {
+    padding: 64px 12px 72px;
+  }
+
+  .proj-cta-panel {
+    padding: 24px 16px 26px;
+    border-radius: 22px;
+  }
+
+  .proj-cta-title {
+    font-size: clamp(2.1rem, 7vw, 3.2rem);
+  }
+
+  .proj-cta-buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .proj-cta-btn {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce) {
+  .proj-cta-title,
+  .proj-cta-sub,
+  .proj-cta-btn {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

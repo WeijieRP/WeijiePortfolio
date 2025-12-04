@@ -5,7 +5,6 @@ import ProjectsBuilt from './ProjectsBuilt'
 import ProjectCTA from './ProjectsCTA'
 import Navbar from '../../ProjectDetails/Design/Designdetail2/Navbar'
 import Footer from '../../ProjectDetails/Design/Designdetail2/Footer'
-import FeaturedVR from './FeaturedProjects'
 import ProjectsBuiltVR from './ProjectsBuilt'
 
 export default function VirtualRelality() {
@@ -13,7 +12,6 @@ export default function VirtualRelality() {
     <>
     <Navbar/>
     <ProjectCTA/>
-    <FeaturedVR/>
     <ProjectsBuiltVR/>
     <Footer/>
     </>

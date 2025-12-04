@@ -1,20 +1,22 @@
-/* projectCTA.css — metallic lavender title (filled) with glossy sheen, no dark plate on text */
+/* hero.css — CTA with soft glass panel behind content
+   (no glass / sheen on the words themselves) */
 
-:root {
-  --ink: #f3f9ff;
-  --muted: #c9d6e6;
-  --gradA: #56ccf2;   /* cyan */
-  --gradB: #2f80ed;   /* deep blue */
-
-  /* Title lavender spectrum (matches your “Project that i build” reference) */
-  --tA:#c9b6ff;   /* highlight */
-  --tB:#a78eff;   /* mid */
-  --tC:#8e72e8;   /* deep edge */
-  --tD:#d6b8ff;   /* return highlight */
-}
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@600;800;900&display=swap");
 
 /* ===== Section ===== */
 .cta-section {
+  --ink: var(--body-ink);
+  --muted: var(--body-muted);
+
+  --gradA: #56ccf2;
+  --gradB: #2f80ed;
+
+  /* soft glass panel tokens (lighter, less dark) */
+  --panel-bg: rgba(10, 16, 30, 0.3); /* more transparent */
+  --panel-border: rgba(255, 255, 255, 0.1);
+  --panel-radius: 20px;
+  --panel-shadow: 0 14px 34px rgba(0, 0, 0, 0.35);
+
   position: relative;
   min-height: 86vh;
   display: grid;
@@ -22,87 +24,80 @@
   overflow: hidden;
   isolation: isolate;
   color: var(--ink);
-  background: #000; /* fallback */
+  text-align: center;
 }
 
-/* Background image with gentle parallax */
+/* Background */
 .cta-bg {
   position: absolute;
   inset: -14vh -10vw;
-  background-position: center;
   background-size: cover;
+  background-position: center;
   will-change: transform;
-  filter: brightness(1.0) contrast(1.05) saturate(1.04);
+  filter: brightness(1) contrast(1.05) saturate(1.05);
   z-index: 0;
 }
 
-/* Cinematic overlay for readability (kept light so title stays bright) */
+/* Slightly lighter overlay so scene stays bright */
 .cta-overlay {
   position: absolute;
   inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.18),
+    rgba(0, 0, 0, 0.42)
+  );
   z-index: 1;
-  pointer-events: none;
-  background:
-    radial-gradient(1200px 600px at 50% 24%, rgba(0,0,0, .10), transparent 58%),
-    linear-gradient(180deg, rgba(0,0,0, .14) 0%, rgba(0,0,0, .40) 55%, rgba(0,0,0, .58) 100%);
 }
 
-/* Content */
+/* Content wrapper */
 .cta-content {
   position: relative;
   z-index: 5;
-  text-align: center;
-  padding: clamp(16px, 4vw, 48px);
-  max-width: min(960px, 92vw);
+  padding: 32px 20px;
+  max-width: min(880px, 94vw);
 }
 
-/* ===== Title (metallic lavender, filled) ===== */
-.cta-title {
-  margin: 0 0 .7rem;
-  font-weight: 1000;
-  line-height: 1.05;
-  letter-spacing: .02em;
-  font-size: clamp(2.2rem, 6vw, 4rem);
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .7s ease, transform .7s cubic-bezier(.22,.61,.36,1);
-}
+/* ===== Glass panel behind text + buttons ===== */
+.cta-panel {
+  margin: 0 auto;
+  max-width: 760px;
+  padding: clamp(22px, 4vw, 34px) clamp(18px, 4vw, 30px);
 
-/* Apply gradient, bevel & sheen to each line (the two <span>s) */
-.cta-title span{
-  display:inline-block;
-  position:relative;
-
-  /* gradient fill */
   background:
-    linear-gradient(180deg, rgba(255,255,255,.22), rgba(255,255,255,0) 40%),
-    linear-gradient(90deg, var(--tA) 0%, var(--tB) 35%, var(--tC) 65%, var(--tD) 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color:transparent;
+    radial-gradient(
+      900px 600px at 0% 0%,
+      rgba(255, 255, 255, 0.04),
+      transparent 55%
+    ),
+    radial-gradient(
+      900px 600px at 100% 100%,
+      rgba(255, 255, 255, 0.03),
+      transparent 55%
+    ),
+    var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  border-radius: var(--panel-radius);
 
-  /* bevel + ambient drop (embossed look) */
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.28),
-    0 2px 0 rgba(26,34,54,.55),
-    0 6px 12px rgba(10,14,22,.50);
+  backdrop-filter: blur(6px) saturate(135%);
+  -webkit-backdrop-filter: blur(8px) saturate(135%);
 
-  /* crisp edge like your screenshot */
-  -webkit-text-stroke: 0.8px rgba(18,22,32,.35);
+  box-shadow: var(--panel-shadow);
 }
 
-/* subtle moving sheen across each line */
-.cta-title span::after{
-  content:"";
-  position:absolute; inset:0;
-  background:linear-gradient(90deg, transparent 0%, rgba(255,255,255,.16) 45%, transparent 80%);
-  mix-blend-mode:screen;
-  animation: ctaSheen 7.5s linear infinite;
+/* ===== Title ===== */
+.cta-title {
+  margin: 0 0 0.9rem;
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.65s ease,
+    transform 0.65s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-@keyframes ctaSheen{
-  0%{ transform:translateX(-30%); opacity:.75 }
-  50%{ transform:translateX(30%); opacity:.38 }
-  100%{ transform:translateX(-30%); opacity:.75 }
+
+/* spans only for line break, no extra effects */
+.cta-title span {
+  display: inline-block;
 }
 
 .cta-title.visible {
@@ -110,66 +105,92 @@
   transform: translateY(0);
 }
 
-/* Subtitle */
+/* ===== Subtitle ===== */
 .cta-sub {
-  margin: .5rem auto 2rem;
-  color: var(--muted);
+  margin: 0.4rem 0 1.9rem;
   font-weight: 600;
-  font-size: clamp(1rem, 2.2vw, 1.2rem);
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity .75s .06s ease, transform .75s .06s cubic-bezier(.22,.61,.36,1);
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s 0.03s ease,
+    transform 0.7s 0.03s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
-.cta-sub.visible { opacity: 1; transform: translateY(0); }
 
-/* Buttons row */
+.cta-sub.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Buttons ===== */
 .cta-buttons {
   display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  gap: 1rem;
+
+  /* on wide screens: side-by-side */
+  flex-wrap: nowrap;
 }
 
-/* Buttons (no jumpy hover) */
 .cta-btn {
-  display: inline-block;
-  padding: .95rem 1.9rem;
-  font-size: clamp(1rem, 2vw, 1.15rem);
-  font-weight: 800;
+  padding: 0.9rem 1.8rem;
   border-radius: 14px;
+  font-weight: 800;
+  font-size: 1.05rem;
   text-decoration: none;
-  box-shadow: 0 10px 24px rgba(0,0,0,.35);
+  display: inline-block;
+  text-align: center;
+
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(22px);
+  transition:
+    opacity 0.7s ease,
+    transform 0.7s cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-/* Reveal timings */
-.cta-btn.visible:nth-of-type(1),
-.cta-buttons .cta-btn:nth-of-type(1).visible {
-  transition: opacity .75s .12s, transform .75s .12s;
-  opacity: 1; transform: translateY(0);
-}
-.cta-btn.visible:nth-of-type(2),
-.cta-buttons .cta-btn:nth-of-type(2).visible {
-  transition: opacity .75s .2s, transform .75s .2s;
-  opacity: 1; transform: translateY(0);
-}
-
-/* Primary */
-.cta-btn.primary {
-  color: #061018;
-  background: linear-gradient(90deg, var(--gradA), var(--gradB));
-}
-.cta-btn.primary:hover { filter: brightness(1.05); }
-
-/* Secondary */
+/* both buttons have similar width on desktop */
+.cta-btn.primary,
 .cta-btn.secondary {
-  color: #fff;
-  border: 2px solid var(--gradB);
-  background: rgba(0,0,0,.35);
-  backdrop-filter: blur(6px);
+  min-width: 180px;
 }
-.cta-btn.secondary:hover { filter: brightness(1.05); }
+
+.cta-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.cta-btn.primary {
+  background: linear-gradient(90deg, var(--gradA), var(--gradB));
+  color: #061018;
+}
+
+.cta-btn.primary:hover {
+  filter: brightness(1.05);
+}
+
+.cta-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--ink);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.cta-btn.secondary:hover {
+  filter: brightness(1.03);
+}
+
+/* ===== Responsive buttons (mobile) ===== */
+@media (max-width: 640px) {
+  .cta-buttons {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .cta-btn {
+    width: 100%;
+    min-width: 0;
+  }
+}
 
 /* Motion safety */
 @media (prefers-reduced-motion: reduce) {
@@ -177,7 +198,7 @@
   .cta-sub,
   .cta-btn {
     transition: none !important;
-    transform: none !important;
     opacity: 1 !important;
+    transform: none !important;
   }
 }

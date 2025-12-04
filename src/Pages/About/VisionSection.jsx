@@ -38,18 +38,26 @@ export default function VisionSection({
   ],
 }) {
   const ref = useRef(null);
-  const lastY = useRef(typeof window !== "undefined" ? window.scrollY : 0);
+  const lastY = useRef(
+    typeof window !== "undefined" ? window.scrollY : 0
+  );
   const dirRef = useRef("down");
 
-  // Track scroll direction on the section (adds .dir-down / .dir-up)
+  // Track scroll direction (adds .dir-down / .dir-up on section)
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY || 0;
       dirRef.current = y > lastY.current ? "down" : "up";
       lastY.current = y;
       if (ref.current) {
-        ref.current.classList.toggle("dir-down", dirRef.current === "down");
-        ref.current.classList.toggle("dir-up", dirRef.current === "up");
+        ref.current.classList.toggle(
+          "dir-down",
+          dirRef.current === "down"
+        );
+        ref.current.classList.toggle(
+          "dir-up",
+          dirRef.current === "up"
+        );
       }
     };
     onScroll();
@@ -69,14 +77,25 @@ export default function VisionSection({
       const vh = window.innerHeight || 1;
       const p = Math.max(
         -1,
-        Math.min(1, -(r.top + r.height * 0.5 - vh * 0.5) / (vh * 0.9))
+        Math.min(
+          1,
+          -(r.top + r.height * 0.5 - vh * 0.5) / (vh * 0.9)
+        )
       );
       el.style.setProperty("--bg-ty", `${(p * 44).toFixed(1)}px`);
-      el.style.setProperty("--bg-scale", (1.02 + Math.abs(p) * 0.05).toFixed(3));
-      el.style.setProperty("--bg-burn", (0.98 - Math.abs(p) * 0.10).toFixed(3));
+      el.style.setProperty(
+        "--bg-scale",
+        (1.02 + Math.abs(p) * 0.05).toFixed(3)
+      );
+      el.style.setProperty(
+        "--bg-burn",
+        (0.98 - Math.abs(p) * 0.1).toFixed(3)
+      );
     };
 
-    const onScroll = () => { if (!raf) raf = requestAnimationFrame(run); };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(run);
+    };
     run();
     window.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onScroll);
@@ -116,7 +135,9 @@ export default function VisionSection({
     return () => io.disconnect();
   }, []);
 
-  const bgSrc = normalizeSrc("/assets/AboutBackgroundImage/anik-deb-nath-8bSV4ulfbzo-unsplash.jpg");
+  const bgSrc = normalizeSrc(
+    "/assets/AboutBackgroundImage/anik-deb-nath-8bSV4ulfbzo-unsplash.jpg"
+  );
 
   return (
     <section
@@ -126,18 +147,34 @@ export default function VisionSection({
     >
       {/* Background */}
       <div className="vision-bg" aria-hidden="true">
-        <div className="vision-img" style={{ backgroundImage: `url("${bgSrc}")` }} />
+        <div
+          className="vision-img"
+          style={{ backgroundImage: `url("${bgSrc}")` }}
+        />
         <div className="vision-overlay" />
       </div>
 
       {/* Content */}
       <div className="vision-inner">
-        <h2 id="vision-title" className="vision-title" data-observe data-side="up" data-delay="0">
-          {title}
-        </h2>
-        <p className="vision-quote" data-observe data-side="up" data-delay="80">
-          “{quote}”
-        </p>
+        {/* Glass wrapper for heading + quote */}
+        <div
+          className="vision-head-glass"
+          data-observe
+          data-side="up"
+          data-delay="0"
+          role="group"
+          aria-roledescription="panel"
+        >
+          <h2
+            id="vision-title"
+            className="vision-title title-aurora"
+          >
+            {title}
+          </h2>
+          <p className="vision-quote section-subtitle">
+            “{quote}”
+          </p>
+        </div>
 
         <div className="vision-grid">
           {cards.map((c, i) => {
@@ -152,8 +189,16 @@ export default function VisionSection({
                 tabIndex={0}
               >
                 <div className="vision-card__media">
-                  <img src={normalizeSrc(c.image)} alt={c.title} loading="lazy" decoding="async" />
-                  <span className="vision-card__shade" aria-hidden="true" />
+                  <img
+                    src={normalizeSrc(c.image)}
+                    alt={c.title}
+                    loading="lazy"
+                    decoding="async"
+                  />
+                  <span
+                    className="vision-card__shade"
+                    aria-hidden="true"
+                  />
                 </div>
 
                 <div className="vision-card__body">

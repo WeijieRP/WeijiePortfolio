@@ -1,4 +1,4 @@
-// FlowchartsSection.jsx — FINAL CRISP & CLEAN VERSION
+// FlowchartsSection.jsx — crisp cards + slide-up reveal animation
 import React, { useEffect, useRef, useState } from "react";
 import "./flowchart.css";
 
@@ -15,19 +15,35 @@ export default function FlowchartsSection({
   const [viewMode, setViewMode] = useState("fit");
   const viewerRef = useRef(null);
 
-  // Reveal animation
+  // 🔁 Reveal animation for cards (slide-up + fade)
   useEffect(() => {
-    const cards = document.querySelectorAll(".fc-card[data-reveal]");
+    const section = document.getElementById(id);
+    if (!section) return;
+
+    const cards = section.querySelectorAll(".fc-card");
     const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => e.target.classList.toggle("fc-in", e.isIntersecting)),
+      (entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            e.target.classList.add("fc-in");
+          } else {
+            e.target.classList.remove("fc-in");
+          }
+        });
+      },
       { threshold: 0.18 }
     );
-    cards.forEach((el) => io.observe(el));
-    return () => io.disconnect();
-  }, []);
 
-  // Modal scroll lock + shortcuts
+    cards.forEach((card, i) => {
+      // small stagger
+      card.style.setProperty("--fc-delay", `${(i % 6) * 70}ms`);
+      io.observe(card);
+    });
+
+    return () => io.disconnect();
+  }, [id, items.length]);
+
+  // Lock body scroll when modal open + keyboard shortcuts
   useEffect(() => {
     if (!active) return;
     const prev = document.body.style.overflow;
@@ -39,8 +55,8 @@ export default function FlowchartsSection({
         setViewMode((m) => (m === "fit" ? "full" : "fit"));
       }
     };
-
     window.addEventListener("keydown", onKey);
+
     requestAnimationFrame(() => {
       if (viewerRef.current) {
         viewerRef.current.scrollTop = 0;
@@ -54,7 +70,7 @@ export default function FlowchartsSection({
     };
   }, [active]);
 
-  // Default items
+  // Default data if no props.items passed
   const defaultItems = [
     {
       key: "entrance_r1",
@@ -112,25 +128,30 @@ export default function FlowchartsSection({
     <section
       id={id}
       className={`fc-section ${heightClass} ${fixedBg ? "fc--fixed" : ""}`}
-      style={typeof height === "number" ? { minHeight: `${height}px` } : undefined}
+      style={
+        typeof height === "number" ? { minHeight: `${height}px` } : undefined
+      }
       aria-label="Game flowcharts"
     >
-      <div className="fc-bg" style={{ backgroundImage: `url(${bgImage})` }} aria-hidden="true" />
+      <div
+        className="fc-bg"
+        style={{ backgroundImage: `url(${bgImage})` }}
+        aria-hidden="true"
+      />
       <div className="fc-overlay" aria-hidden="true" />
 
+      {/* Header glass with aurora title (from global h2 styles) */}
       <header className="fc-head">
-        <h2 className="fc-title">{heading}</h2>
-        <p className="fc-sub">{subheading}</p>
+        <div className="fc-headGlass">
+          <h2 className="fc-title">{heading}</h2>
+          <p className="fc-sub">{subheading}</p>
+        </div>
       </header>
 
+      {/* Cards */}
       <ul className="fc-grid" role="list">
-        {data.map((item, i) => (
-          <li
-            key={item.key}
-            className="fc-card"
-            data-reveal
-            style={{ transitionDelay: `${i * 90}ms` }}
-          >
+        {data.map((item) => (
+          <li key={item.key} className="fc-card">
             <button
               className="fc-card-btn"
               onClick={() => setActive(item)}
@@ -140,26 +161,38 @@ export default function FlowchartsSection({
                 <img
                   className="fc-thumb-img"
                   src={item.thumb}
-                  srcSet={`${item.thumb} 1x, ${item.thumb} 2x, ${item.thumb} 3x`}
                   alt={item.title}
                   loading="lazy"
                   decoding="async"
                 />
               </div>
+
               <div className="fc-meta">
                 <h3 className="fc-card-title">{item.title}</h3>
-                <p className="fc-card-desc">{item.meta}</p>
-                <span className="fc-chip">View Details</span>
+                <button
+                  type="button"
+                  className="fc-more fc-btn-peach"
+                  aria-label={`View details for ${item.title}`}
+                >
+                  View details
+                </button>
               </div>
+
+              <p className="fc-card-desc" title={item.meta}>
+                {item.meta}
+              </p>
             </button>
           </li>
         ))}
       </ul>
 
+      {/* Modal viewer */}
       {active && (
         <div
           className="fc-modal"
-          onClick={(e) => e.target.classList.contains("fc-modal") && setActive(null)}
+          onClick={(e) =>
+            e.target.classList.contains("fc-modal") && setActive(null)
+          }
           role="dialog"
           aria-modal="true"
           aria-labelledby="fc-modal-title"
@@ -175,18 +208,27 @@ export default function FlowchartsSection({
 
               <div className="fc-toolbar-actions">
                 <button
-                  className={`fc-btn small ${viewMode === "fit" ? "active" : ""}`}
+                  className={`fc-btn small ${
+                    viewMode === "fit" ? "active" : ""
+                  }`}
                   onClick={() => setViewMode("fit")}
                 >
                   Fit
                 </button>
                 <button
-                  className={`fc-btn small ghost ${viewMode === "full" ? "active" : ""}`}
+                  className={`fc-btn small ghost ${
+                    viewMode === "full" ? "active" : ""
+                  }`}
                   onClick={() => setViewMode("full")}
                 >
                   Full
                 </button>
-                <a className="fc-btn small" href={active.full} target="_blank" rel="noreferrer">
+                <a
+                  className="fc-btn small ghost"
+                  href={active.full}
+                  target="_blank"
+                  rel="noreferrer"
+                >
                   Original
                 </a>
               </div>
@@ -194,12 +236,13 @@ export default function FlowchartsSection({
 
             <div
               ref={viewerRef}
-              className={`fc-viewer ${viewMode === "full" ? "is-scroll" : "is-fit"}`}
+              className={`fc-viewer ${
+                viewMode === "full" ? "is-scroll" : "is-fit"
+              }`}
             >
               <img
                 className={`fc-viewer-img ${viewMode}`}
                 src={active.full}
-                srcSet={`${active.full} 1x, ${active.full} 2x, ${active.full} 3x`}
                 alt={active.title}
                 draggable={false}
                 loading="eager"
@@ -207,7 +250,7 @@ export default function FlowchartsSection({
               />
             </div>
 
-            {active.bullets?.length && (
+            {active.bullets?.length > 0 && (
               <div className="fc-modal-body">
                 <ul className="fc-bullets">
                   {active.bullets.map((b, i) => (
@@ -221,7 +264,9 @@ export default function FlowchartsSection({
               <div className="fc-footer-left">
                 <button
                   className="fc-btn ghost small"
-                  onClick={() => setViewMode((m) => (m === "fit" ? "full" : "fit"))}
+                  onClick={() =>
+                    setViewMode((m) => (m === "fit" ? "full" : "fit"))
+                  }
                 >
                   Toggle Fit/Full
                 </button>
@@ -236,14 +281,21 @@ export default function FlowchartsSection({
                 >
                   Download
                 </a>
-                <button className="fc-btn small" onClick={() => setActive(null)}>
+                <button
+                  className="fc-btn small"
+                  onClick={() => setActive(null)}
+                >
                   Close
                 </button>
               </div>
             </div>
           </div>
 
-          <button className="fc-x" onClick={() => setActive(null)} aria-label="Close modal">
+          <button
+            className="fc-x"
+            onClick={() => setActive(null)}
+            aria-label="Close modal"
+          >
             ×
           </button>
         </div>

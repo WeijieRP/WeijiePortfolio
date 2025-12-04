@@ -22,7 +22,6 @@ export default function ReflectionLearning({
   const learningsText =
     "I learned that leading with emotion helps players understand the purpose of each puzzle before they deal with mechanics. Keeping clues diegetic made the experience feel believable. Targeting Quest taught me to optimise aggressively and be intentional with every asset. Short, focused rooms kept players engaged without fatigue. Most of all, sound did the heavy lifting — voice hints and spatial audio guided players more naturally than any menu or HUD.";
 
-
   // Track scroll direction
   useEffect(() => {
     const onScroll = () => {
@@ -41,7 +40,15 @@ export default function ReflectionLearning({
 
     const targets = root.querySelectorAll("[data-reveal]");
 
-    const setVars = (el, fromX, fromY, toX, toY, fromScale = 0.96, toScale = 1) => {
+    const setVars = (
+      el,
+      fromX,
+      fromY,
+      toX,
+      toY,
+      fromScale = 0.96,
+      toScale = 1
+    ) => {
       el.style.setProperty("--from-x", fromX);
       el.style.setProperty("--from-y", fromY);
       el.style.setProperty("--to-x", toX);
@@ -67,12 +74,16 @@ export default function ReflectionLearning({
 
     const leave = (el, side, dir) => {
       if (dir === "down") {
-        if (side === "left") setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
-        else if (side === "right") setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
+        if (side === "left")
+          setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
+        else if (side === "right")
+          setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
         else setVars(el, "0px", "0px", "0px", "18px", 1, 0.96);
       } else {
-        if (side === "left") setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
-        else if (side === "right") setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
+        if (side === "left")
+          setVars(el, "0px", "0px", "54px", "18px", 1, 0.96);
+        else if (side === "right")
+          setVars(el, "0px", "0px", "-54px", "18px", 1, 0.96);
         else setVars(el, "0px", "0px", "0px", "18px", 1, 0.96);
       }
       el.classList.add("reveal", "is-out");
@@ -105,13 +116,26 @@ export default function ReflectionLearning({
 
   return (
     <section className="rl-stage" id={id} ref={rootRef}>
-      {/* Full-section background image */}
-      <div className="rl-bg" style={{ backgroundImage: `url(${bgImage})` }} />
+      {/* Full-section background image + soft overlay */}
+      <div
+        className="rl-bg"
+        style={{ backgroundImage: `url(${bgImage})` }}
+        aria-hidden="true"
+      />
+      <div className="rl-overlay" aria-hidden="true" />
 
-      {/* Header */}
-      <header className="rl-head" data-reveal data-side="center" data-stagger>
-        <p className="rl-eyebrow">{eyebrow}</p>
-        <h2 className="rl-title">{title}</h2>
+      {/* 🔶 Header inside glass */}
+      <header className="rl-head">
+        <div
+          className="rl-headGlass"
+          data-reveal
+          data-side="center"
+          data-stagger
+        >
+          <p className="rl-eyebrow">{eyebrow}</p>
+          {/* h2 picks up global aurora gradient + sizing */}
+          <h2 className="rl-title">{title}</h2>
+        </div>
       </header>
 
       {/* Quick metrics */}
@@ -124,15 +148,14 @@ export default function ReflectionLearning({
           <span className="rl-metric-value">XR</span>
           <span className="rl-metric-label">Hand Interactions</span>
         </li>
-       <li className="rl-metric">
-  <span className="rl-metric-value">UI inside the world</span>
-  <span className="rl-metric-label">UI Style</span>
-</li>
-
-<li className="rl-metric">
-  <span className="rl-metric-value">Player missions / tasks</span>
-  <span className="rl-metric-label">Quest System</span>
-</li>
+        <li className="rl-metric">
+          <span className="rl-metric-value">UI inside the world</span>
+          <span className="rl-metric-label">UI Style</span>
+        </li>
+        <li className="rl-metric">
+          <span className="rl-metric-value">Player missions / tasks</span>
+          <span className="rl-metric-label">Quest System</span>
+        </li>
       </ul>
 
       {/* Three descriptive cards */}
@@ -152,8 +175,6 @@ export default function ReflectionLearning({
           <p className="rl-copy">{learningsText}</p>
         </article>
       </div>
-
-     
     </section>
   );
 }

@@ -13,7 +13,7 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Read through the Travelly brief to know what’s needed.",
         "Confirmed the main tasks: poster, email design, and Instagram grid.",
-        "Decided the brand mood — warm, friendly, and travel-inspired."
+        "Decided the brand mood — warm, friendly, and travel-inspired.",
       ],
     },
     {
@@ -23,7 +23,7 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Looked at travel visuals, sunsets, clouds and cozy colours.",
         "Collected photos and textures that feel warm and dreamy.",
-        "Built a moodboard to lock the style direction."
+        "Built a moodboard to lock the style direction.",
       ],
     },
     {
@@ -33,7 +33,7 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Chose fonts for headings and body text.",
         "Set simple spacing rules so everything feels organised.",
-        "Picked a soft orange colour theme with gentle glows."
+        "Picked a soft orange colour theme with gentle glows.",
       ],
     },
     {
@@ -43,7 +43,7 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Sketched simple logo ideas.",
         "Made friendly icons with soft lines.",
-        "Added sparkles and curved lines to feel like movement and travel."
+        "Added sparkles and curved lines to feel like movement and travel.",
       ],
     },
     {
@@ -53,7 +53,7 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Combined travel landmarks into one poster.",
         "Added warm glow and slight haze to give depth.",
-        "Placed the main button clearly so it stands out."
+        "Placed the main button clearly so it stands out.",
       ],
     },
     {
@@ -63,7 +63,7 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Designed a 9-post Instagram grid.",
         "Mixed destination photos, quotes, and hero visual.",
-        "Kept calls-to-action consistent and easy to notice."
+        "Kept calls-to-action consistent and easy to notice.",
       ],
     },
     {
@@ -73,7 +73,7 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Built the email layout from top to bottom — hero first, offers, then CTA.",
         "Kept wording short and easy to read.",
-        "Added QR code and checked everything aligns nicely."
+        "Added QR code and checked everything aligns nicely.",
       ],
     },
     {
@@ -83,7 +83,7 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Adjusted spacing so everything feels neat.",
         "Softened shadows and button glow for warmth.",
-        "Exported all files cleanly and in good quality."
+        "Exported all files cleanly and in good quality.",
       ],
     },
     {
@@ -93,7 +93,7 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Drew a cute travel mascot idea.",
         "Played with shapes and facial expressions.",
-        "Added soft glow highlights so it matches the brand look."
+        "Added soft glow highlights so it matches the brand look.",
       ],
     },
     {
@@ -103,10 +103,10 @@ export default function DesignJourneyCarousel({
       tasks: [
         "Organised all final files into folders.",
         "Placed designs into mockups for presentation.",
-        "Did final checks and submitted the work."
+        "Did final checks and submitted the work.",
       ],
     },
-  ]
+  ],
 }) {
   const [index, setIndex] = useState(0);
   const trackRef = useRef(null);
@@ -143,6 +143,7 @@ export default function DesignJourneyCarousel({
     startX.current = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
     deltaX.current = 0;
   };
+
   const onPointerMove = (e) => {
     if (!isDown.current || !trackRef.current) return;
     const x = e.clientX ?? e.touches?.[0]?.clientX ?? startX.current;
@@ -152,6 +153,7 @@ export default function DesignJourneyCarousel({
     const percentShift = (deltaX.current / trackRef.current.clientWidth) * 100;
     trackRef.current.style.transform = `translateX(calc(${base}% + ${percentShift}%))`;
   };
+
   const onPointerUp = () => {
     if (!trackRef.current) return;
     trackRef.current.style.transition = "";
@@ -164,12 +166,22 @@ export default function DesignJourneyCarousel({
 
   return (
     <section className="tf-stage" id={id} aria-label="Design journey timeline">
-      <div className="tf-bg" style={{ backgroundImage: `url(${bgImage})` }} />
-      {/* overlay removed so the background stands out */}
+      <div
+        className="tf-bg"
+        style={{ backgroundImage: `url(${bgImage})` }}
+        aria-hidden="true"
+      />
 
       <div className="tf-container">
-        <h2 className="tf-title">Design Journey From Concept to Launch</h2>
-        <p className="tf-sub">A week-by-week view of how the brand and site came together.</p>
+        {/* ✅ Panel: uses global gradient title + warm subtitle */}
+        <div className="tf-hero-panel">
+          <h2 className="tf-title title-aurora">
+            Design Journey From Concept to Launch
+          </h2>
+          <p className="tf-sub">
+            A week-by-week view of how the brand and campaign came together.
+          </p>
+        </div>
 
         <div
           className="tf-viewport"
@@ -183,7 +195,12 @@ export default function DesignJourneyCarousel({
         >
           <div className="tf-track" ref={trackRef}>
             {items.map((w, i) => (
-              <article className="tf-card" key={i} role="group" aria-roledescription="slide">
+              <article
+                className="tf-card"
+                key={i}
+                role="group"
+                aria-roledescription="slide"
+              >
                 <header className="tf-head">
                   <span className="tf-week">{w.week}</span>
                   <h3 className="tf-card-title">{w.title}</h3>
@@ -191,7 +208,9 @@ export default function DesignJourneyCarousel({
 
                 <ul className="tf-badges">
                   {w.badges.map((b, j) => (
-                    <li className="tf-badge" key={j}>{b}</li>
+                    <li className="tf-badge" key={j}>
+                      {b}
+                    </li>
                   ))}
                 </ul>
 
@@ -206,7 +225,13 @@ export default function DesignJourneyCarousel({
         </div>
 
         <div className="tf-controls">
-          <button className="tf-btn" onClick={prev} aria-label="Previous slide">←</button>
+          <button
+            className="tf-btn"
+            onClick={prev}
+            aria-label="Previous slide"
+          >
+            ←
+          </button>
           <div className="tf-dots" role="tablist" aria-label="Slide dots">
             {items.map((_, i) => (
               <button
@@ -219,7 +244,9 @@ export default function DesignJourneyCarousel({
               />
             ))}
           </div>
-          <button className="tf-btn" onClick={next} aria-label="Next slide">→</button>
+          <button className="tf-btn" onClick={next} aria-label="Next slide">
+            →
+          </button>
         </div>
       </div>
     </section>

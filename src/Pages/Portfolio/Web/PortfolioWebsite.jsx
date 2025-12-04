@@ -1,6 +1,5 @@
 import React from 'react'
 import WebsiteHero from './Hero'
-import "../../../Components/footer.css"
 import Footer from './Footer'
 import FeaturedProjectsZigZag from './FeaturedProjects'
 import ProjectCTA from './ProjectCTA'

@@ -2,13 +2,33 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import "./cca.css";
 
-const BG_DEFAULT = "/assets/AboutBackgroundImage/adrian-regeci-o6JXzubyI-c-unsplash.jpg";
+const BG_DEFAULT =
+  "/assets/AboutBackgroundImage/alexander-andrews-yOIT88xWkbg-unsplash.jpg";
 
 const CCA_STATS = [
-  { label: "Years Active", value: "3+", desc: "Time contributing to Student Council, Academic Club, and community events across ITE → RP." },
-  { label: "Events Led/Supported", value: "15+", desc: "Orientations, Principal’s Cup, graduation helpers, workshops, and community drives." },
-  { label: "Volunteer Hours", value: "180+", desc: "Service hours across AWWA, beach clean-ups, food distribution, and operations." },
-  { label: "Awards/Lists", value: "4+", desc: "Leadership/merit recognition and appearances on honours lists." },
+  {
+    label: "Years Active",
+    value: "3+",
+    desc:
+      "Time contributing to Student Council, Academic Club, and community events across ITE → RP.",
+  },
+  {
+    label: "Events Led/Supported",
+    value: "15+",
+    desc:
+      "Orientations, Principal’s Cup, graduation helpers, workshops, and community drives.",
+  },
+  {
+    label: "Volunteer Hours",
+    value: "180+",
+    desc:
+      "Service hours across AWWA, beach clean-ups, food distribution, and operations.",
+  },
+  {
+    label: "Awards/Lists",
+    value: "4+",
+    desc: "Leadership/merit recognition and appearances on honours lists.",
+  },
 ];
 
 const CCA_ROLES = [
@@ -45,22 +65,93 @@ const CCA_ROLES = [
 ];
 
 const CCA_TIMELINE = [
-  { date: "2025", title: "oneRP Meeting Facilitation", note: "Agenda, time-keeping, motions, voting records; minutes & actions.", tag: "RP SC" },
-  { date: "2025", title: "General Meeting (Council-wide)", note: "Attendance/quorum, minutes, comms & follow-ups.", tag: "RP SC" },
-  { date: "2025", title: "Department Meetings", note: "Scheduling, secretariat support, issues log & cross-coordination.", tag: "RP SC" },
-  { date: "Sep 2025", title: "ISLP Overseas Trip", note: "Overseas student exchange; coordination, communication, cultural learning.", tag: "RP SC" },
+  {
+    date: "2025",
+    title: "oneRP Meeting Facilitation",
+    note: "Agenda, time-keeping, motions, voting records; minutes & actions.",
+    tag: "RP SC",
+  },
+  {
+    date: "2025",
+    title: "General Meeting (Council-wide)",
+    note: "Attendance/quorum, minutes, comms & follow-ups.",
+    tag: "RP SC",
+  },
+  {
+    date: "2025",
+    title: "Department Meetings",
+    note: "Scheduling, secretariat support, issues log & cross-coordination.",
+    tag: "RP SC",
+  },
+  {
+    date: "Sep 2025",
+    title: "ISLP Overseas Trip",
+    note:
+      "Overseas student exchange; coordination, communication, cultural learning.",
+    tag: "RP SC",
+  },
 
-  { date: "Jan 2023", title: "Principal’s Cup — Players Mgmt", note: "Briefed 80 players; crowd control for 1,000+ new students.", tag: "Student Council" },
-  { date: "Jan–Apr 2023", title: "Orientation Ushering", note: "Wayfinding, registration flow, safety comms for new intakes.", tag: "Student Council" },
-  { date: "Feb 2023", title: "Graduation Helpers", note: "Venue ops & ushering for graduates & families.", tag: "Student Council" },
+  {
+    date: "Jan 2023",
+    title: "Principal’s Cup — Players Mgmt",
+    note: "Briefed 80 players; crowd control for 1,000+ new students.",
+    tag: "Student Council",
+  },
+  {
+    date: "Jan–Apr 2023",
+    title: "Orientation Ushering",
+    note: "Wayfinding, registration flow, safety comms for new intakes.",
+    tag: "Student Council",
+  },
+  {
+    date: "Feb 2023",
+    title: "Graduation Helpers",
+    note: "Venue ops & ushering for graduates & families.",
+    tag: "Student Council",
+  },
 
-  { date: "2022", title: "Parents’ Seminar", note: "Public-facing helper; information & guidance.", tag: "Student Council" },
-  { date: "2022", title: "Nat’l Day Investiture", note: "Ceremony support attended by President Halimah Yacob.", tag: "Student Council" },
-  { date: "2022", title: "IUEC Conference", note: "Environmental coalition event support.", tag: "Community" },
-  { date: "2022", title: "AWWA Service", note: "Activities with seniors; engagement & care.", tag: "Service" },
-  { date: "2022", title: "Beach Clean-up", note: "Coastal clean-up, sorting & disposal.", tag: "Service" },
-  { date: "2022", title: "Food Distribution", note: "Packing & distribution for day-care centres.", tag: "Service" },
-  { date: "2022", title: "Leadership Workshops", note: "Ikigai, First Aid, MHA session, Mission X, SBFF leadership.", tag: "Training" },
+  {
+    date: "2022",
+    title: "Parents’ Seminar",
+    note: "Public-facing helper; information & guidance.",
+    tag: "Student Council",
+  },
+  {
+    date: "2022",
+    title: "Nat’l Day Investiture",
+    note: "Ceremony support attended by President Halimah Yacob.",
+    tag: "Student Council",
+  },
+  {
+    date: "2022",
+    title: "IUEC Conference",
+    note: "Environmental coalition event support.",
+    tag: "Community",
+  },
+  {
+    date: "2022",
+    title: "AWWA Service",
+    note: "Activities with seniors; engagement & care.",
+    tag: "Service",
+  },
+  {
+    date: "2022",
+    title: "Beach Clean-up",
+    note: "Coastal clean-up, sorting & disposal.",
+    tag: "Service",
+  },
+  {
+    date: "2022",
+    title: "Food Distribution",
+    note: "Packing & distribution for day-care centres.",
+    tag: "Service",
+  },
+  {
+    date: "2022",
+    title: "Leadership Workshops",
+    note: "Ikigai, First Aid, MHA session, Mission X, SBFF leadership.",
+    tag: "Training",
+  },
 ];
 
 const getYear = (d) => {
@@ -75,9 +166,12 @@ export default function CCASection({
   bgImage = BG_DEFAULT,
 }) {
   const rootRef = useRef(null);
-  const lastY = useRef(typeof window !== "undefined" ? window.scrollY : 0);
+  const lastY = useRef(
+    typeof window !== "undefined" ? window.scrollY : 0
+  );
   const dirRef = useRef("down");
 
+  // track scroll direction for leave animations
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY || 0;
@@ -97,6 +191,7 @@ export default function CCASection({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // intersection reveal
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
@@ -109,7 +204,8 @@ export default function CCASection({
       (entries) => {
         entries.forEach((e) => {
           const el = e.target;
-          if (e.isIntersecting) el.classList.add("visible", "was-visible");
+          if (e.isIntersecting)
+            el.classList.add("visible", "was-visible");
           else el.classList.remove("visible");
         });
       },
@@ -126,7 +222,9 @@ export default function CCASection({
       if (!map.has(y)) map.set(y, []);
       map.get(y).push(t);
     }
-    const entries = Array.from(map.entries()).sort((a, b) => Number(b[0]) - Number(a[0]));
+    const entries = Array.from(map.entries()).sort(
+      (a, b) => Number(b[0]) - Number(a[0])
+    );
     return entries.map(([year, items]) => ({ year, items }));
   }, []);
 
@@ -140,9 +238,21 @@ export default function CCASection({
     >
       <div className="cca-bg" aria-hidden="true" />
 
-      <header className="cca-head" data-reveal data-anim="up" data-delay="0">
-        <h2 className="cca-title" id={`${id}-title`}>{heading}</h2>
-        <p className="cca-sub">{sub}</p>
+      <header className="cca-head" data-reveal data-anim="up">
+        <div
+          className="cca-head-glass"
+          role="group"
+          aria-roledescription="panel"
+        >
+          <h2
+            className="cca-title title-aurora"
+            id={`${id}-title`}
+          >
+            {heading}
+          </h2>
+
+          <p className="cca-sub section-subtitle">{sub}</p>
+        </div>
         <span className="cca-rule" />
       </header>
 
@@ -159,11 +269,12 @@ export default function CCASection({
               aria-describedby={popId}
               data-reveal
               data-anim={side}
-              data-delay={80 + i * 80}
             >
               <div className="cca-stat-value">{s.value}</div>
               <div className="cca-stat-label">{s.label}</div>
-              <span className="cca-stat-i" aria-hidden="true">i</span>
+              <span className="cca-stat-i" aria-hidden="true">
+                i
+              </span>
               <div className="cca-stat-pop" id={popId} role="note">
                 <div className="cca-stat-pop-inner">
                   <div className="cca-stat-pop-title">{s.label}</div>
@@ -183,10 +294,9 @@ export default function CCASection({
           return (
             <article
               key={r.title}
-              className={`cca-role sheen ${flip ? "flip" : ""}`}
+              className={`cca-role ${flip ? "flip" : ""}`}
               data-reveal
               data-anim={side}
-              data-delay={60 + i * 100}
               aria-label={r.title}
             >
               <div className="cca-media">
@@ -196,7 +306,9 @@ export default function CCASection({
                 <h3 className="cca-h3">{r.title}</h3>
                 <div className="cca-period">{r.period}</div>
                 <ul className="cca-points">
-                  {r.points.map((p, j) => <li key={j}>{p}</li>)}
+                  {r.points.map((p, j) => (
+                    <li key={j}>{p}</li>
+                  ))}
                 </ul>
               </div>
             </article>
@@ -213,7 +325,6 @@ export default function CCASection({
               className="cca-yearcard"
               data-reveal
               data-anim={side}
-              data-delay={80 + gi * 90}
               aria-label={`Highlights in ${group.year}`}
             >
               <header className="cca-yhead">
@@ -228,7 +339,6 @@ export default function CCASection({
                     className="cca-yitem"
                     data-reveal
                     data-anim="up"
-                    data-delay={140 + i * 70}
                   >
                     <div className="cca-yrow">
                       <div className="cca-ytag">{t.tag}</div>

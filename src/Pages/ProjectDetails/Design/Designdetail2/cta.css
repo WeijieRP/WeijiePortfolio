@@ -1,3 +1,5 @@
+/* cta.css */
+
 /* ===== Scoped CTA variables ===== */
 :root{
   --fcta-ink:#fff4e6;
@@ -11,6 +13,11 @@
   --slide-dur:.7s;
   --slide-ease:cubic-bezier(.23,1,.32,1);
   --stagger: .08s;
+
+  /* glass panel tokens (title + description only) */
+  --fcta-glass-bg: rgba(255,255,255,.08);
+  --fcta-glass-stroke: rgba(255,255,255,.18);
+  --fcta-glass-shadow: 0 18px 44px rgba(0,0,0,.35);
 }
 
 /* ===== Stage ===== */
@@ -29,7 +36,7 @@
   position: absolute;
   inset: 0;
   background: center / cover no-repeat;
-  filter: brightness(.9) contrast(1.06) saturate(1.06);
+  filter: brightness(.9) contrast(1.06) saturate(1.06); /* no blur */
   z-index: 0;
 }
 .fcta-overlay{
@@ -51,6 +58,19 @@
   padding-inline: clamp(8px, 2vw, 16px);
 }
 
+/* ✅ Glass wrapper for heading + tagline only */
+.fcta-glass{
+  display:block;
+  margin: 0 auto 20px;
+  padding: clamp(14px,2.2vw,24px) clamp(16px,3vw,28px);
+  border-radius: 18px;
+  background: var(--fcta-glass-bg);
+  border: 1px solid var(--fcta-glass-stroke);
+  box-shadow: var(--fcta-glass-shadow);
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
 /* ===== Heading & Tagline ===== */
 .fcta-heading{
   margin: 0 0 10px;
@@ -65,7 +85,7 @@
   color: var(--fcta-muted);
   font-size: clamp(15px,1.2vw,18px);
   max-width: 700px;
-  margin: 0 auto 22px;
+  margin: 0 auto;
   line-height: 1.6;
 }
 
@@ -143,15 +163,7 @@
 /* Slide In/Out Engine       */
 /* ========================= */
 
-/*
-  We slide each .fcta-snap horizontally depending on scroll direction.
-  - When scrolling DOWN (data-dir="down"): items enter from the RIGHT, leave to the LEFT.
-  - When scrolling UP   (data-dir="up"):   items enter from the LEFT,  leave to the RIGHT.
-  Stagger is controlled by --i set inline from JS (0,1,2...).
-*/
-
 .fcta-snap{
-  /* base state (out of view) — will be adjusted via [data-dir] below */
   opacity: 0;
   transform: translate3d(0,0,0);
   transition:
@@ -163,16 +175,14 @@
 
 /* DOWN: enter from right, exit to left */
 .fcta-stage[data-dir="down"] .fcta-snap{
-  /* when not in view, position to left so that leaving looks like sliding left */
   transform: translate3d(-28px, 0, 0);
 }
 .fcta-stage[data-dir="down"] .fcta-snap.is-in{
   opacity: 1;
-  transform: translate3d(0,0,0); /* settled */
+  transform: translate3d(0,0,0);
 }
 .fcta-stage[data-dir="down"] .fcta-snap:not(.is-in){
   opacity: 0;
-  /* off-screen left on exit */
   transform: translate3d(-28px, 0, 0);
 }
 

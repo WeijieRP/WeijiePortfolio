@@ -1,4 +1,4 @@
-// TechStackSection.jsx — VR Escape Room toolchain (content from your DesignTechStack items)
+// TechStackSection.jsx — VR Escape Room toolchain (with glass around title+desc)
 import React, { useEffect, useRef, useState } from "react";
 import "./techstack.css";
 
@@ -8,12 +8,12 @@ export default function TechStackSection({
   bgImage = "/assets/PortfolioVRProjectDetails2BackgroundImage/ivan-diaz-UrwHK4k8Fmk-unsplash.jpg",
   fallbackImage = "/assets/PortfolioVRProjectDetails2BackgroundImage/ivan-diaz-UrwHK4k8Fmk-unsplash.jpg",
 
-  // Head copy (from your VR DesignTechStack)
+  // Head copy
   eyebrow = "Escape Archive VR",
   title = "AR Escape Room — Development Toolchain",
   desc = "Tools used to assemble scenes, script puzzles, trigger animations, and polish interactions for the AR escape-room.",
 
-  // Items (Unity → Asset Store → C# → VS Code)
+  // Items
   items = [
     {
       key: "unity",
@@ -55,6 +55,7 @@ export default function TechStackSection({
   // Track scroll direction
   const lastY = useRef(typeof window !== "undefined" ? window.scrollY : 0);
   const dirRef = useRef("down"); // "down" | "up"
+
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY || 0;
@@ -74,11 +75,11 @@ export default function TechStackSection({
       const r = vpRef.current?.getBoundingClientRect();
       if (r && vpRef.current) {
         const vh = innerHeight || 1;
-        const enter = vh,
-          leave = -r.height;
+        const enter = vh;
+        const leave = -r.height;
         const p = clamp((enter - r.top) / (enter - leave), 0, 1);
         const d = Math.abs(p - 0.5) / 0.5;
-        const scale = 1 + (1 - d) * 0.02; // 1 → 1.02 (keeps crisp)
+        const scale = 1 + (1 - d) * 0.02; // 1 → 1.02
         const ty = (p - 0.5) * 30; // -15 → +15
         vpRef.current.style.setProperty("--bg-scale", scale.toFixed(3));
         vpRef.current.style.setProperty("--bg-ty", `${ty.toFixed(1)}px`);
@@ -89,7 +90,7 @@ export default function TechStackSection({
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // IO reveal + settle (drop transforms after enter)
+  // IO reveal + settle
   useEffect(() => {
     const root = vpRef.current;
     if (!root) return;
@@ -198,15 +199,21 @@ export default function TechStackSection({
 
         {/* Content */}
         <div className="tech-content">
-          <p className="tech-sub" data-reveal data-side="center" data-stagger>
+          {/* Eyebrow outside glass */}
+          <p className="tech-eyebrow" data-reveal data-side="center" data-stagger>
             {eyebrow}
           </p>
-          <h2 className="tech-title" data-reveal data-side="center" data-stagger>
-            {title}
-          </h2>
-          <p className="tech-sub" data-reveal data-side="center" data-stagger>
-            {desc}
-          </p>
+
+          {/* Glass panel for title + description */}
+          <div
+            className="tech-glass"
+            data-reveal
+            data-side="center"
+            data-stagger
+          >
+            <h2 className="tech-title">{title}</h2>
+            <p className="tech-sub tech-sub--desc">{desc}</p>
+          </div>
 
           <div className="tech-grid" role="list">
             {items.map((t, i) => (

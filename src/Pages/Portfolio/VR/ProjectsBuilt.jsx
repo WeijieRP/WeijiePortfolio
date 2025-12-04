@@ -1,34 +1,41 @@
-// ProjectsBuiltVR.jsx
+// ProjectsBuiltVR.jsx — VR projects section
 import React, { useEffect, useRef } from "react";
 import "./projects-built.css";
 import { Link } from "react-router-dom";
 
 export default function ProjectsBuiltVR() {
   const rootRef = useRef(null);
-  const lastY = useRef(typeof window !== "undefined" ? window.scrollY : 0);
+  const lastY = useRef(
+    typeof window !== "undefined" ? window.scrollY : 0
+  );
   const dirRef = useRef("down");
 
-  // Track scroll direction and set data-scroll on the section
+  // Track scroll direction -> data-scroll="up|down"
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY || 0;
       dirRef.current = y > lastY.current ? "down" : "up";
       lastY.current = y;
+
       const root = rootRef.current;
       if (root) root.setAttribute("data-scroll", dirRef.current);
     };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Reveal animation (toggle .is-in when intersecting)
+  // Reveal animation
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
-    const cards = root.querySelectorAll(".vr-card");
 
-    const reduce = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+    const cards = root.querySelectorAll(".vr-card");
+    const reduce = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)"
+    )?.matches;
+
     if (reduce) {
       cards.forEach((c) => c.classList.add("is-in"));
       return;
@@ -36,9 +43,12 @@ export default function ProjectsBuiltVR() {
 
     const io = new IntersectionObserver(
       (entries) =>
-        entries.forEach((e) => e.target.classList.toggle("is-in", e.isIntersecting)),
+        entries.forEach((e) =>
+          e.target.classList.toggle("is-in", e.isIntersecting)
+        ),
       { threshold: 0.2 }
     );
+
     cards.forEach((c) => io.observe(c));
     return () => io.disconnect();
   }, []);
@@ -47,7 +57,7 @@ export default function ProjectsBuiltVR() {
     {
       title: "AR Name Card in Vuforia",
       desc:
-        "This is an AR business card. You point your phone at the card. A 3D panel shows your info. You tap to open links. It feels smooth and neat.",
+        "An AR business card where a 3D panel appears when you point the camera at it. It shows key info with smooth motion and tappable links.",
       stack: "Unity · C# · Vuforia · Image Targets · UI Animation",
       img: "/assets/VR_ArtWork/Font.png",
       href: "/portfolio/VR/projectdetail1",
@@ -55,7 +65,7 @@ export default function ProjectsBuiltVR() {
     {
       title: "VR Escape Room",
       desc:
-        "This is an immersive puzzle room. You walk or you teleport. You pick up items. You solve each step with clear hints. The world feels calm and amazing.",
+        "A calm VR puzzle room built for new players. You move, pick up items, and solve each step with clear hints and readable cues.",
       stack: "Unity · XR Interaction Toolkit · Locomotion · Diegetic UI",
       img: "/assets/Screenshot.png",
       href: "/portfolio/VR/projectdetail2",
@@ -63,7 +73,11 @@ export default function ProjectsBuiltVR() {
   ];
 
   return (
-    <section className="vr-section" ref={rootRef} id="vr-projects">
+    <section
+      className="vr-section"
+      ref={rootRef}
+      id="vr-projects"
+    >
       <div
         className="vr-bg"
         aria-hidden="true"
@@ -74,10 +88,21 @@ export default function ProjectsBuiltVR() {
       />
 
       <header className="vr-header">
-        <h2 className="vr-title-emboss">Projects that I built</h2>
-        <p className="vr-subtitle">
-          I built two projects in Unity. One is an AR business card. One is a VR escape room. Both focus on clear action and a good feeling.
-        </p>
+        {/* Glass panel wraps title + subtitle */}
+        <div
+          className="vr-headpanel"
+          role="group"
+          aria-label="VR projects overview"
+        >
+          <h2 className="">
+            VR &amp; AR Projects I’ve Built
+          </h2>
+          <p className="vr-subtitle">
+            These Unity projects explore AR image targets and VR escape
+            spaces, with a focus on clear actions, comfort, and a smooth
+            first-time experience.
+          </p>
+        </div>
       </header>
 
       <div className="vr-grid">
@@ -93,7 +118,6 @@ export default function ProjectsBuiltVR() {
                 alt={p.title}
                 loading="lazy"
                 decoding="async"
-            
               />
             </figure>
 
@@ -101,7 +125,11 @@ export default function ProjectsBuiltVR() {
               <h3 className="vr-name">{p.title}</h3>
               <p className="vr-desc">{p.desc}</p>
               <p className="vr-stack">{p.stack}</p>
-              <Link to={p.href} className="vr-btn" aria-label={`View ${p.title}`}>
+              <Link
+                to={p.href}
+                className="vr-btn"
+                aria-label={`View ${p.title}`}
+              >
                 View Project
               </Link>
             </div>

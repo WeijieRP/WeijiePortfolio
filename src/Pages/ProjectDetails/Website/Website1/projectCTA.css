@@ -1,58 +1,41 @@
-/* ===== Scoped CTA variables ===== */
-:root{
-  --fcta-ink:#fff4e6;
-  --fcta-muted:#fcd8b0;
-
-  /* Metallic lavender spectrum for the TITLE (matches your screenshot) */
-  --lavA:#cec2ff;   /* highlight */
-  --lavB:#a48dff;   /* mid */
-  --lavC:#6f63b8;   /* lower edge */
-  --lavGlow:#bda8ff;
-
-  /* Keep your old accent oranges for buttons if needed */
-  --fcta-accent:#f6a96c;
-  --fcta-accent2:#ffb574;
-
-  --fcta-bg:#0a0a0a;
-  --fcta-overlay: rgba(0,0,0,.25);
-
-  /* motion */
-  --slide-dur:.7s;
-  --slide-ease:cubic-bezier(.23,1,.32,1);
-  --stagger:.08s;
-}
-
-/* ===== Stage ===== */
-.fcta-stage{
+/* ===== Final CTA Stage ===== */
+.fcta-stage {
   position: relative;
   isolation: isolate;
-  padding: clamp(80px,10vw,140px) clamp(24px,6vw,80px);
-  color: var(--fcta-ink);
+  padding: clamp(80px, 10vw, 140px) clamp(24px, 6vw, 80px);
+  color: var(--body-ink);
   text-align: center;
-  background: var(--fcta-bg);
+  background: #050816;
   overflow: hidden;
+
+  /* local motion vars */
+  --slide-dur: 0.7s;
+  --slide-ease: cubic-bezier(0.23, 1, 0.32, 1);
+  --stagger: 0.08s;
 }
 
-/* ===== Background ===== */
-.fcta-bg{
+/* Background image */
+.fcta-bg {
   position: absolute;
   inset: 0;
   background: center / cover no-repeat;
-  filter: brightness(.9) contrast(1.06) saturate(1.06);
+  filter: brightness(0.9) contrast(1.06) saturate(1.06);
   z-index: 0;
 }
-.fcta-overlay{
+
+/* Soft overlay for readability */
+.fcta-overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
   pointer-events: none;
   background:
-    radial-gradient(1200px 700px at 50% 10%, rgba(0,0,0,.10), transparent 55%),
-    linear-gradient(180deg, rgba(0,0,0,.06), var(--fcta-overlay));
+    radial-gradient(1200px 700px at 50% 10%, rgba(0, 0, 0, 0.1), transparent 55%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0.06), rgba(0, 0, 0, 0.25));
 }
 
-/* ===== Content ===== */
-.fcta-content{
+/* Content wrapper */
+.fcta-content {
   position: relative;
   z-index: 2;
   max-width: 920px;
@@ -60,47 +43,53 @@
   padding-inline: clamp(8px, 2vw, 16px);
 }
 
-/* ===== Heading (METALLIC PURPLE) & Tagline ===== */
-.fcta-heading{
-  margin: 0 0 10px;
-  font-weight: 1000;
-  line-height: 1.05;
-  font-size: clamp(32px,5vw,56px);
+/* ===== Glass wrapper (NO blur) for heading + tagline ===== */
+.fcta-glass-head {
+  display: block;
+  width: 100%;
+  margin: 0 auto 18px;
+  padding: clamp(14px, 2vw, 20px) clamp(16px, 3vw, 28px);
+  border-radius: 18px;
 
-  /* metallic lavender gradient fill */
-  background:
-    linear-gradient(180deg, var(--lavA) 0%, var(--lavB) 55%, var(--lavC) 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.06)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 12px 36px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 
-  /* bevel + soft glow for depth (no white plate) */
-  text-shadow:
-    0 1px 0 rgba(255,255,255,.28),   /* top ridge */
-    0 2px 0 rgba(26,34,54,.55),      /* inner edge */
-    0 8px 18px rgba(0,0,0,.50),      /* drop */
-    0 0 20px var(--lavGlow);         /* ambient glow */
-  -webkit-text-stroke:.6px rgba(20,22,32,.35);
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
-.fcta-tagline{
-  color: var(--fcta-muted);
-  font-size: clamp(15px,1.2vw,18px);
+/* h2 in CTA uses the GLOBAL gradient + weight from styles.css */
+/* we only adjust spacing here */
+.fcta-glass-head h2 {
+  margin: 0 0 10px;
+}
+
+/* Tagline */
+.fcta-tagline {
+  color: var(--body-muted);
+  font-size: clamp(15px, 1.2vw, 18px);
   max-width: 700px;
-  margin: 0 auto 22px;
+  margin: 0 auto;
   line-height: 1.6;
 }
 
 /* ===== Actions ===== */
-.fcta-actions{
+.fcta-actions {
   display: flex;
   gap: 14px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
-/* ===== Buttons (no motion on hover) ===== */
-.fcta-btn{
+/* ===== Buttons ===== */
+.fcta-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -115,49 +104,59 @@
   border: none;
 }
 
-/* Primary (keep your warm CTA color) */
-.fcta-btn--primary{
+/* Primary CTA button (warm peach) */
+.fcta-btn--primary {
   background: linear-gradient(180deg, #ffe0b6, #ffb874 60%, #ff9f55);
   color: #121212;
-  border: 1px solid rgba(0,0,0,.28);
+  border: 1px solid rgba(0, 0, 0, 0.28);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.75),
-    0 12px 28px rgba(0,0,0,.32);
+    inset 0 1px 0 rgba(255, 255, 255, 0.75),
+    0 12px 28px rgba(0, 0, 0, 0.32);
   transition: none;
 }
-.fcta-btn--primary:hover{ filter:none; transform:none; }
 
-/* Ghost */
-.fcta-btn--ghost{
-  background: rgba(255,255,255,.16);
-  border: 1px solid rgba(255,255,255,.28);
-  color: var(--fcta-ink);
+.fcta-btn--primary:hover {
+  filter: none;
+  transform: none;
+}
+
+/* Ghost secondary button */
+.fcta-btn--ghost {
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: var(--body-ink);
   box-shadow:
-    0 8px 20px rgba(0,0,0,.25) inset,
-    0 6px 16px rgba(0,0,0,.25);
+    0 8px 20px rgba(0, 0, 0, 0.25) inset,
+    0 6px 16px rgba(0, 0, 0, 0.25);
   transition: none;
 }
-.fcta-btn--ghost:hover{ filter:none; transform:none; }
+
+.fcta-btn--ghost:hover {
+  filter: none;
+  transform: none;
+}
 
 /* Accessible focus */
-.fcta-btn:focus-visible{
+.fcta-btn:focus-visible {
   outline: none;
   box-shadow:
-    0 0 0 3px rgba(189,168,255,.6),
-    0 12px 28px rgba(0,0,0,.34);
+    0 0 0 3px rgba(189, 168, 255, 0.6),
+    0 12px 28px rgba(0, 0, 0, 0.34);
 }
 
 /* Mobile */
-@media (max-width: 560px){
-  .fcta-btn{ min-width: 150px; }
+@media (max-width: 560px) {
+  .fcta-btn {
+    min-width: 150px;
+  }
 }
 
 /* ========================= */
 /* Slide In/Out Engine       */
 /* ========================= */
-.fcta-snap{
+.fcta-snap {
   opacity: 0;
-  transform: translate3d(0,0,0);
+  transform: translate3d(0, 0, 0);
   transition:
     transform var(--slide-dur) var(--slide-ease),
     opacity var(--slide-dur) var(--slide-ease);
@@ -165,17 +164,37 @@
   will-change: transform, opacity;
 }
 
-/* DOWN: enter from right, exit left */
-.fcta-stage[data-dir="down"] .fcta-snap{ transform: translate3d(-28px, 0, 0); }
-.fcta-stage[data-dir="down"] .fcta-snap.is-in{ opacity: 1; transform: translate3d(0,0,0); }
-.fcta-stage[data-dir="down"] .fcta-snap:not(.is-in){ opacity: 0; transform: translate3d(-28px,0,0); }
+/* DOWN: enter from left, exit left */
+.fcta-stage[data-dir="down"] .fcta-snap {
+  transform: translate3d(-28px, 0, 0);
+}
+.fcta-stage[data-dir="down"] .fcta-snap.is-in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.fcta-stage[data-dir="down"] .fcta-snap:not(.is-in) {
+  opacity: 0;
+  transform: translate3d(-28px, 0, 0);
+}
 
-/* UP: enter from left, exit right */
-.fcta-stage[data-dir="up"] .fcta-snap{ transform: translate3d(28px, 0, 0); }
-.fcta-stage[data-dir="up"] .fcta-snap.is-in{ opacity: 1; transform: translate3d(0,0,0); }
-.fcta-stage[data-dir="up"] .fcta-snap:not(.is-in){ opacity: 0; transform: translate3d(28px,0,0); }
+/* UP: enter from right, exit right */
+.fcta-stage[data-dir="up"] .fcta-snap {
+  transform: translate3d(28px, 0, 0);
+}
+.fcta-stage[data-dir="up"] .fcta-snap.is-in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+.fcta-stage[data-dir="up"] .fcta-snap:not(.is-in) {
+  opacity: 0;
+  transform: translate3d(28px, 0, 0);
+}
 
 /* Reduced motion */
-@media (prefers-reduced-motion: reduce){
-  .fcta-snap{ transition:none !important; transform:none !important; opacity:1 !important; }
+@media (prefers-reduced-motion: reduce) {
+  .fcta-snap {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
 }

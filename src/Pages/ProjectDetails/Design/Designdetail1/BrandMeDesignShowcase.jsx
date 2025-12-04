@@ -158,6 +158,8 @@ Outcome
 
   const lastY = useRef(typeof window !== "undefined" ? window.scrollY : 0);
   const dir = useRef("down");
+
+  // Track scroll direction for reveal animation
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY || 0;
@@ -168,26 +170,35 @@ Outcome
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Reveal animation
   useEffect(() => {
     const root = innerRef.current;
     if (!root) return;
+
     const els = root.querySelectorAll("[data-reveal]");
     els.forEach((el) => el.setAttribute("data-anim", "prep"));
+
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((e) => {
           const state = e.isIntersecting
-            ? dir.current === "down" ? "in-up" : "in-down"
-            : dir.current === "down" ? "out-up" : "out-down";
+            ? dir.current === "down"
+              ? "in-up"
+              : "in-down"
+            : dir.current === "down"
+            ? "out-up"
+            : "out-down";
           e.target.setAttribute("data-anim", state);
         });
       },
       { threshold: 0.15, rootMargin: "0px 0px -10% 0px" }
     );
+
     els.forEach((el) => io.observe(el));
     return () => io.disconnect();
   }, []);
 
+  // Lock scroll when modal open
   useEffect(() => {
     if (!viewer) return;
     const prev = document.documentElement.style.overflow;
@@ -206,11 +217,16 @@ Outcome
     <section className="ds-stage" id={id}>
       <div className="ds-bg" style={{ backgroundImage: `url(${bgImage})` }} />
       <div className="ds-overlay" />
+
       <div className="ds-inner" ref={innerRef}>
         <header className="ds-head" data-reveal style={{ "--delay": "40ms" }}>
           <p className="ds-eyebrow">{eyebrow}</p>
-          <h2 className="ds-title">{title}</h2>
-          <p className="ds-note">{note}</p>
+
+          {/* Header panel uses global gradient for title via .title-aurora */}
+          <div className="ds-head-glass">
+            <h2 className="ds-title title-aurora">{title}</h2>
+            <p className="ds-note">{note}</p>
+          </div>
         </header>
 
         <div className="ds-grid">
@@ -243,7 +259,7 @@ Outcome
   );
 }
 
-/* ===== Modal ===== */
+/* ===== Modal component ===== */
 function Viewer({ item, onClose }) {
   const imgRef = useRef(null);
   const [expanded, setExpanded] = useState(false);
@@ -252,7 +268,13 @@ function Viewer({ item, onClose }) {
   useEffect(() => {
     const el = imgRef.current;
     if (el?.complete) return;
-    el?.addEventListener("load", () => setMaxH("38vh"), { once: true });
+    el?.addEventListener(
+      "load",
+      () => {
+        setMaxH("38vh");
+      },
+      { once: true }
+    );
   }, []);
 
   return (
@@ -264,13 +286,21 @@ function Viewer({ item, onClose }) {
 
         <div className="ds-modal-content">
           <div className="ds-modal-media">
-            <img ref={imgRef} src={item.img} alt={item.title} className="ds-modal-img" />
+            <img
+              ref={imgRef}
+              src={item.img}
+              alt={item.title}
+              className="ds-modal-img"
+            />
           </div>
 
           <aside className="ds-modal-info">
             <h3 className="ds-modal-title">{item.title}</h3>
 
-            <div className="ds-notes" style={{ maxHeight: maxH }}>
+            <div
+              className={`ds-notes ${expanded ? "is-expanded" : ""}`}
+              style={{ maxHeight: expanded ? "none" : maxH }}
+            >
               <p className="ds-modal-desc">{item.desc}</p>
             </div>
 

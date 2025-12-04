@@ -1,96 +1,104 @@
 // ProjectCTA.jsx
 import React, { useEffect, useRef } from "react";
-import "./hero.css";
 import { Link } from "react-router-dom";
+import "./projectcta.css";
 
 export default function ProjectCTA({
   id = "project-cta",
   bgImage = "/assets/ContactBackgroundImage/galaxy.jpg",
 
-  // Portfolio hero copy (title + subtitle)
   titleTop = "Let’s collaborate and grow together",
   subtitle = "Let’s make the most of our time by building meaningful projects that inspire, connect, and create value for both users and ourselves.",
 
-  // Buttons tuned for a portfolio hero
   leftBtnText = "Contact Me",
   leftBtnLink = "/projects",
   rightBtnText = "View Resume",
   rightBtnLink = "/about",
 }) {
-  const ref = useRef(null);
+  const sectionRef = useRef(null);
 
-  // Apply background to CSS var and fallback <img>
+  // Set background image via CSS var + img fallback
   useEffect(() => {
-    const root = ref.current;
+    const root = sectionRef.current;
     if (!root) return;
-    root.style.setProperty("--cta-bg", `url("${bgImage}")`);
-    const img = root.querySelector(".cta-bg-img");
+
+    root.style.setProperty("--proj-cta-bg", `url("${bgImage}")`);
+
+    const img = root.querySelector(".proj-cta-bg-img");
     if (img) img.src = bgImage;
   }, [bgImage]);
 
-  // Parallax effect
+  // Parallax background
   useEffect(() => {
-    const el = ref.current;
+    const el = sectionRef.current;
+    if (!el || typeof window === "undefined") return;
+
     let raf = 0;
-    const tick = () => {
-      if (!el) return;
-      const r = el.getBoundingClientRect();
+    const onFrame = () => {
+      const rect = el.getBoundingClientRect();
       const vh = window.innerHeight || 1;
-      const p = Math.max(0, 1 - Math.abs(r.top / vh));
-      el.style.setProperty("--bg-scale", 1 + p * 0.06);
-      el.style.setProperty("--bg-ty", `${p * -20}px`);
-      raf = requestAnimationFrame(tick);
+      const centerOffset = rect.top + rect.height / 2 - vh / 2;
+      const norm = Math.max(-1, Math.min(1, centerOffset / vh)); // -1..1
+
+      const scale = 1.03 + Math.abs(norm) * 0.05;
+      const ty = norm * -24;
+
+      el.style.setProperty("--proj-bg-scale", scale.toString());
+      el.style.setProperty("--proj-bg-ty", `${ty}px`);
+
+      raf = requestAnimationFrame(onFrame);
     };
-    tick();
+
+    raf = requestAnimationFrame(onFrame);
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // Reveal animation
+  // Reveal title + subtitle + buttons
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const nodes = el.querySelectorAll(
-      ".cta-title, .cta-sub, .cta-buttons a, .cta-buttons .cta-link"
+    const el = sectionRef.current;
+    if (!el || typeof window === "undefined") return;
+
+    const targets = el.querySelectorAll(
+      ".proj-cta-title, .proj-cta-sub, .proj-cta-btn"
     );
+
     const io = new IntersectionObserver(
-      (ents) => ents.forEach((e) => e.target.classList.toggle("visible", e.isIntersecting)),
-      { threshold: 0.2 }
+      (entries) =>
+        entries.forEach((entry) => {
+          entry.target.classList.toggle("visible", entry.isIntersecting);
+        }),
+      { threshold: 0.15 }
     );
-    nodes.forEach((n) => io.observe(n));
+
+    targets.forEach((t) => io.observe(t));
     return () => io.disconnect();
   }, []);
 
   return (
-    <section className="cta-section" id={id} ref={ref}>
-      {/* Full-bleed background image (parallax via CSS vars) */}
-      <div className="cta-bg" aria-hidden="true" />
-      <img className="cta-bg-img" alt="" aria-hidden="true" />
+    <section className="proj-cta-section" id={id} ref={sectionRef}>
+      {/* Background */}
+      <div className="proj-cta-bg" aria-hidden="true" />
+      <img className="proj-cta-bg-img" alt="" aria-hidden="true" />
 
-      {/* Ambient effects */}
-      <div className="cta-ambient" aria-hidden="true" />
-      <div className="cta-overlay" aria-hidden="true" />
-      <div className="cta-sparkles" aria-hidden="true">
-        {Array.from({ length: 18 }).map((_, i) => <span key={i} />)}
-      </div>
+      {/* Soft overlay */}
+      <div className="proj-cta-overlay" aria-hidden="true" />
 
-      {/* Hero content */}
-      <div className="cta-content">
-        <h2 className="cta-title">
-          <span>{titleTop}</span><br />
-        </h2>
+      {/* Glass panel */}
+      <div className="proj-cta-panel">
+        <div className="proj-cta-content">
+          {/* Uses global gradient via .title-aurora */}
+          <h2 className="proj-cta-title title-aurora">{titleTop}</h2>
 
-        <p className="cta-sub">{subtitle}</p>
+          <p className="proj-cta-sub section-subtitle">{subtitle}</p>
 
-        <div className="cta-buttons">
-          {/* Left: internal route to Projects */}
-          <Link to={leftBtnLink} className="cta-btn primary">
-            {leftBtnText}
-          </Link>
-
-          {/* Right: internal route to About/CV */}
-          <Link to={rightBtnLink} className="cta-btn secondary">
-            {rightBtnText}
-          </Link>
+          <div className="proj-cta-buttons">
+            <Link to={leftBtnLink} className="proj-cta-btn primary">
+              {leftBtnText}
+            </Link>
+            <Link to={rightBtnLink} className="proj-cta-btn secondary">
+              {rightBtnText}
+            </Link>
+          </div>
         </div>
       </div>
     </section>

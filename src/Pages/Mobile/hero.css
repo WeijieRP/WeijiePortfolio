@@ -1,3 +1,5 @@
+/* hero.css — mobile portfolio hero, floating words + cyan glow */
+
 :root{
   --hp-ink:#ffffff;
   --hp-muted:#cfd7e6;
@@ -57,7 +59,6 @@
   max-width:min(980px, 92vw);
   margin-inline:auto;
 
-  /* counter-drift while scrolling */
   transform: translateY(var(--hp-stack-ty));
   transition: transform .08s linear;
 }

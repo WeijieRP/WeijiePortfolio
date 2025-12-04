@@ -1,4 +1,4 @@
-// BrandMeHero.jsx (GPA Calculator App)
+// BrandMeHero.jsx (GPA Calculator App hero with glass panel)
 import React, { useEffect, useRef } from "react";
 import "./hero.css";
 
@@ -6,22 +6,19 @@ export default function BrandMeHero({
   id = "gpa-hero",
   bgImage = "/assets/PortfolioMobileProjectDetails1BackgroundImage/astronomy.png",
 
-  // 📱 Project context
   eyebrow = "Flutter & Dart Mobile Application",
-
-  // 🧭 Project theme
   title = "GPA Calculator App",
-  subtitle = "A cross-platform mobile app that helps students calculate their GPA instantly. Users can add modules, credits, and grades with a simple interface. The app runs smoothly on Android and iOS, supports offline use, and delivers a fast, clean user experience.",
+  subtitle =
+    "A cross-platform mobile app that helps students calculate their GPA instantly. Users can add modules, credits, and grades with a simple interface. The app runs smoothly on Android and iOS, supports offline use, and delivers a fast, clean user experience.",
 
-  // CTA
   primaryBtn = "View Case Study",
   primaryLink = "/case-study/gpa-tracker",
   secondaryBtn = "See My Projects",
-  secondaryLink = "https://github.com/WebDeveloper1299", // replace with actual repo link if available
+  secondaryLink = "https://github.com/WebDeveloper1299",
 }) {
   const bgRef = useRef(null);
 
-  // Parallax zoom + drift (keeps edges covered)
+  // Parallax zoom
   useEffect(() => {
     const el = bgRef.current;
     if (!el) return;
@@ -36,8 +33,9 @@ export default function BrandMeHero({
         const vh = window.innerHeight || 1;
         const p = clamp(y / (vh * 2), 0, 1);
         const eased = p * (2 - p);
-        const scale = 1.04 + eased * 0.12; // 1.04→1.16
-        const ty = eased * 18; // 0→18px
+
+        const scale = 1.05 + eased * 0.12;
+        const ty = eased * 18;
 
         el.style.setProperty("--bg-scale", String(scale));
         el.style.setProperty("--bg-ty", `${ty}px`);
@@ -55,7 +53,7 @@ export default function BrandMeHero({
     };
   }, []);
 
-  // Simple reveal on enter
+  // Reveal on enter
   useEffect(() => {
     const section = document.getElementById(id);
     const targets = section?.querySelectorAll("[data-reveal]");
@@ -74,40 +72,45 @@ export default function BrandMeHero({
   }, [id]);
 
   return (
-    <section className="bm-hero" id={id}>
+    <section className="fs-hero" id={id}>
+      {/* Background */}
       <div
-        className="bm-hero-bg"
+        className="fs-bg"
         ref={bgRef}
         style={{ backgroundImage: `url(${bgImage})` }}
+        aria-hidden="true"
       />
-      <div className="bm-hero-overlay" />
+      <div className="fs-overlay" aria-hidden="true" />
 
-      <div className="bm-hero-inner">
-        <header className="bm-head">
-          <p className="bm-eyebrow" data-reveal>
-            <span>{eyebrow}</span>
-          </p>
+      {/* Content */}
+      <div className="fs-inner">
+        <header className="fs-head fs-no-blur">
+          {/* Glass Panel */}
+          <div className="fs-glass" data-reveal>
+            <p className="fs-eyebrow">
+              <span>{eyebrow}</span>
+            </p>
 
-          <h1 className="bm-title" data-reveal>
-            <span>{title}</span>
-          </h1>
+            {/* h1 uses GLOBAL gradient + this layout spacing */}
+            <h1 className="fs-title title-aurora">{title}</h1>
 
-          <p className="bm-sub" data-reveal>
-            <span>{subtitle}</span>
-          </p>
+            <p className="fs-sub">
+              <span>{subtitle}</span>
+            </p>
 
-          <div className="bm-ctas" data-reveal>
-            <a className="bm-btn" href={primaryLink}>
-              {primaryBtn}
-            </a>
-            <a
-              className="bm-btn ghost"
-              href={secondaryLink}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              {secondaryBtn}
-            </a>
+            <div className="fs-ctas">
+              <a className="fs-btn" href={primaryLink}>
+                {primaryBtn}
+              </a>
+              <a
+                className="fs-btn ghost"
+                href={secondaryLink}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {secondaryBtn}
+              </a>
+            </div>
           </div>
         </header>
       </div>

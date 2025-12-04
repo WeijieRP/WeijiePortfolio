@@ -1,3 +1,4 @@
+// ProjectCTA.jsx
 import React, { useEffect, useRef } from "react";
 import "./projectCTA.css";
 import { Link } from "react-router-dom";
@@ -19,7 +20,7 @@ export default function ProjectCTA({
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    root.style.setProperty("--cta-bg", `url("${bgImage}")`);
+    root.style.setProperty("--project-cta-bg", `url("${bgImage}")`);
     const img = root.querySelector(".cta-bg-img");
     if (img) img.src = bgImage;
   }, [bgImage]);
@@ -27,13 +28,14 @@ export default function ProjectCTA({
   // Parallax effect
   useEffect(() => {
     const el = ref.current;
+    if (!el || typeof window === "undefined") return;
+
     let raf = 0;
     const tick = () => {
-      if (!el) return;
       const r = el.getBoundingClientRect();
       const vh = window.innerHeight || 1;
       const p = Math.max(0, 1 - Math.abs(r.top / vh));
-      el.style.setProperty("--bg-scale", 1 + p * 0.06);
+      el.style.setProperty("--bg-scale", (1 + p * 0.06).toString());
       el.style.setProperty("--bg-ty", `${p * -20}px`);
       raf = requestAnimationFrame(tick);
     };
@@ -45,9 +47,14 @@ export default function ProjectCTA({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const nodes = el.querySelectorAll(".cta-title, .cta-sub, .cta-buttons a, .cta-buttons .cta-link");
+    const nodes = el.querySelectorAll(
+      ".project-cta-section .cta-title span, .project-cta-section .cta-sub, .project-cta-section .cta-btn"
+    );
     const io = new IntersectionObserver(
-      (ents) => ents.forEach((e) => e.target.classList.toggle("visible", e.isIntersecting)),
+      (ents) =>
+        ents.forEach((e) =>
+          e.target.classList.toggle("visible", e.isIntersecting)
+        ),
       { threshold: 0.2 }
     );
     nodes.forEach((n) => io.observe(n));
@@ -55,26 +62,33 @@ export default function ProjectCTA({
   }, []);
 
   return (
-    <section className="cta-section" id={id} ref={ref}>
+    <section className="project-cta-section" id={id} ref={ref}>
+      {/* Background layers */}
       <div className="cta-bg" aria-hidden="true" />
       <img className="cta-bg-img" alt="" aria-hidden="true" />
 
       <div className="cta-ambient" aria-hidden="true" />
       <div className="cta-overlay" aria-hidden="true" />
       <div className="cta-sparkles" aria-hidden="true">
-        {Array.from({ length: 18 }).map((_, i) => <span key={i} />)}
+        {Array.from({ length: 18 }).map((_, i) => (
+          <span key={i} />
+        ))}
       </div>
 
+      {/* Content */}
       <div className="cta-content">
-        <h2 className="cta-title">
-          <span>{titleTop}</span><br />
+        {/* gradient from global .title-aurora */}
+        <h2 className="">
+          <span>{titleTop}</span>
+          <br />
           <span>{titleBottom}</span>
         </h2>
 
-        <p className="cta-sub">{subtitle}</p>
+        {/* typography/color from global .section-subtitle, plus local spacing */}
+        <p className="cta-sub section-subtitle">{subtitle}</p>
 
         <div className="cta-buttons">
-          {/* ✅ External route using Link */}
+          {/* External route */}
           <Link
             to={leftBtnLink}
             target="_blank"
@@ -84,8 +98,13 @@ export default function ProjectCTA({
             {leftBtnText}
           </Link>
 
-          {/* ✅ Internal route using Link */}
-          <Link to={rightBtnLink} className="cta-btn secondary">
+          {/* Another external (GitHub) – still ok to use Link with target=_blank */}
+          <Link
+            to={rightBtnLink}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="cta-btn secondary"
+          >
             {rightBtnText}
           </Link>
         </div>

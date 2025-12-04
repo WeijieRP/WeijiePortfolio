@@ -8,7 +8,8 @@ export default function FinalCTA({
 
   // ✨ BrandMe version (simple English)
   heading = "Like my BrandMe identity? Want to build it further together?",
-  tagline = "I designed a clean, soft-glow brand system — logo, colors, type, and a 4-page portfolio (Home, Work, About, Contact). If you’ve got ideas or feedback, let’s iterate and make it even better.",
+  tagline =
+    "I designed a clean, soft-glow brand system — logo, colors, type, and a 4-page portfolio (Home, Work, About, Contact). If you’ve got ideas or feedback, let’s iterate and make it even better.",
 
   // Swap to any BrandMe-themed background image you have
   bgImage = "/assets/PortfolioDesignProjectDetail1BackgroundImage/planet-6977161_1920.jpg",
@@ -17,7 +18,9 @@ export default function FinalCTA({
   githubHref = "https://github.com/WebDeveloper1299",
 }) {
   const rootRef = useRef(null);
-  const lastY = useRef(typeof window !== "undefined" ? window.scrollY : 0);
+  const lastY = useRef(
+    typeof window !== "undefined" ? window.scrollY : 0
+  );
 
   useEffect(() => {
     const root = rootRef.current;
@@ -41,7 +44,7 @@ export default function FinalCTA({
       (entries) => {
         entries.forEach((e) => {
           if (e.isIntersecting) e.target.classList.add("is-in");
-          else e.target.classList.remove("is-in"); // allows slide-out based on direction
+          else e.target.classList.remove("is-in");
         });
       },
       { rootMargin: "0px 0px -10% 0px", threshold: 0.15 }
@@ -73,22 +76,26 @@ export default function FinalCTA({
 
       {/* Content */}
       <div className="fcta-content">
-        <h2 className="fcta-heading fcta-snap">{heading}</h2>
-        <p className="fcta-tagline fcta-snap">{tagline}</p>
+        {/* ✅ Solid panel around title + description, using global gradient heading */}
+        <div className="fcta-hero-panel fcta-snap">
+          <h2 className="fcta-heading title-aurora">{heading}</h2>
+          <p className="fcta-tagline">{tagline}</p>
+        </div>
 
+        {/* Actions (no glass) */}
         <div className="fcta-actions fcta-snap">
           <Link to={contactHref} className="fcta-btn fcta-btn--primary">
             Collaborate with Me
           </Link>
 
-          <Link
-            to={githubHref}
+          <a
+            href={githubHref}
             className="fcta-btn fcta-btn--ghost"
             target="_blank"
             rel="noopener noreferrer"
           >
             View BrandMe Repo
-          </Link>
+          </a>
         </div>
       </div>
     </section>

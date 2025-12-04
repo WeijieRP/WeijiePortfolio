@@ -1,0 +1,194 @@
+/* top.css – Project CTA with ONE glass panel */
+
+/* SECTION WRAPPER */
+.top-cta-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 80px 20px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+  background: #050816;
+  color: #eaf2ff;
+  font-family: "Poppins", system-ui, -apple-system, sans-serif;
+}
+
+/* Background */
+.top-cta-bg,
+.top-cta-bg-img {
+  position: absolute;
+  inset: 0;
+  background-image: var(--top-cta-bg);
+  background-size: cover;
+  background-position: center;
+  transform: scale(var(--top-bg-scale, 1)) translateY(var(--top-bg-ty, 0));
+  z-index: 0;
+}
+
+.top-cta-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Soft overlay over image */
+.top-cta-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.15),
+    rgba(0, 0, 0, 0.4)
+  );
+  z-index: 1;
+}
+
+/* === SINGLE GLASS PANEL (wraps all content) === */
+.top-cta-content {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+
+  max-width: 960px;
+  width: min(100%, 900px);
+
+  padding: clamp(32px, 4vw, 40px) clamp(24px, 5vw, 40px);
+  border-radius: 26px;
+
+  background:
+    radial-gradient(
+      140% 160% at 0% 0%,
+      rgba(143, 191, 255, 0.28),
+      transparent 55%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(6, 10, 26, 0.88),
+      rgba(10, 18, 40, 0.82)
+    );
+  border: 1px solid rgba(200, 220, 255, 0.2);
+  box-shadow: 0 26px 72px rgba(0, 0, 0, 0.75);
+
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+
+  transform: translateY(6px);
+  transition: transform 0.6s ease, box-shadow 0.6s ease;
+}
+
+.top-cta-content:hover {
+  transform: translateY(0);
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.85);
+}
+
+/* Title (gradient from .clean-gradient-title) */
+.top-cta-title {
+  margin: 0 0 1rem;
+  font-size: clamp(2.6rem, 6vw, 4.1rem);
+  font-weight: 900;
+
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+/* Gradient style */
+.clean-gradient-title {
+  background: linear-gradient(
+    90deg,
+    #71c4ff 0%,
+    #9189ff 50%,
+    #ff7ab5 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.top-cta-title.top-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Subtitle */
+.top-cta-sub {
+  font-size: clamp(1rem, 1.8vw, 1.2rem);
+  color: #dde5ff;
+  max-width: 720px;
+  margin: 0 auto 2rem;
+
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease 0.15s, transform 0.9s ease 0.15s;
+}
+
+.top-cta-sub.top-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Buttons container */
+.top-cta-buttons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.top-cta-btn {
+  min-width: 170px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+
+  opacity: 0;
+  transform: translateY(24px);
+  transition: transform 0.35s ease, opacity 0.35s ease, box-shadow 0.35s ease;
+}
+
+.top-cta-btn.top-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Primary Button */
+.top-cta-btn.top-primary {
+  background: linear-gradient(135deg, #71c4ff, #ff7ab5);
+  color: #04101c;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Secondary Button */
+.top-cta-btn.top-secondary {
+  background: transparent;
+  color: #f3f5ff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Hover */
+.top-cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .top-cta-section {
+    padding: 64px 16px;
+  }
+
+  .top-cta-content {
+    padding: 24px 18px 28px;
+    border-radius: 22px;
+  }
+
+  .top-cta-btn {
+    width: 80%;
+  }
+}

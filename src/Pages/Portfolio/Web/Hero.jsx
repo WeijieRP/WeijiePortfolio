@@ -1,12 +1,12 @@
+// ProjectCTA.jsx
 import React, { useEffect, useRef } from "react";
-import "./projectCTA.css";
+import "./top.css";
 import { Link } from "react-router-dom";
 
 export default function ProjectCTA({
   id = "project-cta",
   bgImage = "/assets/PortfolioWebBackgroundImage/moon.png",
 
-  // ✨ Simple and action-driven content
   titleTop = "Let’s Create Your Website",
   titleBottom = "From Idea to Launch",
   subtitle = "I design and build clean, responsive websites that help you stand out online. Let’s make something great together.",
@@ -18,26 +18,33 @@ export default function ProjectCTA({
 }) {
   const ref = useRef(null);
 
-  // Apply background both as CSS var and <img> src
+  // Set background image via CSS var + <img> fallback
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
-    root.style.setProperty("--cta-bg", `url("${bgImage}")`);
-    const img = root.querySelector(".cta-bg-img");
+
+    root.style.setProperty("--web-cta-bg", `url("${bgImage}")`);
+    const img = root.querySelector(".web-cta-bg-img");
     if (img) img.src = bgImage;
   }, [bgImage]);
 
-  // Parallax background effect
+  // Parallax
   useEffect(() => {
     const el = ref.current;
-    let raf = 0;
+    if (!el || typeof window === "undefined") return;
+
+    let raf;
     const tick = () => {
-      if (!el) return;
-      const r = el.getBoundingClientRect();
+      const rect = el.getBoundingClientRect();
       const vh = window.innerHeight || 1;
-      const p = Math.max(0, 1 - Math.abs(r.top / vh));
-      el.style.setProperty("--bg-scale", 1 + p * 0.06);
-      el.style.setProperty("--bg-ty", `${p * -20}px`);
+      const p = Math.max(0, 1 - Math.abs(rect.top / vh)); // 0..1
+
+      const scale = 1 + p * 0.06;
+      const ty = -20 * p;
+
+      el.style.setProperty("--web-bg-scale", scale.toString());
+      el.style.setProperty("--web-bg-ty", `${ty}px`);
+
       raf = requestAnimationFrame(tick);
     };
     tick();
@@ -47,64 +54,64 @@ export default function ProjectCTA({
   // Reveal animation
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || typeof window === "undefined") return;
+
     const nodes = el.querySelectorAll(
-      ".cta-title, .cta-sub, .cta-buttons a, .cta-buttons .cta-link"
+      ".web-cta-title, .web-cta-sub, .web-cta-btn"
     );
+
     const io = new IntersectionObserver(
       (entries) => {
-        entries.forEach((e) => {
-          e.target.classList.toggle("visible", e.isIntersecting);
+        entries.forEach((entry) => {
+          entry.target.classList.toggle("visible", entry.isIntersecting);
         });
       },
       { threshold: 0.2 }
     );
+
     nodes.forEach((n) => io.observe(n));
     return () => io.disconnect();
   }, []);
 
   return (
-    <section className="cta-section" id={id} ref={ref}>
+    <section className="web-cta-section" id={id} ref={ref}>
       {/* Background */}
-      <div className="cta-bg" aria-hidden="true" />
-      <img className="cta-bg-img" alt="" aria-hidden="true" />
+      <div className="web-cta-bg" aria-hidden="true" />
+      <img className="web-cta-bg-img" alt="" aria-hidden="true" />
+      <div className="web-cta-overlay" aria-hidden="true" />
 
-      {/* Ambient visual effects */}
-      <div className="cta-ambient" aria-hidden="true" />
-      <div className="cta-overlay" aria-hidden="true" />
-      <div className="cta-sparkles" aria-hidden="true">
+      {/* Ambient + sparkles */}
+      <div className="web-cta-ambient" aria-hidden="true" />
+      <div className="web-cta-sparkles" aria-hidden="true">
         {Array.from({ length: 18 }).map((_, i) => (
           <span key={i} />
         ))}
       </div>
 
-      {/* Main content */}
-      <div className="cta-content">
-        <h2 className="cta-title">
-          <span>{titleTop}</span>
+      {/* Single glass panel */}
+      <div className="web-cta-panel">
+        <h2 className="web-cta-title title-aurora">
+          {titleTop}
           <br />
-          <span>{titleBottom}</span>
+          {titleBottom}
         </h2>
 
-        <p className="cta-sub">{subtitle}</p>
+        <p className="web-cta-sub section-subtitle">{subtitle}</p>
 
-        <div className="cta-buttons">
-          {/* Contact button */}
+        <div className="web-cta-buttons">
           <Link
             to={leftBtnLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="cta-btn primary"
+            className="web-cta-btn primary"
           >
             {leftBtnText}
           </Link>
-
-          {/* Projects button */}
           <Link
             to={rightBtnLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="cta-btn secondary"
+            className="web-cta-btn secondary"
           >
             {rightBtnText}
           </Link>

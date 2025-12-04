@@ -1,9 +1,11 @@
+// PortfolioHeroMobile.jsx
 import React, { useEffect, useRef, useMemo } from "react";
 import "./hero.css";
 
 /** Split into words so each can float with a stagger */
 function HPFloatWords({ text, startDelay = 0 }) {
   const words = useMemo(() => (text || "").trim().split(/\s+/), [text]);
+
   return (
     <>
       {words.map((w, i) => (
@@ -11,9 +13,9 @@ function HPFloatWords({ text, startDelay = 0 }) {
           key={i}
           className="hp-float-word"
           style={{
-            ["--hp-delay"]: `${startDelay + i * 90}ms`,
-            ["--hp-time"]: `${2300 + (i % 3) * 300}ms`,
-            ["--hp-amp"]: `${6 + (i % 2) * 2}px`,
+            "--hp-delay": `${startDelay + i * 90}ms`,
+            "--hp-time": `${2300 + (i % 3) * 300}ms`,
+            "--hp-amp": `${6 + (i % 2) * 2}px`,
           }}
         >
           {w}
@@ -25,11 +27,11 @@ function HPFloatWords({ text, startDelay = 0 }) {
 
 export default function PortfolioHeroMobile({
   id = "portfolio-hero",
-  // High-contrast, visible default background (you can swap to /image/yourfile.jpg)
+  // You can swap this to /assets/PortfolioMobileBackgroundImage/xxx.jpg
   bgImage = "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=2400&q=80",
   titleTop = "MOBILE APP",
   titleBottom = "DEVELOPMENT",
-  subtitle = "Cross-platform , Flutter, Clean UI ,Secure auth, Fast APIs",
+  subtitle = "Cross-platform, Flutter, clean UI, secure auth, fast APIs.",
   ctaText = "View Mobile Projects",
   ctaHref = "#projects",
 }) {
@@ -43,6 +45,7 @@ export default function PortfolioHeroMobile({
     let raf = 0;
     let prevY = window.scrollY || 0;
     let vel = 0;
+
     const lerp = (a, b, t) => a + (b - a) * t;
     const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
 

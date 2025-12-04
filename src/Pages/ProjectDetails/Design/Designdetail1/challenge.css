@@ -1,179 +1,218 @@
-:root{
-  --ink:#e6edf3; --muted:#cfd9ec;
-  --accent:#67d3ff; --accentSoft: rgba(103,211,255,.12);
-  --padX: clamp(16px, 5vw, 6vw);
-
-  /* parallax vars (already used by your JS) */
-  --scroll-scale:1; --scroll-ty:0px;
-  --stars-tx:0; --stars-ty:0; --stars-rot:0deg;
-
-  /* slide reveal */
-  --reveal-dur: 640ms;
-  --reveal-ease: cubic-bezier(.22,.61,.36,1);
-}
+/* challenge.css — BrandMe challenge section (CRISP VERSION) */
 
 /* ===== Full-bleed stage ===== */
-.section-bg{
-  position:relative;
-  background:#000;
-  color:var(--ink);
-  width:100vw;
-  margin-left:calc(50% - 50vw);
-  margin-right:calc(50% - 50vw);
-  overflow:hidden;
+.section-bg {
+  position: relative;
+  background: #000;
+  color: var(--body-ink); /* from styles.css */
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-right: calc(50% - 50vw);
+  overflow: hidden;
+
+  --reveal-dur: 640ms;
+  --reveal-ease: cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
-/* Viewport */
-.ch-viewport{
-  position:relative;
-  min-height:92vh;
-  isolation:isolate;
-  overflow:clip;
+/* Viewport wrapper with parallax vars */
+.ch-viewport {
+  position: relative;
+  min-height: 92vh;
+  isolation: isolate;
+  overflow: hidden;
+
+  --scroll-ty: 0px;
+  --stars-tx: 0px;
+  --stars-ty: 0px;
+  --stars-rot: 0deg;
 }
 
-/* Backdrop */
-.ch-bg{
-  position:absolute; inset:0;
-  background-size:cover;
-  background-position:50% 50%;
-  transform-origin:50% 45%;
-  filter:saturate(1.05) contrast(1.05) brightness(.95);
-  z-index:0;
-}
-.kb-layer{
-  --kb-scale: 1.05;
-  animation: ch-kb 18s ease-in-out infinite alternate;
-  transform: translate3d(0,var(--scroll-ty),0) scale(calc(var(--scroll-scale) * var(--kb-scale)));
-}
-@keyframes ch-kb{
-  0%{ --kb-scale:1.03; background-position:48% 52%; }
-  50%{ --kb-scale:1.09; background-position:52% 48%; }
-  100%{ --kb-scale:1.12; background-position:50% 50%; }
+/* Backdrop — NO filters, NO animation, NO scale except Y drift */
+.ch-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: translate3d(0, var(--scroll-ty), 0); /* only vertical move */
+  z-index: 0;
 }
 
-/* Stars overlay */
-.ch-stars{
-  position:absolute; inset:-20%;
+/* Stars overlay — tiny dots only, no blur */
+.ch-stars {
+  position: absolute;
+  inset: -20%;
   background-image:
-    radial-gradient(2px 2px at 22% 30%, rgba(255,255,255,.9), transparent 50%),
-    radial-gradient(1.6px 1.6px at 70% 70%, rgba(255,255,255,.7), transparent 50%),
-    radial-gradient(1.5px 1.5px at 85% 25%, rgba(255,255,255,.6), transparent 50%),
-    radial-gradient(1.9px 1.9px at 35% 80%, rgba(255,255,255,.8), transparent 50%),
-    radial-gradient(1.2px 1.2px at 10% 60%, rgba(255,255,255,.6), transparent 50%);
-  opacity:.33;
-  transform: translate(var(--stars-tx), var(--stars-ty)) rotate(var(--stars-rot));
+    radial-gradient(2px 2px at 22% 30%, rgba(255, 255, 255, 0.9), transparent 50%),
+    radial-gradient(1.6px 1.6px at 70% 70%, rgba(255, 255, 255, 0.7), transparent 50%),
+    radial-gradient(1.5px 1.5px at 85% 25%, rgba(255, 255, 255, 0.6), transparent 50%),
+    radial-gradient(1.9px 1.9px at 35% 80%, rgba(255, 255, 255, 0.8), transparent 50%),
+    radial-gradient(1.2px 1.2px at 10% 60%, rgba(255, 255, 255, 0.6), transparent 50%);
+  opacity: 0.33;
+  transform: translate(var(--stars-tx), var(--stars-ty))
+    rotate(var(--stars-rot));
   transition: transform 16ms linear;
-  z-index:1;
+  z-index: 1;
 }
 
-/* Tint */
-.ch-overlay{
-  position:absolute; inset:0; z-index:2; pointer-events:none;
+/* Tint (no blur, just gradients) */
+.ch-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
   background:
-    linear-gradient(180deg, rgba(0,0,0,.52) 0%, rgba(0,0,0,.18) 35%, rgba(0,0,0,.66) 100%),
-    radial-gradient(60rem 40rem at 50% 12%, rgba(126,141,254,.18), rgba(0,0,0,0) 60%);
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.52) 0%,
+      rgba(0, 0, 0, 0.18) 35%,
+      rgba(0, 0, 0, 0.66) 100%
+    ),
+    radial-gradient(
+      60rem 40rem at 50% 12%,
+      rgba(126, 141, 254, 0.18),
+      rgba(0, 0, 0, 0) 60%
+    );
 }
 
 /* ===== Grid (side-by-side) ===== */
-.ch-inner{
-  position:relative; z-index:3;
-  display:grid;
-  grid-template-columns: 1.05fr .95fr;
+.ch-inner {
+  position: relative;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
   gap: clamp(20px, 4.6vw, 56px);
-  align-items: start;
-  width:min(1140px, 92%);
+  align-items: flex-start;
+  width: min(1140px, 92%);
   margin: 0 auto;
-  padding: clamp(44px, 7vw, 108px) var(--padX);
+  padding: clamp(50px, 7vw, 112px) clamp(16px, 5vw, 6vw) clamp(64px, 7vw, 120px);
+  /* extra bottom padding helps avoid viewport clipping */
 }
-.ch-left{ min-width:0; display:flex; flex-direction:column; gap:14px; }
-.ch-right{ min-width:0; display:flex; align-items:center; justify-content:center; }
 
-/* ===== Left glass card ===== */
-.ch-hero-card{
+.ch-left {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.ch-right {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== Left card — NO blur, clean panel ===== */
+.ch-hero-card {
   border-radius: 18px;
-  padding: clamp(16px, 2.4vw, 26px);
-  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
-  border: 1px solid rgba(255,255,255,.24);
-  box-shadow: 0 10px 26px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.04) inset;
-  backdrop-filter: blur(10px);
+  padding: clamp(18px, 2.4vw, 28px);
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.6);
+  overflow: visible; /* make sure descenders like “g” never get cut */
 }
 
 /* Type */
-.ch-eyebrow{
-  margin:0 0 8px;
-  letter-spacing:.28em;
-  text-transform:uppercase;
-  color:#e8dfcf; opacity:.9;
-  font-size: clamp(10px,1.1vw,14px);
+.ch-eyebrow {
+  margin: 0 0 8px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--body-muted); /* from styles.css */
+  opacity: 0.9;
+  font-size: clamp(10px, 1.1vw, 14px);
 }
-.ch-title{
-  margin:.1em 0 .25em;
-  line-height:.95; font-weight:900;
-  font-size: clamp(30px, 5.2vw, 64px);
-  text-shadow: 0 1px 0 rgba(0,0,0,.6), 0 0 32px rgba(255,255,255,.12);
+
+/* h2 uses global gradient from styles.css (add .title-aurora if you want) */
+.ch-title {
+  margin: 0.1em 0 0.45em;
+  line-height: 1.12;     /* loosen line-height so “g” has room */
+  padding-bottom: 2px;   /* tiny buffer to avoid visual clipping */
+  font-weight: 900;
 }
-.ch-summary{
+
+/* Summary uses warm peach muted */
+.ch-summary {
   margin: 6px 0 0;
-  color: var(--muted); font-weight:600;
+  color: var(--body-muted);
+  font-weight: 600;
   font-size: clamp(14px, 1.9vw, 19px);
 }
 
-/* ===== Right figure ===== */
-.ch-figure{
+/* ===== Right figure — NO blur, solid card ===== */
+.ch-figure {
   width: 100%;
   max-width: 640px;
   border-radius: 18px;
-  overflow: clip;
-  border:1px solid rgba(255,255,255,.16);
-  background: rgba(0,0,0,.4);
-  backdrop-filter: blur(4px);
-  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: #060814;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
 }
-.ch-img{
-  width:100%;
+
+.ch-img {
+  width: 100%;
   height: min(56vh, 520px);
   object-fit: cover;
-  display:block;
-  transform: translateZ(0);
+  display: block;
 }
-.ch-cap{
-  margin:0; padding:10px 12px;
-  font-size:12px; color:var(--muted);
-  border-top:1px solid rgba(255,255,255,.12);
-  text-align:center;
+
+.ch-cap {
+  margin: 0;
+  padding: 10px 12px;
+  font-size: 12px;
+  color: var(--body-muted);
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  text-align: center;
 }
 
 /* ===== Smooth slide-in/out on scroll ===== */
-[data-reveal]{
+[data-reveal] {
   opacity: 0;
   will-change: transform, opacity;
   transition:
     transform var(--reveal-dur) var(--reveal-ease),
-    opacity   var(--reveal-dur) var(--reveal-ease);
+    opacity var(--reveal-dur) var(--reveal-ease);
 }
 
 /* start offsets (desktop) */
-[data-reveal="title"]  { transform: translate3d(-44px, 0, 0); } /* left column slides from left */
-[data-reveal="summary"]{ transform: translate3d(-44px, 0, 0); }
-[data-reveal="figure"] { transform: translate3d( 44px, 0, 0); } /* right column slides from right */
+[data-reveal="title"] {
+  transform: translate3d(-44px, 0, 0);
+}
+[data-reveal="summary"] {
+  transform: translate3d(-44px, 0, 0);
+}
+[data-reveal="figure"] {
+  transform: translate3d(44px, 0, 0);
+}
 
 /* visible */
-.is-shown[data-reveal]{
+.is-shown[data-reveal] {
   opacity: 1;
-  transform: translate3d(0,0,0);
+  transform: translate3d(0, 0, 0);
 }
 
 /* ===== Mobile: stack and slide up ===== */
-@media (max-width: 980px){
-  .ch-inner{ grid-template-columns: 1fr; }
+@media (max-width: 980px) {
+  .ch-inner {
+    grid-template-columns: 1fr;
+  }
+
   [data-reveal="title"],
   [data-reveal="summary"],
-  [data-reveal="figure"]{ transform: translate3d(0, 22px, 0); }
+  [data-reveal="figure"] {
+    transform: translate3d(0, 22px, 0);
+  }
 }
 
 /* Motion safety */
-@media (prefers-reduced-motion: reduce){
-  .kb-layer{ animation: none !important; transform:none !important; }
-  .ch-stars{ transition:none !important; transform:none !important; }
-  [data-reveal]{ opacity:1 !important; transform:none !important; transition:none !important; }
+@media (prefers-reduced-motion: reduce) {
+  .ch-stars {
+    transition: none !important;
+    transform: none !important;
+  }
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }

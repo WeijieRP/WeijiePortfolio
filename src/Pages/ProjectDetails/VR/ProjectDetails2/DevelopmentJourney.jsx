@@ -9,7 +9,7 @@ export default function EscapeJourneyCarousel({
     {
       week: "Week 5",
       title: "Design Document & Project Setup",
-      badges: ["GDD", "Scope", "Planning"],
+      badges: ["GDD", "Scope & Planning"],
       tasks: [
         "Wrote the Game Design Document covering the concept and emotional arc.",
         "Defined the six-room flow and progression logic.",
@@ -91,6 +91,7 @@ export default function EscapeJourneyCarousel({
   const [index, setIndex] = useState(0);
   const trackRef = useRef(null);
 
+  // Slide movement
   useEffect(() => {
     if (trackRef.current) {
       trackRef.current.style.transform = `translateX(-${index * 100}%)`;
@@ -102,6 +103,7 @@ export default function EscapeJourneyCarousel({
   const prev = () => setIndex((i) => (i - 1 + items.length) % items.length);
   const goTo = (i) => setIndex(clamp(i, 0, items.length - 1));
 
+  // Keyboard arrows
   useEffect(() => {
     const onKey = (e) => {
       if (e.key === "ArrowRight") next();
@@ -111,24 +113,29 @@ export default function EscapeJourneyCarousel({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Swipe / drag
   const startX = useRef(0);
   const deltaX = useRef(0);
   const isDown = useRef(false);
 
+  const getClientX = (e) => e.touches?.[0]?.clientX ?? e.clientX ?? 0;
+
   const onPointerDown = (e) => {
     isDown.current = true;
-    startX.current = e.clientX ?? e.touches?.[0]?.clientX ?? 0;
+    startX.current = getClientX(e);
     deltaX.current = 0;
   };
+
   const onPointerMove = (e) => {
     if (!isDown.current || !trackRef.current) return;
-    const x = e.clientX ?? e.touches?.[0]?.clientX ?? startX.current;
+    const x = getClientX(e);
     deltaX.current = x - startX.current;
     trackRef.current.style.transition = "none";
     const base = -index * 100;
     const percentShift = (deltaX.current / trackRef.current.clientWidth) * 100;
     trackRef.current.style.transform = `translateX(calc(${base}% + ${percentShift}%))`;
   };
+
   const onPointerUp = () => {
     if (!trackRef.current) return;
     trackRef.current.style.transition = "";
@@ -143,16 +150,22 @@ export default function EscapeJourneyCarousel({
     <section
       className="tf-stage"
       id={id}
-      /* set CSS var + hard fallback background directly */
-      style={{
-        ["--tf-bg"]: `url("${bgImage}")`,
-        backgroundImage: `url("${bgImage}")`,
-      }}
       aria-label="Escape Archive VR — Journey & Milestones"
     >
+      {/* full-bleed BG like other sections, no blur */}
+      <div
+        className="tf-bg"
+        style={{ backgroundImage: `url(${bgImage})` }}
+        aria-hidden="true"
+      />
+      <div className="tf-overlay" aria-hidden="true" />
+
       <div className="tf-container">
-        <h2 className="tf-title">Escape Archive VR — Journey & Milestones</h2>
-        <p className="tf-sub">A calm, room-by-room progression from concept to the open sky.</p>
+        {/* h2 picks up global aurora gradient rules */}
+        <h2 className="tf-title">Escape Archive VR — Journey &amp; Milestones</h2>
+        <p className="tf-sub">
+          A calm, room-by-room progression from concept to the open sky.
+        </p>
 
         <div
           className="tf-viewport"
@@ -183,7 +196,9 @@ export default function EscapeJourneyCarousel({
 
                 <ul className="tf-badges">
                   {w.badges.map((b, j) => (
-                    <li className="tf-badge" key={j}>{b}</li>
+                    <li className="tf-badge" key={j}>
+                      {b}
+                    </li>
                   ))}
                 </ul>
 
@@ -198,8 +213,18 @@ export default function EscapeJourneyCarousel({
         </div>
 
         <div className="tf-controls">
-          <button className="tf-btn" onClick={prev} aria-label="Previous slide">←</button>
-          <div className="tf-dots" role="tablist" aria-label="Slide navigation">
+          <button
+            className="tf-btn"
+            onClick={prev}
+            aria-label="Previous slide"
+          >
+            ←
+          </button>
+          <div
+            className="tf-dots"
+            role="tablist"
+            aria-label="Slide navigation"
+          >
             {items.map((_, i) => (
               <button
                 key={i}
@@ -211,7 +236,13 @@ export default function EscapeJourneyCarousel({
               />
             ))}
           </div>
-          <button className="tf-btn" onClick={next} aria-label="Next slide">→</button>
+          <button
+            className="tf-btn"
+            onClick={next}
+            aria-label="Next slide"
+          >
+            →
+          </button>
         </div>
       </div>
     </section>

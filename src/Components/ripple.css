@@ -1,41 +1,78 @@
 :root {
-  --ripple-color: rgba(157, 112, 255, 0.25); /* purple-blue glow */
-  --ripple-size: 320px;
-  --ripple-blur: 90px;
-  --ripple-fade: 0.8s;
+  /* Tweak these to taste */
+  --ripple-color: rgba(157,112,255,0.28); /* purple-blue glow */
+  --ripple-color-2: rgba(90,180,255,0.18); /* cool blue outer halo */
+  --ripple-size: 150px;         /* main glow radius */
+  --ripple-size-2: 100px;       /* outer halo radius */
+  --ripple-blur: 80px;          /* softness */
+  --ripple-fade: 0.45s;         /* fade in/out speed */
+  --ripple-move-ease: 120ms;    /* gradient reposition smoothing */
+  --ripple-z: 9999;             /* ensure above everything */
 }
 
-/* host */
+/* host with a subtle base vignette so the glow shows up on flat backgrounds */
 .ripple-host {
   position: relative;
-  isolation: isolate;
+  isolation: isolate; /* separate stacking context */
   overflow: hidden;
 }
-
-/* overlay follows mouse */
-.mouse-ripple {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
+.ripple-host::before {
+  content: "";
+  position: absolute; inset: -10%;
   z-index: 0;
-  background: radial-gradient(
-    circle var(--ripple-size) at var(--x, 50%) var(--y, 50%),
-    var(--ripple-color),
-    transparent 80%
-  );
-  opacity: 0;
-  transition:
-    background 0.2s ease-out,
-    opacity var(--ripple-fade) ease-out;
-  filter: blur(var(--ripple-blur));
+  pointer-events: none;
+  background:
+    radial-gradient(120% 120% at 50% 0%,
+      rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 60%) /* soft top vignette */
+    ,
+    radial-gradient(150% 120% at 50% 100%,
+      rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 65%); /* soft bottom vignette */
 }
 
-/* visible while moving */
-.ripple-host:hover .mouse-ripple {
+/* the ripple overlay sits ABOVE content but cannot be clicked */
+.mouse-ripple {
+  position: absolute; /* relative to host */
+  inset: 0;
+  z-index: var(--ripple-z);
+  pointer-events: none;
+  will-change: background, opacity, transform;
+  filter: blur(var(--ripple-blur));
+  opacity: 0;
+
+  /* Blend so the glow is visible on dark/medium UIs without washing out */
+  mix-blend-mode: screen;
+
+  /* Two layered gradients: tight core + large faint halo */
+  background:
+    radial-gradient(
+      circle var(--ripple-size) at var(--x, 50%) var(--y, 50%),
+      var(--ripple-color) 0%,
+      rgba(0,0,0,0) 70%
+    ),
+    radial-gradient(
+      circle var(--ripple-size-2) at var(--x, 50%) var(--y, 50%),
+      var(--ripple-color-2) 0%,
+      rgba(0,0,0,0) 70%
+    );
+
+  transition:
+    opacity var(--ripple-fade) ease-out,
+    background-position var(--ripple-move-ease) ease-out,
+    background var(--ripple-move-ease) ease-out;
+}
+
+/* Turn on when active (mouse/touch moving). We toggle data-active in JS. */
+.ripple-host[data-active="1"] .mouse-ripple {
   opacity: 1;
 }
 
-/* accessibility */
+/* If you ALSO want it to appear on hover only (desktop), keep this: */
+/* .ripple-host:hover .mouse-ripple { opacity: 1; } */
+
+/* Optional: darker UIs might want a slightly bigger glow */
+/* .theme-dark .ripple-host { --ripple-size: 420px; --ripple-size-2: 820px; } */
+
+/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
   .mouse-ripple { transition: none; opacity: 0 !important; }
 }

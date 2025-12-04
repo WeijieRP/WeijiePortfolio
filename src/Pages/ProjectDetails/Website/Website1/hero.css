@@ -1,109 +1,197 @@
-:root{
-  --ink:#e6edf3;
-  --muted:#cfd9ec;
-  --bg:#000;
-  --accentA:#67d3ff;
-  --accentB:#ff4da6;
+/* ---------------------------------------------------
+   Portfolio Project Hero — standardized to global UI
+   Uses global:
+   - var(--body-ink)
+   - var(--body-muted)
+   - h1 gradient from styles.css
+----------------------------------------------------*/
+
+/* SECTION */
+.bm-hero {
+  position: relative;
+  isolation: isolate;
+  min-height: 100vh;
+  width: 100vw;
+  display: grid;
+  place-items: center;
+  /* 🔧 allow descenders + glow to breathe */
+  overflow: visible;
+  text-align: center;
+  color: var(--body-ink);
 }
 
-/* Base */
-html,body{margin:0;background:var(--bg);color:var(--ink);}
-*{box-sizing:border-box;}
-
-/* HERO */
-.bm-hero{
-  position:relative; isolation:isolate;
-  min-height:100vh; min-height:100svh; min-height:100dvh;
-  width:100vw; /* full-bleed */
-  display:grid; place-items:center;
-  text-align:center; overflow:hidden;
-}
-
-/* Parallax background driven by CSS vars set in JS */
-.bm-hero-bg{
+/* BACKGROUND (parallax) */
+.bm-hero-bg {
   --bg-scale: 1.04;
   --bg-ty: 0px;
-  position:absolute; inset:0;           /* full-bleed, no black bars */
-  background-size:cover; background-position:center;
-  filter: brightness(.62) contrast(1.06) saturate(1.08);
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  filter: brightness(0.55) saturate(1.15);
   transform: translate3d(0, var(--bg-ty), 0) scale(var(--bg-scale));
   will-change: transform;
-  transition: transform .18s ease-out; /* light smoothing */
-  z-index:0;
+  transition: transform 0.18s ease-out;
+  z-index: 0;
 }
 
-/* Readability overlay */
-.bm-hero-overlay{
-  position:absolute; inset:0; z-index:1; pointer-events:none;
+/* CONTENT WRAPPER */
+.bm-hero-inner {
+  position: relative;
+  z-index: 2;
+  padding: clamp(80px, 10vw, 140px) clamp(20px, 6vw, 72px);
+  width: 100%;
+}
+
+.bm-head {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ---------------------------------------------------
+   GLASS PANEL (wraps title + subtitle + CTAs)
+----------------------------------------------------*/
+.bm-panel {
+  margin: 0 auto;
+  padding: clamp(26px, 4.2vw, 40px) clamp(22px, 4.2vw, 38px);
+  border-radius: 24px;
+
   background:
-    radial-gradient(70rem 40rem at 50% 10%, rgba(126,141,254,.16), transparent 60%),
-    linear-gradient(180deg, rgba(0,0,0,.65) 0%, rgba(0,0,0,.28) 40%, rgba(0,0,0,.78) 100%);
+    radial-gradient(
+      900px 600px at 0% 0%,
+      rgba(255, 255, 255, 0.06),
+      transparent 60%
+    ),
+    radial-gradient(
+      900px 600px at 100% 100%,
+      rgba(255, 255, 255, 0.05),
+      transparent 60%
+    ),
+    rgba(5, 8, 22, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.6);
+  text-align: center;
+
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  filter: none;
 }
 
-/* Content */
-.bm-hero-inner{
-  position:relative; z-index:2;
-  padding: clamp(40px,6vw,96px) clamp(20px,6vw,72px);
-  width:100%;
-}
-.bm-head{ max-width:1000px; margin:0 auto; }
+/* ---------------------------------------------------
+   HEADLINE + SUBTITLE
+   h1 gradient comes from global styles.css
+----------------------------------------------------*/
+.bm-title {
+  margin: 0 0 0.7em;
+  font-size: clamp(2.3rem, 6vw, 4.2rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
 
-.bm-eyebrow{
-  margin:0 0 8px; letter-spacing:.28em; text-transform:uppercase;
-  font-size: clamp(10px,1.1vw,12px); color:#e8dfcf; opacity:.9;
-}
-.bm-title{
-  margin:0; line-height:1.04; font-weight:900;
-  font-size: clamp(32px, 8vw, 88px);
-  background: linear-gradient(90deg, var(--accentA), var(--accentB));
-  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-  text-shadow: 0 1px 0 rgba(0,0,0,.5);
-}
-.bm-sub{
-  margin:12px auto 18px; color: var(--muted); font-weight:600; line-height:1.5;
-  font-size: clamp(14px, 2.1vw, 18px); max-width: 900px;
+  /* 🔧 main fix: more room for descenders like “y” */
+  line-height: 1.25;
+  display: inline-block;
+  padding-bottom: 4px; /* tiny cushion so bottom can’t “kiss” the edge */
 }
 
-/* CTAs */
-.bm-ctas{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:16px; }
-.bm-btn{
-  display:inline-block; padding:12px 20px; border-radius:999px;
-  border:1px solid rgba(255,255,255,.24); background:rgba(0,0,0,.35);
-  color:var(--ink); text-decoration:none; font-weight:800; font-size:15px;
-  box-shadow:0 6px 18px rgba(0,0,0,.3);
-  transition:background .2s ease, transform .2s ease;
-}
-.bm-btn:hover{ background:rgba(103,211,255,.15); transform:translateY(-2px); }
-.bm-btn.ghost{ background:transparent; border-color:rgba(255,255,255,.22); }
-
-/* Reveal */
-[data-reveal]{ opacity:0; transform: translateY(16px); }
-.is-shown{ animation: bm-in .6s cubic-bezier(.22,.61,.36,1) forwards; }
-@keyframes bm-in{
-  from{ opacity:0; transform: translateY(16px); }
-  to  { opacity:1; transform: translateY(0); }
+.bm-sub {
+  margin: 0 auto;
+  max-width: 780px;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--body-muted);
+  line-height: 1.6;
+  font-weight: 500;
 }
 
-/* Gentle floating for inline spans */
-.float{
-  display:inline-block;
-  animation: floatY 6s ease-in-out infinite;
-}
-@keyframes floatY{
-  0%{ transform:translateY(0px); }
-  50%{ transform:translateY(-6px); }
-  100%{ transform:translateY(0px); }
-}
-
-/* Responsive */
-@media (max-width:640px){
-  .bm-title{ font-size: clamp(28px, 10vw, 64px); }
-  .bm-sub{ font-size: clamp(13px, 3.4vw, 16px); }
+/* ---------------------------------------------------
+   CTA BUTTONS — inside panel
+----------------------------------------------------*/
+.bm-ctas {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 22px;
 }
 
-/* Motion safety */
-@media (prefers-reduced-motion: reduce){
-  .bm-hero-bg{ transition:none !important; transform:none !important; }
-  [data-reveal]{ opacity:1 !important; transform:none !important; animation:none !important; }
-  .float{ animation:none !important; }
+.bm-btn {
+  display: inline-block;
+  padding: 0.9rem 1.8rem;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+/* Primary — uses global title gradient */
+.bm-btn {
+  background: linear-gradient(
+    90deg,
+    var(--titleA),
+    var(--titleB),
+    var(--titleC),
+    var(--titleD)
+  );
+  color: #050816;
+  border: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+}
+
+.bm-btn:hover {
+  filter: brightness(1.06);
+  transform: translateY(-2px);
+}
+
+/* Secondary — ghost */
+.bm-btn.ghost {
+  background: transparent;
+  color: var(--body-ink);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.bm-btn.ghost:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+/* ---------------------------------------------------
+   Reveal Animation
+----------------------------------------------------*/
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.is-shown {
+  animation: bm-reveal 0.6s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+}
+
+@keyframes bm-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---------------------------------------------------
+   Responsive
+----------------------------------------------------*/
+@media (max-width: 640px) {
+  .bm-title {
+    font-size: clamp(2rem, 8.5vw, 3.4rem);
+    line-height: 1.3;   /* extra safe on small screens */
+    padding-bottom: 6px;
+  }
+
+  .bm-sub {
+    font-size: clamp(0.9rem, 3.4vw, 1.1rem);
+  }
+
+  .bm-panel {
+    padding-inline: 18px;
+  }
 }

@@ -167,7 +167,7 @@ export default function DesignJourneyCarousel({
       <div className="tf-overlay" />
 
       <div className="tf-container">
-        <h2 className="tf-title">Development Journey — From Idea to Working App</h2>
+        <h2 className="">Development Journey — From Idea to Working App</h2>
         <p className="tf-sub">
           A week-by-week journey showing how I built, designed, tested, and launched my GPA Calculator mobile app.
         </p>

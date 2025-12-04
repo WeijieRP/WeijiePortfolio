@@ -1,20 +1,16 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import "./experience.css";
 
-/* --- helpers --- */
+/* helpers */
 const toRad = (d) => (d * Math.PI) / 180;
 
-/** How far we can travel from (cx,cy) along a direction (dx,dy)
- * before a rectangle of size halfW/halfH would overflow stage (sw x sh).
- * We return the maximum allowed distance so the rect stays fully inside.
- */
 function maxDistWithinStage({ cx, cy, sw, sh, halfW, halfH, dx, dy, safe }) {
   const minX = halfW + safe;
   const maxX = sw - halfW - safe;
   const minY = halfH + safe;
   const maxY = sh - halfH - safe;
-  const limits = [];
 
+  const limits = [];
   if (dx > 0) limits.push((maxX - cx) / dx);
   else if (dx < 0) limits.push((minX - cx) / dx);
   if (dy > 0) limits.push((maxY - cy) / dy);
@@ -24,19 +20,17 @@ function maxDistWithinStage({ cx, cy, sw, sh, halfW, halfH, dx, dy, safe }) {
   return pos.length ? Math.min(...pos) : Number.POSITIVE_INFINITY;
 }
 
-/* --- reveal --- */
+/* reveal */
 function useReveal(rootRef) {
   useEffect(() => {
     const root = rootRef.current;
     if (!root) return;
     const els = root.querySelectorAll(".reveal");
     const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) {
-          if (e.isIntersecting) e.target.classList.add("is-inview");
-          else e.target.classList.remove("is-inview");
-        }
-      },
+      (entries) =>
+        entries.forEach((e) =>
+          e.target.classList.toggle("is-inview", e.isIntersecting)
+        ),
       { threshold: 0.14, rootMargin: "0px 0px -8% 0px" }
     );
     els.forEach((el) => io.observe(el));
@@ -47,10 +41,10 @@ function useReveal(rootRef) {
 export default function Experience() {
   const rootRef = useRef(null);
   const stageRef = useRef(null);
-  const coreRef  = useRef(null);
+  const coreRef = useRef(null);
   const panelRefs = useRef([]);
-  const pathRefs  = useRef([]);
-  const gradRefs  = useRef([]);
+  const pathRefs = useRef([]);
+  const gradRefs = useRef([]);
 
   useReveal(rootRef);
 
@@ -59,33 +53,33 @@ export default function Experience() {
       {
         id: "figma",
         title: "Figma",
-        logo: "assets/Icons/Figma.png",
+        logo: "/assets/Icons/Figma.png",
         copy:
-          "I use Figma to plan user journeys, build wireframes, and design high-fidelity UI screens. It helps me collaborate in real-time, test ideas quickly, and iterate fast based on feedback.",
+          "I map flows, wireframe quickly, and build pixel-perfect UI for fast feedback and iteration.",
         corner: "tl",
       },
       {
         id: "ai",
         title: "Illustrator",
-        logo: "assets/Icons/Adobe_Illustrator.png",
+        logo: "/assets/Icons/Adobe_Illustrator.png",
         copy:
-          "I use Illustrator for vector graphics, logos, icons, and scalable branding assets. It allows precise control over shapes, typography, and brand-ready design elements.",
+          "I craft logos, icons, and scalable vectors to keep brand assets crisp at any size.",
         corner: "tr",
       },
       {
         id: "xd",
         title: "Adobe XD",
-        logo: "assets/Icons/AdobeXD.png",
+        logo: "/assets/Icons/AdobeXD.png",
         copy:
-          "I use Adobe XD to prototype interactive screens and simulate user flows. This helps me validate usability early, gather feedback, and refine the experience before development.",
+          "I prototype interactions to validate usability early and communicate intent clearly.",
         corner: "bl",
       },
       {
         id: "ps",
         title: "Photoshop",
-        logo: "assets/Icons/Adobe-Photoshop.png",
+        logo: "/assets/Icons/Adobe-Photoshop.png",
         copy:
-          "I use Photoshop to retouch images, enhance lighting and colour, and prepare polished visual assets. It lets me create realistic textures and mood-driven visuals for UI and marketing.",
+          "I retouch, light, and composite visuals so screens feel polished and production-ready.",
         corner: "br",
       },
     ],
@@ -94,70 +88,99 @@ export default function Experience() {
 
   useEffect(() => {
     const stage = stageRef.current;
-    const core  = coreRef.current;
-    if (!stage || !core) return;
+    const coreDisc = coreRef.current;
+    if (!stage || !coreDisc) return;
 
     const layout = () => {
       const sw = stage.clientWidth;
       const sh = stage.clientHeight;
 
-      const hubSize = core.offsetWidth;
-      const radius  = hubSize / 2;
+      const hubSize = coreDisc.offsetWidth || 360;
+      const radius = hubSize / 2;
+
       const cx = sw / 2;
       const cy = sh / 2;
 
-      const SAFE = 22;
-      const RIM_CLEAR = 100;
-      const START_ON_RIM = 0.94;
-      const TIP_FADE = 10;
+      // layout tuning
+      const SAFE = 48; // padding from stage edges
+      const EXTRA_RING = 70; // spacing outside the hub
+      const START_ON_RIM = 0.9; // where line starts on circle
+      const TIP_FADE = 14; // shorten near the card
 
       items.forEach((it, i) => {
         const panel = panelRefs.current[i];
-        const path  = pathRefs.current[i];
-        const grad  = gradRefs.current[i];
+        const path = pathRefs.current[i];
+        const grad = gradRefs.current[i];
         if (!panel || !path || !grad) return;
 
-        let angle = 45;
-        if (it.corner === "tl") angle = 225;
-        if (it.corner === "tr") angle = 330;
-        if (it.corner === "bl") angle = -350;
-        if (it.corner === "br") angle = 150;
+        // quadrant angles
+        let angle;
+        if (it.corner === "tl") angle = 225; // ↖
+        else if (it.corner === "tr") angle = 315; // ↗
+        else if (it.corner === "bl") angle = 135; // ↙
+        else if (it.corner === "br") angle = 45; // ↘
+        else angle = 45;
 
         const dx = Math.cos(toRad(angle));
         const dy = Math.sin(toRad(angle));
 
-        const halfW = panel.offsetWidth  / 4;
-        const halfH = panel.offsetHeight / 3;
+        const halfW = (panel.offsetWidth || 0) / 2;
+        const halfH = (panel.offsetHeight || 0) / 2;
 
+        // how much the card extends in that direction
         const projectedHalf = Math.abs(dx) * halfW + Math.abs(dy) * halfH;
-        const ringDist = radius + projectedHalf + RIM_CLEAR;
 
-        const maxDist = maxDistWithinStage({ cx, cy, sw, sh, halfW, halfH, dx, dy, safe: SAFE });
+        // distance from center: circle radius + card edge + spacing
+        const ringDist = radius + projectedHalf + EXTRA_RING;
+
+        // but don't go past the stage edges
+        const maxDist = maxDistWithinStage({
+          cx,
+          cy,
+          sw,
+          sh,
+          halfW,
+          halfH,
+          dx,
+          dy,
+          safe: SAFE,
+        });
+
         const dist = Math.min(ringDist, maxDist);
 
+        // final panel center position
         const px = cx + dist * dx;
         const py = cy + dist * dy;
 
         panel.style.left = `${px}px`;
-        panel.style.top  = `${py}px`;
-        panel.dataset.corner = it.corner;
+        panel.style.top = `${py}px`;
 
+        // ===== connector line =====
+
+        // start slightly inside the circle
         const sx = cx + radius * START_ON_RIM * dx;
         const sy = cy + radius * START_ON_RIM * dy;
 
-        const tx = Math.abs(dx) / (halfW || 1);
-        const ty = Math.abs(dy) / (halfH || 1);
-        const k  = 1 / Math.max(tx, ty);
+        // vector from card center back toward hub
+        const vdx = -dx;
+        const vdy = -dy;
 
-        const edgeX = px - dx * k;
-        const edgeY = py - dy * k;
+        // distance from card center to its edge along that vector
+        const kx = vdx !== 0 ? halfW / Math.abs(vdx) : Infinity;
+        const ky = vdy !== 0 ? halfH / Math.abs(vdy) : Infinity;
+        const k = Math.min(kx, ky);
 
-        const ex = edgeX - dx * TIP_FADE;
-        const ey = edgeY - dy * TIP_FADE;
+        const edgeX = px + vdx * k;
+        const edgeY = py + vdy * k;
+
+        const ex = edgeX + vdx * TIP_FADE;
+        const ey = edgeY + vdy * TIP_FADE;
 
         path.setAttribute("d", `M ${sx},${sy} L ${ex},${ey}`);
-        grad.setAttribute("x1", sx); grad.setAttribute("y1", sy);
-        grad.setAttribute("x2", ex); grad.setAttribute("y2", ey);
+        grad.setAttribute("x1", sx);
+        grad.setAttribute("y1", sy);
+        grad.setAttribute("x2", ex);
+        grad.setAttribute("y2", ey);
 
         const stops = grad.querySelectorAll("stop");
         if (stops.length === 3) {
@@ -172,30 +195,44 @@ export default function Experience() {
     };
 
     layout();
-    const ro = new ResizeObserver(layout);
-    ro.observe(stage);
+
+    let ro;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(layout);
+      ro.observe(stage);
+    }
+
     window.addEventListener("resize", layout);
+
     return () => {
-      ro.disconnect();
+      if (ro) ro.disconnect();
       window.removeEventListener("resize", layout);
     };
   }, [items]);
 
   return (
     <section ref={rootRef} className="exp">
-      <div className="exp-bg" style={{ backgroundImage: "url(/assets/HomeBackgroundImage/cloudy-1869753_1920.png)" }} />
+      <div
+        className="exp-bg"
+        style={{
+          backgroundImage:
+            "url(/assets/HomeBackgroundImage/cloudy-1869753_1920.png)",
+        }}
+      />
 
       <div ref={stageRef} className="stage">
-        {/* central circle */}
-        <div className="core">
-          <div ref={coreRef} className="core-disc">
-            {/* 👇 gradient title applied here only */}
+        {/* CENTER CIRCLE — breathing + glowing */}
+        <div className="core breathe">
+          <div ref={coreRef} className="core-disc halo">
             <h3 className="exp-title--galaxy">My Design Toolkit</h3>
-            <p>Simple tools I use to plan, design, test, and polish.</p>
+            <p className="exp-desc">
+              I craft seamless interfaces — these are the tools I rely on to
+              plan, design, prototype, and polish every screen.
+            </p>
           </div>
         </div>
 
-        {/* connectors (under panels) */}
+        {/* connectors */}
         <svg className="arrows" width="100%" height="100%">
           <defs>
             {items.map((_, i) => (
@@ -205,8 +242,8 @@ export default function Experience() {
                 ref={(el) => (gradRefs.current[i] = el)}
                 gradientUnits="userSpaceOnUse"
               >
-                <stop offset="0%"   stopColor="rgba(150,178,255,0)" />
-                <stop offset="55%"  stopColor="rgba(150,178,255,.95)" />
+                <stop offset="0%" stopColor="rgba(150,178,255,0)" />
+                <stop offset="55%" stopColor="rgba(150,178,255,.95)" />
                 <stop offset="100%" stopColor="rgba(150,178,255,0)" />
               </linearGradient>
             ))}
@@ -221,7 +258,7 @@ export default function Experience() {
           ))}
         </svg>
 
-        {/* glass panels in four corners */}
+        {/* panels */}
         {items.map((it, i) => (
           <div
             key={it.id}
@@ -230,7 +267,7 @@ export default function Experience() {
           >
             <article className="panel-card">
               <header className="panel-head">
-                <img className="tool" src={it.logo} alt={it.id} />
+                <img className="tool" src={it.logo} alt={it.title} />
                 <h4 className="caption">{it.title}</h4>
               </header>
               <p className="copy">{it.copy}</p>

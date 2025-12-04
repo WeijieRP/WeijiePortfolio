@@ -1,14 +1,13 @@
-/* ===== Tokens ===== */
-:root{
-  --ink:#eef4ff;
-  --muted:#cdd7ea;
+/* ===== Hero tokens (mapped to global) ===== */
+:root {
+  --ink: var(--body-ink, #eef4ff);
+  --muted: var(--body-muted, #cdd7ea);
 
   --padX: clamp(16px, 5vw, 6vw);
   --padTop: clamp(72px, 8vw, 120px);
   --padBottom: clamp(64px, 8vw, 120px);
 
-  --floatDur: 10s;
-  --tiltDur: 24s;
+  --floatDur: 4.4s;
 
   --astro-panel-gap: 14px;
   --astro-panel-maxw: 680px;
@@ -17,195 +16,612 @@
   --my: 50%;
   --ripple-size: 560px;
 
-  /* gradient stops for galaxy title */
-  --title-grad-a:#5aaabc;  /* teal */
-  --title-grad-b:#7d8fe6;  /* lavender/blue */
-  --title-grad-c:#a45a87;  /* magenta/purple */
-}
+  --card-grad-a: #67d3ff;
+  --card-grad-b: #b597ff;
+  --card-grad-c: #ffb574;
 
-html,body{ margin:0; overflow-x:hidden; background:#000; }
+  --jet-core: #fff7d6;
+  --jet-mid: #ffd06b;
+  --jet-hot: #ff9c3a;
+  --jet-red: #ff5b2a;
+  --jet-glow: 26px;
+
+  --earth-cyan: #73d5ff;
+  --earth-blue: #3ea0ff;
+}
 
 /* ===== Stage / bg ===== */
-.hero-stage{ position:relative; background:#000; overflow:visible; }
-.hero-viewport{
-  position:relative; min-height:100vh; isolation:isolate; overflow:visible; color:var(--ink);
-  --z-scale:1; --z-ty:0px;
+.hero-stage {
+  position: relative;
+  background: #000;
+  overflow: visible;
+}
+.hero-viewport {
+  position: relative;
+  min-height: 100vh;
+  isolation: isolate;
+  overflow: visible;
+  color: var(--ink);
+  --z-scale: 1;
+  --z-ty: 0px;
 }
 
-/* Nebula background */
-.hero-bg{
-  position:absolute;
-  inset:max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
-        max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
-  margin:-8rem -3rem -3rem -3rem;
-  background-size:cover; background-position:50% 50%;
-  transform:translate3d(0, var(--z-ty), 0) scale(var(--z-scale));
-  will-change:transform;
-  filter:saturate(1.05) contrast(1.06) brightness(.94);
-  z-index:0;
+/* Background image (gets intro zoom) */
+.hero-bg {
+  position: absolute;
+  inset: max(10px, env(safe-area-inset-top))
+    max(10px, env(safe-area-inset-right))
+    max(10px, env(safe-area-inset-bottom))
+    max(10px, env(safe-area-inset-left));
+  margin: -8rem -3rem -3rem -3rem;
+  background-size: cover;
+  background-position: 50% 50%;
+  transform: translate3d(0, var(--z-ty), 0) scale(var(--z-scale));
+  will-change: transform;
+  filter: saturate(1.05) contrast(1.06) brightness(0.94);
+  z-index: 0;
 }
 
-/* ===== Extra-smooth page-load zoom-in intro ===== */
-.hero-viewport.is-mounted .hero-bg{
-  --intro-dur: 5200ms;
-  animation: heroIntro var(--intro-dur) cubic-bezier(.16,.84,.14,1) both;
+/* Page-load zoom intro */
+.hero-viewport.is-mounted .hero-bg {
+  animation: heroIntro var(--intro-dur, 1800ms)
+    cubic-bezier(0.16, 0.84, 0.14, 1) both;
 }
-@keyframes heroIntro{
-  0%{ transform: translate3d(0, 70px, 0) scale(1.18); filter: saturate(1.0) contrast(1.0) brightness(.88); }
-  40%{ transform: translate3d(0, 40px, 0) scale(1.10); filter: saturate(1.02) contrast(1.03) brightness(.90); }
-  80%{ transform: translate3d(0, 20px, 0) scale(1.04); filter: saturate(1.04) contrast(1.05) brightness(.92); }
-  100%{ transform: translate3d(0, var(--z-ty), 0) scale(var(--z-scale)); filter: saturate(1.05) contrast(1.06) brightness(.94); }
+@keyframes heroIntro {
+  0% {
+    transform: translate3d(0, 70px, 0) scale(1.18);
+    filter: saturate(1) contrast(1) brightness(0.88);
+  }
+  100% {
+    transform: translate3d(0, var(--z-ty), 0) scale(var(--z-scale));
+    filter: saturate(1.05) contrast(1.06) brightness(0.94);
+  }
 }
 
-/* Focus/spotlight overlay */
-.hero-focus{
-  position:absolute; inset:0; z-index:2; pointer-events:none;
-  background: radial-gradient(circle var(--ripple-size) at var(--mx) var(--my),
-              rgba(255,255,255,.15), rgba(0,0,0,0) 60%);
-  mix-blend-mode:screen; opacity:0; transition: opacity .45s ease;
+/* Content intro */
+.hero-viewport:not(.is-intro-done) .hero-grid {
+  opacity: 0;
+  transform: translateY(12px);
 }
-.hero-viewport.is-autofocus .hero-focus{ opacity:.55; animation: focusEase 3600ms ease-out forwards; }
-@keyframes focusEase{ 0%{opacity:.55;} 100%{opacity:.0;} }
-.hero-viewport.is-hovering .hero-focus{ opacity:.42; }
+.hero-viewport.is-intro-done .hero-grid {
+  animation: gridFadeIn 520ms ease-out both;
+}
+@keyframes gridFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
 
-.hero-ripple{ position:absolute; inset:0; z-index:2; pointer-events:none; }
+/* Spotlight overlay */
+.hero-focus {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+    circle var(--ripple-size) at var(--mx) var(--my),
+    rgba(255, 255, 255, 0.15),
+    rgba(0, 0, 0, 0) 60%
+  );
+  mix-blend-mode: screen;
+  opacity: 0;
+  transition: opacity 0.45s ease;
+}
+.hero-viewport.is-autofocus .hero-focus {
+  opacity: 0.55;
+  animation: focusEase 3600ms ease-out forwards;
+}
+@keyframes focusEase {
+  0% {
+    opacity: 0.55;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Optional ripple layer (kept for future use) */
+.hero-ripple {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
 
 /* ===== Layout ===== */
-.hero-grid{ position:relative; z-index:6; }
-.hero-grid{
-  display:grid; grid-template-columns:50% 50%;
-  grid-template-areas:"creative astro" "skills astro";
+.hero-grid {
+  position: relative;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-areas: "creative astro" "skills astro";
   gap: clamp(20px, 3vw, 40px) clamp(28px, 4vw, 56px);
-  align-items:start;
+  align-items: start;
   padding: var(--padTop) var(--padX) var(--padBottom);
-  max-width: 1400px; margin:0 auto;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-/* ===== Title ===== */
-.creative{ grid-area:creative; display:flex; align-items:center; }
-.creative h1{
-  margin:0;
+/* ===== Title (floating) ===== */
+.creative {
+  grid-area: creative;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.creative h1 {
+  margin: 0;
   font-size: clamp(56px, 12vw, 180px);
-  font-weight:900;
-  line-height:.95;
-  animation:floatText var(--floatDur) ease-in-out infinite;
+  font-weight: 900;
+  line-height: 0.95;
+  transform-origin: left center;
 }
 
-/* ✅ Subtle galaxy style (teal → lavender → magenta) */
-.galaxy-title--soft{
-  background: linear-gradient(90deg,
-    var(--title-grad-a) 0%,
-    var(--title-grad-b) 52%,
-    var(--title-grad-c) 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  -webkit-text-fill-color: transparent;
-  color: transparent;
-
-  /* thin outline + light drop for clarity */
-  -webkit-text-stroke: 1px rgba(0,0,0,.22);
-  text-shadow:
-    0 2px 0 rgba(0,0,0,.35),
-    0 8px 10px rgba(0,0,0,.18);
+/* Floating animation for title (gradient comes from styles.css) */
+.hero-title {
+  animation: titleFloat var(--floatDur) ease-in-out infinite alternate;
+}
+@keyframes titleFloat {
+  0% {
+    transform: scaleX(1.06) translateY(-16px);
+  }
+  100% {
+    transform: scaleX(1.06) translateY(16px);
+  }
 }
 
-@keyframes floatText{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
-
-/* ===== Astronaut (unchanged) ===== */
-.astro{ grid-area:astro; position:relative; display:flex; flex-direction:column; align-items:center; min-height: clamp(220px, 32vw, 340px); }
-.astro-ship{ position:relative; width: clamp(160px, 28vw, 260px); aspect-ratio: 1/1; display:grid; place-items:center; filter:drop-shadow(0 18px 28px rgba(0,0,0,.45)); }
-.astro-ship::after{ content:""; position:absolute; left:50%; bottom:-10%; width:58%; height:18%; transform: translateX(-50%) scale(1);
-  background: radial-gradient(closest-side, rgba(0,0,0,.40), rgba(0,0,0,0) 65%); filter: blur(10px); opacity:.70; z-index:-2;
-  animation: shadowFloat var(--floatDur) ease-in-out infinite; }
-@keyframes shadowFloat{ 0%,100% { transform: translateX(-50%) scale(1); opacity:.70; } 50% { transform: translateX(-50%) scale(0.86); opacity:.50; } }
-.astronaut{ width:100%; height:auto; object-fit:contain; animation: float var(--floatDur) ease-in-out infinite, tilt var(--tiltDur) ease-in-out infinite; pointer-events:none; }
-@keyframes float{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-12px)} }
-@keyframes tilt{ 0%,100%{rotate:0deg} 50%{rotate:4deg} }
-
-/* Thrusters, stats, skills, stars, reveal, responsive, words ... (unchanged) */
-.thrusters{ position:absolute; inset:0; z-index:-1; pointer-events:none; }
-.flame{ position:absolute; bottom:-6%; width:18%; height:42%; transform:translateX(-50%) rotate(var(--flame-tilt, 0deg));
-  clip-path: polygon(50% 0%, 74% 36%, 62% 100%, 38% 100%, 26% 36%);
-  background: radial-gradient(ellipse at 50% 15%, rgba(255,255,255,.97) 0%, rgba(255,238,200,.78) 30%, rgba(255,170,70,0) 64%),
-              conic-gradient(from 180deg at 50% 100%, rgba(255,120,0,.98), rgba(255,210,0,.85), rgba(255,120,0,.98));
-  filter: blur(2.2px) drop-shadow(0 0 12px rgba(255,150,40,.65));
-  transform-origin: 50% 100%;
-  animation: flameValve 1.6s ease-in-out infinite, flameFlicker 260ms ease-in-out infinite;
+/* ===== Astronaut ===== */
+.astro {
+  grid-area: astro;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: clamp(220px, 32vw, 340px);
 }
-.flame.left{ left:32%; --flame-tilt:-2deg; } .flame.right{ left:73%; --flame-tilt:2deg; }
-.flame::after{ content:""; position:absolute; inset:-16% -28% -22%;
-  background: radial-gradient(60% 70% at 50% 65%, rgba(255,180,80,.55), rgba(255,140,40,.18) 60%, transparent 70%),
-              radial-gradient(65% 80% at 50% 90%, rgba(255,230,120,.35), transparent 60%);
-  filter: blur(12px); opacity:.9; animation: flameGlow 1.1s ease-in-out infinite alternate; pointer-events:none; }
-@keyframes flameValve{ 0%,100% { transform: translateX(-50%) scaleY(.92) rotate(var(--flame-tilt, 0deg)); }
-  45% { transform: translateX(-50%) scaleY(1.20) rotate(var(--flame-tilt, 0deg)); }
-  50% { transform: translateX(-50%) scaleY(1.22) rotate(var(--flame-tilt, 0deg)); }
-  55% { transform: translateX(-50%) scaleY(1.20) rotate(var(--flame-tilt, 0deg)); } }
-@keyframes flameFlicker{ 0%,100% { filter: blur(2.2px) drop-shadow(0 0 10px rgba(255,150,40,.55)); }
-  50% { filter: blur(3.0px) drop-shadow(0 0 16px rgba(255,170,70,.80)); } }
-@keyframes flameGlow{ from{ opacity:.70; transform: scale(1); } to{ opacity:.95; transform: scale(1.06); } }
-.thrust-glow{ position:absolute; left:52%; bottom:-10%; width:56%; height:42%; transform:translateX(-50%);
-  background: radial-gradient(80% 100% at 50% 100%, rgba(255,190,90,.28), rgba(255,140,30,.12) 55%, transparent 70%),
-              radial-gradient(100% 120% at 50% 100%, rgba(255,230,120,.16), transparent 60%);
-  filter: blur(24px); opacity:.85; animation: thrustPulse 1.6s ease-in-out infinite; }
-@keyframes thrustPulse{ 0%,100%{ opacity:.78; transform: translateX(-50%) translateY(0) scaleY(.98); }
-  50% { opacity:.95; transform: translateX(-50%) translateY(2px) scaleY(1.05); } }
-
-.panel-under-astro{ position:absolute; left:50%; top: calc(100% + var(--astro-panel-gap)); transform: translateX(-50%);
-  width: min(var(--astro-panel-maxw), calc(100vw - (2 * var(--padX)))); z-index: 6; }
-.panel-under-astro .panel-glass{ width:100%; background:rgba(14,20,30,.60); border-radius:22px; backdrop-filter:blur(10px);
-  padding: clamp(16px, 2.5vw, 24px); color:#e6eeff; box-shadow:0 14px 34px rgba(0,0,0,.38);
-  display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:10px; text-align:center; margin-left:-330px; }
-
-.skills{ grid-area:skills; max-width:780px; }
-.hero-lead{ color:var(--muted); margin:0 0 12px 0; font-size:clamp(14px, 2.2vw, 20px); }
-.skills-grid{ display:grid; grid-template-columns: repeat(2, minmax(260px,1fr)); gap: clamp(14px, 2.2vw, 18px); margin-top: 14px; }
-.skill-card{ position:relative; background: rgba(14,20,30,.55); border: 1px solid rgba(255,255,255,.08); border-radius: 18px;
-  padding: clamp(16px, 2.2vw, 20px); backdrop-filter: blur(10px); box-shadow: 0 10px 24px rgba(0,0,0,.28);
-  transition: transform .3s ease, box-shadow .3s ease, background .3s ease; }
-.skill-card:hover{ transform: translateY(-4px); background: rgba(20,30,44,.62); box-shadow: 0 18px 34px rgba(0,0,0,.36); }
-.skill-card.span-full{ grid-column: 1 / -1; }
-.card-title h3{ margin:0 0 6px 0; font-size: clamp(16px, 2.4vw, 20px); }
-.card-title .muted{ margin:0; color:var(--muted); font-size: clamp(12px, 2vw, 14px); }
-
-.ufo{ position:absolute; top:42%; left:-90px; width: clamp(42px, 7vw, 68px); animation:ufoFly 18s linear infinite; z-index:5; }
-@keyframes ufoFly{ 0%{transform:translate(0,0) rotate(-5deg)} 50%{transform:translate(50vw,-10vh) rotate(10deg)} 100%{transform:translate(100vw,0) rotate(-5deg)} }
-.shooting-star{ position:absolute; width: clamp(12px, 2vw, 18px); height:auto; opacity:0; filter:drop-shadow(0 0 12px rgba(255,255,255,.9)); animation:shoot linear infinite; z-index:4; }
-@keyframes shoot{ 0%{opacity:0; transform:translate(0,0) rotate(-35deg) scale(.9)} 10%{opacity:1} 100%{transform:translate(45vw,-150vh) rotate(-35deg) scale(1.1); opacity:0} }
-
-.reveal{ opacity:0; transition:opacity .9s ease, transform .9s cubic-bezier(.22,.8,.18,1); will-change:opacity, transform; z-index:1; }
-.reveal[data-anim="up"]{ transform:translateY(28px); }
-.reveal[data-anim="down"]{ transform:translateY(-28px); }
-.reveal[data-anim="left"]{ transform:translateX(28px); }
-.reveal[data-anim="right"]{ transform:translateX(-28px); }
-.reveal.is-inview{ opacity:1; transform:none; }
-
-@media (max-width: 1200px){ :root{ --astro-panel-maxw: 620px; } }
-@media (max-width: 1024px){
-  .hero-grid{ grid-template-columns:1fr; grid-template-areas:"creative" "astro" "skills";
-    gap: clamp(18px, 4vw, 34px); justify-items:center; text-align:center; }
-  .panel-under-astro{ position: static; transform:none; width:100%; margin-top: 14px; }
-  .panel-under-astro .panel-glass{ grid-template-columns: repeat(3, 1fr); margin-left:0; }
+.astro-ship {
+  position: relative;
+  width: clamp(180px, 30vw, 300px);
+  aspect-ratio: 1/1;
+  display: grid;
+  place-items: center;
+  filter: drop-shadow(0 18px 28px rgba(0, 0, 0, 0.45));
+  --jet-x: 66%;
+  --jet-y: 50%;
+  --thruster-angle: 22deg;
+  --earth-x: 22%;
+  --earth-y: 6%;
+  animation: astroFloat var(--floatDur) ease-in-out infinite alternate;
+  will-change: transform;
+  overflow: visible;
 }
-@media (max-width: 720px){
-  .panel-under-astro .panel-glass{ margin-left:0; grid-template-columns:1fr; gap:12px; }
+@keyframes astroFloat {
+  0% {
+    transform: translateY(22px);
+  }
+  100% {
+    transform: translateY(-22px);
+  }
+}
+.astronaut {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+  pointer-events: none;
+  z-index: 3;
 }
 
-@media (prefers-reduced-motion: reduce){
-  .hero-bg{ transform:none !important; animation:none !important; }
-  .astronaut, .astro-ship{ animation:none !important; }
-  .shooting-star, .flame, .thrust-glow{ display:none !important; }
-  .reveal{ transition:none !important; opacity:1 !important; transform:none !important; }
-  .hero-focus{ display:none !important; }
+/* Earth glow */
+.earth-glow {
+  position: absolute;
+  left: var(--earth-x);
+  top: var(--earth-y);
+  width: clamp(40px, 9vw, 92px);
+  height: clamp(40px, 9vw, 92px);
+  transform: translate(-6%, -10%);
+  z-index: 2;
+  pointer-events: none;
+  background: radial-gradient(
+      50% 50% at 50% 50%,
+      rgba(255, 255, 255, 0.65) 0 18%,
+      rgba(255, 255, 255, 0) 19%
+    ),
+    radial-gradient(
+      60% 60% at 50% 50%,
+      var(--earth-cyan) 0 55%,
+      rgba(115, 213, 255, 0.25) 70%,
+      transparent 80%
+    );
+  filter: blur(6px) drop-shadow(0 0 18px rgba(62, 160, 255, 0.65));
+  border-radius: 50%;
+  mix-blend-mode: screen;
+  animation: earthPulse 2.8s ease-in-out infinite alternate;
+}
+@keyframes earthPulse {
+  from {
+    transform: translate(-6%, -10%) scale(1);
+    opacity: 0.9;
+  }
+  to {
+    transform: translate(-6%, -10%) scale(1.08);
+    opacity: 1;
+  }
 }
 
-/* word float */
-.words{ white-space: pre-wrap; }
-.sp{ white-space: pre; }
-.word{
-  display:inline-block; opacity:0; transform: translateY(8px);
-  animation: wf var(--dur, 2600ms) ease-in-out infinite alternate;
-  animation-delay: var(--delay, 0ms); animation-play-state: paused;
+/* Jet */
+.jet {
+  position: absolute;
+  left: var(--jet-x);
+  top: var(--jet-y);
+  transform: translate(-8%, -42%) rotate(var(--thruster-angle));
+  width: clamp(22px, 5.2vw, 44px);
+  height: clamp(22px, 5.2vw, 44px);
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  background: radial-gradient(
+    60% 60% at 50% 40%,
+    var(--jet-core) 0 40%,
+    var(--jet-mid) 42% 58%,
+    rgba(255, 150, 40, 0.22) 70%,
+    transparent 72%
+  );
+  border-radius: 50% 50% 65% 65% / 55% 55% 80% 80%;
+  filter: drop-shadow(0 0 var(--jet-glow) rgba(255, 180, 80, 0.65));
+  animation: jetWobble 0.95s ease-in-out infinite alternate,
+    jetFlicker 0.16s ease-in-out infinite;
 }
-.is-shown .word{ opacity:1; transform: translateY(0); animation-play-state: running; }
-@keyframes wf{ 0%{ transform: translateY(calc(var(--amp, 6px))) } 50%{ transform: translateY(calc(var(--amp, 6px) * -1)) } 100%{ transform: translateY(calc(var(--amp, 6px))) } }
+.jet::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 58%;
+  transform: translateX(-50%);
+  width: 40%;
+  height: 220%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 230, 170, 0.95),
+    rgba(255, 185, 90, 0.7) 28%,
+    rgba(255, 140, 40, 0.38) 60%,
+    rgba(255, 120, 30, 0.18) 78%,
+    rgba(255, 120, 30, 0)
+  );
+  filter: blur(7px);
+  clip-path: polygon(50% 0%, 68% 12%, 58% 100%, 42% 100%, 32% 12%);
+  animation: jetLength var(--floatDur) ease-in-out infinite alternate;
+}
+.jet::after {
+  content: "";
+  position: absolute;
+  inset: -26% -32% -48%;
+  background: radial-gradient(
+      65% 70% at 50% 35%,
+      rgba(255, 200, 120, 0.42),
+      rgba(255, 140, 40, 0.12) 60%,
+      transparent 70%
+    ),
+    radial-gradient(
+      80% 85% at 50% 80%,
+      rgba(255, 240, 160, 0.24),
+      transparent 70%
+    );
+  filter: blur(14px);
+  opacity: 0.9;
+  animation: jetGlow 1.1s ease-in-out infinite alternate;
+}
+.jet.j1 {
+  transform: translate(-6%, -44%) rotate(var(--thruster-angle));
+}
+.jet.j2 {
+  left: calc(var(--jet-x) - 5%);
+  top: calc(var(--jet-y) + 3%);
+  transform: translate(-12%, -40%)
+    rotate(calc(var(--thruster-angle) - 4deg));
+  width: clamp(18px, 4.6vw, 38px);
+  height: clamp(18px, 4.6vw, 38px);
+  animation-delay: 0.05s, 0.05s;
+}
+@keyframes jetWobble {
+  0% {
+    transform: translate(-8%, -42%) rotate(var(--thruster-angle)) skewX(0);
+  }
+  100% {
+    transform: translate(-8%, -42%)
+      rotate(calc(var(--thruster-angle) - 2deg))
+      skewX(2deg);
+  }
+}
+@keyframes jetLength {
+  0% {
+    height: 250%;
+  }
+  100% {
+    height: 180%;
+  }
+}
+@keyframes jetFlicker {
+  0%,
+  100% {
+    filter: drop-shadow(
+      0 0 var(--jet-glow) rgba(255, 180, 80, 0.55)
+    );
+  }
+  50% {
+    filter: drop-shadow(
+      0 0 calc(var(--jet-glow) * 1.25)
+        rgba(255, 205, 120, 0.9)
+    );
+  }
+}
+@keyframes jetGlow {
+  from {
+    opacity: 0.72;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0.95;
+    transform: scale(1.05);
+  }
+}
+
+/* ===== Stats / Skills ===== */
+.panel-under-astro {
+  position: absolute;
+  left: 50%;
+  top: calc(100% + var(--astro-panel-gap));
+  transform: translateX(-50%);
+  width: min(
+    var(--astro-panel-maxw),
+    calc(100vw - (2 * var(--padX)))
+  );
+  z-index: 6;
+}
+.panel-under-astro .panel-glass {
+  width: 100%;
+  border: 1px solid transparent;
+  border-radius: 22px;
+  background: linear-gradient(
+        rgba(14, 20, 30, 0.6),
+        rgba(14, 20, 30, 0.6)
+      )
+      padding-box,
+    conic-gradient(
+        from 130deg,
+        var(--card-grad-a),
+        var(--card-grad-b),
+        var(--card-grad-c),
+        var(--card-grad-a)
+      )
+      border-box;
+  backdrop-filter: blur(10px);
+  padding: clamp(16px, 2.5vw, 24px);
+  color: #e6eeff;
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  text-align: center;
+  margin-left: -330px;
+}
+.stat .value {
+  font-weight: 800;
+  font-size: clamp(22px, 3.2vw, 32px);
+}
+.stat .label {
+  font-weight: 600;
+  opacity: 0.9;
+}
+.stat .hint {
+  color: var(--muted);
+}
+
+.skills {
+  grid-area: skills;
+  max-width: 780px;
+}
+.hero-lead {
+  color: var(--muted);
+  margin: 0 0 12px 0;
+  font-size: clamp(14px, 2.2vw, 20px);
+}
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  gap: clamp(14px, 2.2vw, 18px);
+  margin-top: 14px;
+}
+
+.skill-card {
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background: linear-gradient(
+        rgba(14, 20, 30, 0.55),
+        rgba(14, 20, 30, 0.55)
+      )
+      padding-box,
+    conic-gradient(
+        from 130deg,
+        var(--card-grad-a),
+        var(--card-grad-b),
+        var(--card-grad-c),
+        var(--card-grad-a)
+      )
+      border-box;
+  padding: clamp(16px, 2.2vw, 20px);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  transition: transform 0.3s ease, box-shadow 0.3s ease,
+    background 0.3s ease;
+}
+.skill-card:hover {
+  transform: translateY(-4px);
+  background: linear-gradient(
+        rgba(20, 30, 44, 0.62),
+        rgba(20, 30, 44, 0.62)
+      )
+      padding-box,
+    conic-gradient(
+        from 130deg,
+        var(--card-grad-a),
+        var(--card-grad-b),
+        var(--card-grad-c),
+        var(--card-grad-a)
+      )
+      border-box;
+  box-shadow: 0 18px 34px rgba(0, 0, 0, 0.36);
+}
+.skill-card.span-full {
+  grid-column: 1 / -1;
+}
+.card-title h3 {
+  margin: 0 0 6px 0;
+  font-size: clamp(16px, 2.4vw, 20px);
+}
+.card-title .muted {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(12px, 2vw, 14px);
+}
+
+/* UFO + stars */
+.ufo {
+  position: absolute;
+  top: 42%;
+  left: -90px;
+  width: clamp(42px, 7vw, 68px);
+  animation: ufoFly 18s linear infinite;
+  z-index: 5;
+}
+@keyframes ufoFly {
+  0% {
+    transform: translate(0, 0) rotate(-5deg);
+  }
+  50% {
+    transform: translate(50vw, -10vh) rotate(10deg);
+  }
+  100% {
+    transform: translate(100vw, 0) rotate(-5deg);
+  }
+}
+.shooting-star {
+  position: absolute;
+  width: clamp(12px, 2vw, 18px);
+  height: auto;
+  opacity: 0;
+  filter: drop-shadow(
+    0 0 12px rgba(255, 255, 255, 0.9)
+  );
+  animation: shoot linear infinite;
+  z-index: 4;
+}
+@keyframes shoot {
+  0% {
+    opacity: 0;
+    transform: translate(0, 0) rotate(-35deg) scale(0.9);
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(45vw, -150vh) rotate(-35deg) scale(1.1);
+    opacity: 0;
+  }
+}
+
+/* Reveal gate */
+.reveal {
+  opacity: 0;
+  transition: opacity 0.9s ease,
+    transform 0.9s cubic-bezier(0.22, 0.8, 0.18, 1);
+  will-change: opacity, transform;
+  z-index: 1;
+}
+.reveal[data-anim="up"] {
+  transform: translateY(28px);
+}
+.reveal[data-anim="down"] {
+  transform: translateY(-28px);
+}
+.reveal[data-anim="left"] {
+  transform: translateX(28px);
+}
+.reveal[data-anim="right"] {
+  transform: translateX(-28px);
+}
+.hero-viewport.is-intro-done .reveal.is-inview:not([data-float]) {
+  opacity: 1;
+  transform: none;
+}
+.hero-viewport.is-intro-done .reveal.is-inview[data-float] {
+  opacity: 1;
+}
+
+/* Spacer */
+.hero-bottom-spacer {
+  height: 40px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "creative"
+      "astro"
+      "skills";
+    gap: clamp(18px, 4vw, 34px);
+    justify-items: center;
+    text-align: center;
+  }
+
+  .panel-under-astro {
+    position: static;
+    transform: none;
+    width: 100%;
+    margin-top: 14px;
+  }
+
+  .panel-under-astro .panel-glass {
+    grid-template-columns: repeat(3, 1fr);
+    margin-left: 0;
+  }
+}
+@media (max-width: 720px) {
+  .panel-under-astro .panel-glass {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .hero-grid {
+    padding: calc(var(--padTop) * 0.8) var(--padX) var(--padBottom);
+  }
+
+  .creative h1 {
+    font-size: clamp(42px, 16vw, 72px);
+  }
+
+  .astro-ship {
+    width: clamp(160px, 55vw, 240px);
+  }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .hero-bg,
+  .earth-glow {
+    animation: none !important;
+  }
+  .shooting-star {
+    display: none !important;
+  }
+  .hero-focus {
+    display: none !important;
+  }
+}

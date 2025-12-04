@@ -1,0 +1,193 @@
+/* learning.css */
+:root{
+  --ink:#fff4e6;
+  --muted:#fcd8b0;
+  --accent:#f6a96c;
+  --accent-2:#ffb574;
+  --accent-dark:#8d3e10;
+  --glass: rgba(255,255,255,.06);
+  --stroke: rgba(255,255,255,.12);
+}
+
+/* SECTION */
+.rl-stage{
+  position:relative;
+  isolation:isolate;
+  padding: clamp(48px,8vw,120px) clamp(20px,6vw,80px);
+  overflow:hidden;
+  color:var(--ink);
+}
+/* ===== DARK GLASS PANEL FOR REFLECTION CARDS ===== */
+.ref-card {
+  background: rgba(5, 8, 22, 0.92);          /* strong dark glass */
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  padding: clamp(18px, 2.4vw, 28px);
+  box-shadow:
+    0 20px 48px rgba(0, 0, 0, 0.58),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  color: var(--body-ink);
+  filter: none !important;
+}
+
+/* icons + title */
+.ref-card h3 {
+  margin: 0 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+  font-size: clamp(20px, 2.5vw, 28px);
+  color: var(--body-ink);
+}
+
+/* body text */
+.ref-card p {
+  margin: 0;
+  font-size: clamp(14px, 1.8vw, 19px);
+  line-height: 1.55;
+  color: var(--body-muted);
+}
+
+/* BACKGROUND */
+.rl-bg{
+  position:absolute;
+  inset:0;
+  background-size:cover;
+  background-position:center;
+  filter: brightness(.65) contrast(1.05) saturate(1.12);
+  z-index:-1;
+}
+
+/* HEAD */
+.rl-head{ 
+  text-align:center; 
+  margin-bottom: clamp(20px,3vw,40px); 
+}
+
+/* 🔶 Glass panel for eyebrow + title */
+.rl-head-glass{
+  display:inline-block;
+  padding: clamp(12px, 2vw, 18px) clamp(16px, 3vw, 26px);
+  border-radius: 18px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid var(--stroke);
+  box-shadow: 0 18px 46px rgba(0,0,0,.35);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+.rl-eyebrow{
+  letter-spacing:.28em;
+  text-transform:uppercase;
+  opacity:.9;
+  font-size:clamp(10px,1vw,13px);
+  color:var(--muted);
+  margin: 0;
+}
+
+.rl-title{
+  margin:6px 0 0;
+  font-weight:900;
+  line-height:1.05;
+  font-size:clamp(26px,4vw,42px);
+  background: linear-gradient(90deg, var(--accent), var(--muted));
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+/* METRICS */
+.rl-metrics{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap:12px;
+  list-style:none;
+  padding:0;
+  margin:0 0 18px;
+}
+@media (max-width:800px){ .rl-metrics{ grid-template-columns: repeat(2,1fr);} }
+.rl-metric{
+  background:var(--glass);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:14px;
+  text-align:center;
+  backdrop-filter: blur(6px);
+}
+.rl-metric-value{ display:block; font-weight:900; font-size:22px; }
+.rl-metric-label{ display:block; color:var(--muted); font-size:12px; }
+
+/* GRID */
+.rl-grid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:16px;
+  margin-top:10px;
+}
+.rl-grid .rl-card.wide{
+  grid-column: 1 / -1;
+}
+@media (max-width:900px){
+  .rl-grid{ grid-template-columns:1fr; }
+  .rl-grid .rl-card.wide{ grid-column: 1 / -1; }
+}
+
+.rl-card{
+  background:var(--glass);
+  border:1px solid var(--stroke);
+  border-radius:16px;
+  padding:20px;
+  backdrop-filter: blur(6px);
+  transition: background .35s ease, border-color .35s ease;
+}
+.rl-card:hover{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.18); }
+.rl-card-title{ margin:0 0 10px; font-size:16px; font-weight:800; }
+
+/* Body copy */
+.rl-copy{
+  margin: 0;
+  color: var(--ink);
+  opacity: .95;
+  line-height: 1.65;
+}
+
+/* === DIRECTION-AWARE SLIDE ENGINE === */
+.reveal{
+  opacity: 0;
+  transform:
+    translateX(var(--from-x, 0))
+    translateY(var(--from-y, 22px))
+    scale(var(--from-scale, .96));
+  transition:
+    opacity .65s cubic-bezier(.23,1,.32,1),
+    transform .65s cubic-bezier(.23,1,.32,1);
+  will-change: transform, opacity;
+}
+.reveal.is-in{
+  opacity: 1;
+  transform:
+    translateX(var(--to-x, 0))
+    translateY(var(--to-y, 0))
+    scale(var(--to-scale, 1));
+}
+.reveal.is-out{
+  opacity: 0;
+  transform:
+    translateX(var(--to-x, 0))
+    translateY(var(--to-y, 18px))
+    scale(var(--to-scale, .96));
+}
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce){
+  .reveal,
+  .reveal.is-in,
+  .reveal.is-out{
+    transition:none !important;
+    opacity:1 !important;
+    transform:none !important;
+  }
+}

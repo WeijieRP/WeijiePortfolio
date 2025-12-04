@@ -1,7 +1,6 @@
 import React from 'react'
 import Navbar from '../../Components/Navbar'
 import Hero from './Hero'
-import "./hero.css";
 import "./aboutinfo.css";
 import AboutIntro from './AboutInfo';
 import "./highlight.css";
@@ -12,8 +11,8 @@ import "../../Components/footer.css"
 import VisionSection from './VisionSection';
 import TestimonialsSection from './Testimonial';
 import CCASection from './CCA';
-import ProjectCTA from './Hero';
 import TestimonialsITE from './Testimonial';
+import ProjectCTA from './Hero';
 const stats = [
   { icon: "/icons/note.png", value: 10, suffix: "+", subtitle: "Projects Completed" },
   { icon: "/icons/skills.png", value: 5, suffix: "+", subtitle: "Skills Mastered" },

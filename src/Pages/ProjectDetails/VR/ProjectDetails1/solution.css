@@ -1,0 +1,187 @@
+/* solution.css — AR Solution section aligned to global styles */
+
+/* ===== SECTION WRAPPER ===== */
+.bms-stage {
+  /* local tokens scoped to this section */
+  --bms-ink: var(--body-ink);
+  --bms-muted: var(--body-muted);
+  --bms-bg: #05070d;
+  --bms-line: rgba(255, 255, 255, 0.16);
+
+  position: relative;
+  background-color: var(--bms-bg);      /* fallback if image fails */
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  color: var(--bms-ink);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* background enhancement lives behind content, not on content */
+.bms-stage::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: inherit; /* uses the same background-image */
+  filter: brightness(1) contrast(1.04) saturate(1.12);
+}
+
+/* ===== GRID LAYOUT ===== */
+.bms-inner {
+  position: relative;
+  z-index: 1; /* above ::before */
+  width: min(1200px, 92%);
+  margin: 0 auto;
+  padding: clamp(64px, 7vw, 120px) 0;
+  display: grid;
+  gap: clamp(22px, 4vw, 48px);
+}
+
+.bms-balance {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  align-items: stretch;
+  grid-auto-rows: 1fr;
+}
+
+/* ===== LEFT PANEL (COPY CARD) ===== */
+.bms-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 360px;
+
+  background: linear-gradient(
+    180deg,
+    rgba(5, 8, 22, 0.96),
+    rgba(7, 10, 25, 0.94)
+  );
+  border-radius: 22px;
+  border: 1px solid var(--bms-line);
+  box-shadow:
+    0 20px 44px rgba(0, 0, 0, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+}
+
+/* keep everything on the card crisp */
+.bms-card,
+.bms-card * {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  filter: none !important;
+  text-shadow: none !important;
+}
+
+/* Eyebrow */
+.bms-eyebrow {
+  text-transform: uppercase;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  opacity: 0.92;
+  color: var(--bms-muted);
+  margin: 2px 0 10px;
+}
+
+/* Title = layout only; colour/gradient from .title-aurora (global) */
+.bms-title {
+  margin: 0 0 12px;
+  line-height: 1.08;
+}
+
+/* Description paragraphs */
+.bms-desc {
+  margin-top: 6px;
+}
+
+.bms-desc p {
+  margin: 0 0 12px;
+  color: var(--bms-muted);
+  font-size: clamp(14px, 1.55vw, 18px);
+  line-height: 1.66;
+}
+
+/* ===== RIGHT PANEL (IMAGE CARD) ===== */
+.bms-figure {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 360px;
+}
+
+.bms-lightcard {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 22px;
+  overflow: hidden;
+  border: 1px solid var(--bms-line);
+  background: #ffffff;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.42);
+  display: flex;
+}
+
+/* media fills entire card */
+.bms-media.fill-mode {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  border-radius: 0;
+  transform: translate3d(0, 0, 0);
+}
+
+.bms-cap {
+  text-align: center;
+  color: var(--bms-muted);
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+/* ===== REVEAL ANIMATION ===== */
+[data-ani] {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.6s ease,
+    transform 0.6s ease;
+}
+
+.in-view {
+  opacity: 1;
+  transform: none;
+}
+
+.slide-left {
+  transform: translateX(-48px);
+}
+
+.slide-right {
+  transform: translateX(48px);
+}
+
+.in-view.slide-left,
+.in-view.slide-right {
+  transform: none;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 980px) {
+  .bms-balance {
+    grid-template-columns: 1fr;
+  }
+  .bms-card,
+  .bms-figure {
+    min-height: auto;
+  }
+}
+
+/* ===== MOTION SAFETY ===== */
+@media (prefers-reduced-motion: reduce) {
+  [data-ani] {
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

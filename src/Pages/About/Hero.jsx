@@ -1,17 +1,15 @@
 // ProjectCTA.jsx
 import React, { useEffect, useRef } from "react";
-import "./hero.css";
 import { Link } from "react-router-dom";
+import "./projectcta.css";
 
 export default function ProjectCTA({
   id = "project-cta",
   bgImage = "/assets/AboutBackgroundImage/7877341.jpg",
 
-  // Copy
   titleTop = "This is about me",
   subtitle = "Get to know me more and take a quick snapshot of my background, tools, and what I’m building next.",
 
-  // Buttons
   leftBtnText = "See Projects",
   leftBtnLink = "/projects",
   rightBtnText = "Resume",
@@ -19,80 +17,85 @@ export default function ProjectCTA({
 }) {
   const ref = useRef(null);
 
-  // Set CSS var + fallback <img> for background
+  // Set background image via CSS var + img fallback
   useEffect(() => {
     const root = ref.current;
     if (!root) return;
     root.style.setProperty("--cta-bg", `url("${bgImage}")`);
-    const img = root.querySelector(".cta-bg-img");
+
+    const img = root.querySelector(".proj-cta-bg-img");
     if (img) img.src = bgImage;
   }, [bgImage]);
 
-  // Smooth parallax
+  // Parallax
   useEffect(() => {
     const el = ref.current;
+    if (!el || typeof window === "undefined") return;
+
     let raf = 0;
     const tick = () => {
-      if (!el) return;
       const r = el.getBoundingClientRect();
       const vh = window.innerHeight || 1;
-      const p = Math.max(0, 1 - Math.abs(r.top / vh)); // 0..1
-      el.style.setProperty("--bg-scale", (1 + p * 0.06).toString());
-      el.style.setProperty("--bg-ty", `${p * -20}px`);
+      const p = Math.max(0, 1 - Math.abs(r.top / vh));
+
+      el.style.setProperty("--bg-scale", (1 + p * 0.04).toString());
+      el.style.setProperty("--bg-ty", `${p * -14}px`);
+
       raf = requestAnimationFrame(tick);
     };
     tick();
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // Reveal on intersect
+  // Reveal animations
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-    const nodes = el.querySelectorAll(
-      ".cta-title, .cta-sub, .cta-buttons a, .cta-buttons .cta-link"
+    if (!el || typeof window === "undefined") return;
+
+    const targets = el.querySelectorAll(
+      ".proj-cta-title, .proj-cta-sub, .proj-cta-btn"
     );
+
     const io = new IntersectionObserver(
-      (ents) =>
-        ents.forEach((e) =>
-          e.isIntersecting
-            ? e.target.classList.add("visible")
-            : e.target.classList.remove("visible")
+      (entries) =>
+        entries.forEach((e) =>
+          e.target.classList.toggle("visible", e.isIntersecting)
         ),
       { threshold: 0.2 }
     );
-    nodes.forEach((n) => io.observe(n));
+
+    targets.forEach((t) => io.observe(t));
     return () => io.disconnect();
   }, []);
 
   return (
-    <section className="cta-section" id={id} ref={ref}>
-      {/* Background */}
-      <div className="cta-bg" aria-hidden="true" />
-      <img className="cta-bg-img" alt="" aria-hidden="true" />
+    <section className="proj-cta-section" id={id} ref={ref}>
+      <div className="proj-cta-bg" aria-hidden="true" />
+      <img className="proj-cta-bg-img" alt="" aria-hidden="true" />
 
-      {/* Atmosphere */}
-      <div className="cta-ambient" aria-hidden="true" />
-      <div className="cta-overlay" aria-hidden="true" />
-      <div className="cta-scrim" aria-hidden="true" />
-      <div className="cta-sparkles" aria-hidden="true">
-        {Array.from({ length: 18 }).map((_, i) => (
-          <span key={i} />
-        ))}
-      </div>
+      {/* ONE GLASS PANEL */}
+      <div className="proj-cta-panel">
+        <div className="proj-cta-content">
+          {/* 🔹 Title uses global gradient class */}
+          <h2 className="proj-cta-title title-aurora">{titleTop}</h2>
 
-      {/* Content */}
-      <div className="cta-content">
-        <h2 className="cta-title">{titleTop}</h2>
-        <p className="cta-sub">{subtitle}</p>
+          {/* 🔹 Subtitle uses global section-subtitle */}
+          <p className="proj-cta-sub section-subtitle">{subtitle}</p>
 
-        <div className="cta-buttons">
-          <Link to={leftBtnLink} className="cta-btn primary">
-            {leftBtnText}
-          </Link>
-          <Link to={rightBtnLink} className="cta-btn secondary">
-            {rightBtnText}
-          </Link>
+          <div className="proj-cta-buttons">
+            <Link
+              to={leftBtnLink}
+              className="proj-cta-btn primary"
+            >
+              {leftBtnText}
+            </Link>
+            <Link
+              to={rightBtnLink}
+              className="proj-cta-btn secondary"
+            >
+              {rightBtnText}
+            </Link>
+          </div>
         </div>
       </div>
     </section>

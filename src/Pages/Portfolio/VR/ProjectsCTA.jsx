@@ -1,90 +1,51 @@
-import React, { useEffect, useRef } from "react";
+// VRHero.jsx
+import React from "react";
 import "./projectCTA.css";
-import { Link } from "react-router-dom";
 
-export default function ProjectCTA({
-  id = "project-cta",
+export default function VRHero({
+  id = "vr-hero",
   bgImage = "/assets/PortfolioVRBackgroundImage/moon-8013743_1920.jpg",
-  titleTop = "Step Into",
-  titleBottom = "Immersive VR Worlds",
-  subtitle = "Designing interactive spaces focused on comfort, clarity, and presence — blending tactile puzzles, environmental storytelling, and user-first VR UX.",
-  leftBtnText = "Contact Me",
-  leftBtnLink = "https://www.linkedin.com/in/hooi-weijie-b13b11310", // ✅ FIXED LinkedIn link
-  rightBtnText = "See My Project",
-  rightBtnLink = "https://github.com/WebDeveloper1299",
+
+  titleTop = "FEATURED",
+  titleBottom = "PROJECTS",
+
+  subtitle = "A collection of AR/VR experiences I built — focused on clear interaction, player comfort, and immersive moments.",
+
+  ctaText = "View VR Demo",
+  ctaHref = "#vr-demo",
+
+  secondaryText = "View Project Details",
+  secondaryHref = "#vr-details",
 }) {
-  const sectionRef = useRef(null);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const bg = el.querySelector(".cta-bg");
-    if (!bg) return;
-
-    let raf = 0;
-    const tick = () => {
-      const r = el.getBoundingClientRect();
-      const vh = Math.max(1, window.innerHeight);
-      const p = 1 - Math.min(1, Math.abs(r.top / vh));
-      const scale = 1 + p * 0.035;
-      const ty = p * -12;
-      bg.style.transform = `translateY(${ty.toFixed(1)}px) scale(${scale.toFixed(3)})`;
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
-
-  useEffect(() => {
-    const el = sectionRef.current;
-    if (!el) return;
-    const items = el.querySelectorAll(".cta-title, .cta-sub, .cta-btn");
-    const io = new IntersectionObserver(
-      (entries) =>
-        entries.forEach((e) => e.target.classList.toggle("visible", e.isIntersecting)),
-      { threshold: 0.18 }
-    );
-    items.forEach((n) => io.observe(n));
-    return () => io.disconnect();
-  }, []);
-
   return (
-    <section className="cta-section" id={id} ref={sectionRef}>
-      <div
-        className="cta-bg"
-        style={{ backgroundImage: `url("${bgImage}")` }}
-        aria-hidden="true"
-      />
-      <div className="cta-overlay" aria-hidden="true" />
+    <section
+      className="vr-hero"
+      id={id}
+      style={{ backgroundImage: `url(${bgImage})` }}
+    >
+      <div className="vr-hero-overlay" aria-hidden="true" />
 
-      <div className="cta-content" role="region" aria-labelledby={`${id}-title`}>
-        <h2 id={`${id}-title`} className="cta-title">
-          <span>{titleTop}</span><br />
-          <span>{titleBottom}</span>
-        </h2>
+      <div className="vr-hero-content">
+        {/* Panel (no blur, just solid color + border) */}
+        <div className="vr-panel">
+          {/* Title uses global gradient via .title-aurora */}
+          <h1 className="vr-title title-aurora">
+            <span>{titleTop}</span>
+            <br />
+            <span>{titleBottom}</span>
+          </h1>
 
-        <p className="cta-sub">{subtitle}</p>
+          <p className="vr-sub section-subtitle">{subtitle}</p>
 
-        <div className="cta-buttons">
-          {/* ✅ External LinkedIn link */}
-          <Link
-            to={leftBtnLink}
-            className="cta-btn primary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {leftBtnText}
-          </Link>
+          <div className="vr-actions">
+            <a href={ctaHref} className="vr-btn vr-btn-primary">
+              {ctaText}
+            </a>
 
-          {/* ✅ External GitHub */}
-          <Link
-            to={rightBtnLink}
-            className="cta-btn secondary"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {rightBtnText}
-          </Link>
+            <a href={secondaryHref} className="vr-btn vr-btn-secondary">
+              {secondaryText}
+            </a>
+          </div>
         </div>
       </div>
     </section>

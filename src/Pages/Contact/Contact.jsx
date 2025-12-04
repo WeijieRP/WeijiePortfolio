@@ -1,5 +1,4 @@
 import Navbar from "../../Components/Navbar";
-import ContactHero from "./Hero";
 import Footer from "../../Components/Footer";
 import ContactMinimal from "./ContactSection";
 import ContactCollabV2 from "./ContactSection";

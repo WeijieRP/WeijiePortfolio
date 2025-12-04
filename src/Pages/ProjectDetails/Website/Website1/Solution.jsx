@@ -17,6 +17,7 @@ export default function SolutionCA1({
 
     let lastY = window.scrollY || 0;
     let dir = "down";
+
     const onScrollDir = () => {
       const y = window.scrollY || 0;
       dir = y > lastY ? "down" : "up";
@@ -64,7 +65,10 @@ export default function SolutionCA1({
 
     const targets = root.querySelectorAll("[data-reveal]");
     const io = new IntersectionObserver(
-      (entries) => entries.forEach((e) => (e.isIntersecting ? enter(e.target) : leave(e.target))),
+      (entries) =>
+        entries.forEach((e) =>
+          e.isIntersecting ? enter(e.target) : leave(e.target)
+        ),
       { threshold: 0.12, rootMargin: "0px 0px -8% 0px" }
     );
 
@@ -93,6 +97,7 @@ export default function SolutionCA1({
 
   return (
     <section className="sol-stage" id={id} aria-label="Solution">
+      {/* Backdrop */}
       <div
         className="sol-backdrop"
         style={{ backgroundImage: `url("${bgImageSection}")` }}
@@ -101,19 +106,28 @@ export default function SolutionCA1({
       <div className="sol-backdrop-overlay" aria-hidden="true" />
 
       <div className="sol-grid">
-        {/* LEFT: copy */}
+        {/* LEFT: eyebrow + GLASS PANEL (title + text) */}
         <article className="sol-copy" data-reveal data-dir="left">
           <p className="sol-eyebrow">{eyebrow}</p>
-          <h2 className="sol-title">{title}</h2>
 
-          <p className="sol-desc" data-reveal data-dir="left">
-            {problemStatement}
-          </p>
+          <div className="sol-panel">
+            {/* h2 uses GLOBAL gradient via .title-aurora (no shadow here) */}
+            <h2 className="title-aurora sol-title">{title}</h2>
+            <p className="sol-desc">{problemStatement}</p>
+          </div>
         </article>
 
-        {/* RIGHT: visual frame */}
-        <aside className="sol-visual" aria-hidden="true" data-reveal data-dir="right">
-          <div className="sol-bg kb" style={{ backgroundImage: `url("${rightImage}")` }} />
+        {/* RIGHT: visual, still no glass card */}
+        <aside
+          className="sol-visual"
+          aria-hidden="true"
+          data-reveal
+          data-dir="right"
+        >
+          <div
+            className="sol-bg kb"
+            style={{ backgroundImage: `url("${rightImage}")` }}
+          />
           <div className="sol-overlay" />
 
           <div className="sol-meteors">

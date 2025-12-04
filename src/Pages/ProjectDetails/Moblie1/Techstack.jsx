@@ -24,29 +24,33 @@ export default function TechStackSection({
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Background parallax
+  // Background parallax (no blur, only subtle translate + scale)
   useEffect(() => {
     let raf = 0;
     const clamp = (v, a, b) => (v < a ? a : v > b ? b : v);
+
     const tick = () => {
-      const r = vpRef.current?.getBoundingClientRect();
-      if (r && vpRef.current) {
+      const rect = vpRef.current?.getBoundingClientRect();
+      if (rect && vpRef.current) {
         const vh = innerHeight || 1;
-        const enter = vh, leave = -r.height;
-        const p = clamp((enter - r.top) / (enter - leave), 0, 1);
+        const enter = vh;
+        const leave = -rect.height;
+        const p = clamp((enter - rect.top) / (enter - leave), 0, 1);
         const d = Math.abs(p - 0.5) / 0.5;
         const scale = 1 + (1 - d) * 0.02;
         const ty = (p - 0.5) * 30;
+
         vpRef.current.style.setProperty("--bg-scale", scale.toFixed(3));
         vpRef.current.style.setProperty("--bg-ty", `${ty.toFixed(1)}px`);
       }
       raf = requestAnimationFrame(tick);
     };
+
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
   }, []);
 
-  // Reveal animations
+  // Reveal animations (direction-aware, but content stays sharp)
   useEffect(() => {
     const root = vpRef.current;
     if (!root) return;
@@ -77,11 +81,11 @@ export default function TechStackSection({
     const enter = (el, side, dir) => {
       el.classList.remove("settled");
       if (dir === "down") {
-        if (side === "left")  setVars(el, "-48px", "12px", "0px", "0px");
+        if (side === "left") setVars(el, "-48px", "12px", "0px", "0px");
         else if (side === "right") setVars(el, "48px", "12px", "0px", "0px");
         else setVars(el, "0px", "18px", "0px", "0px");
       } else {
-        if (side === "left")  setVars(el, "48px", "12px", "0px", "0px");
+        if (side === "left") setVars(el, "48px", "12px", "0px", "0px");
         else if (side === "right") setVars(el, "-48px", "12px", "0px", "0px");
         else setVars(el, "0px", "18px", "0px", "0px");
       }
@@ -93,11 +97,11 @@ export default function TechStackSection({
     const leave = (el, side, dir) => {
       el.classList.remove("settled");
       if (dir === "down") {
-        if (side === "left")  setVars(el, "0px", "0px", "-44px", "16px");
+        if (side === "left") setVars(el, "0px", "0px", "-44px", "16px");
         else if (side === "right") setVars(el, "0px", "0px", "44px", "16px");
         else setVars(el, "0px", "0px", "0px", "18px");
       } else {
-        if (side === "left")  setVars(el, "0px", "0px", "44px", "16px");
+        if (side === "left") setVars(el, "0px", "0px", "44px", "16px");
         else if (side === "right") setVars(el, "0px", "0px", "-44px", "16px");
         else setVars(el, "0px", "0px", "0px", "18px");
       }
@@ -134,7 +138,7 @@ export default function TechStackSection({
     };
   }, []);
 
-  // ====== UPDATED TECH STACK ITEMS ======
+  // ===== Tech stack items =====
   const items = [
     {
       name: "Flutter",
@@ -160,11 +164,14 @@ export default function TechStackSection({
       use: "Most of my coding was done in VS Code — it’s lightweight, clean, and makes it easy to preview UI and fix bugs quickly.",
       badge: "Editor",
     },
-
   ];
 
   return (
-    <section className="section-bg tech-section" id={id} aria-label="Flutter Project Tech Stack">
+    <section
+      className="section-bg tech-section"
+      id={id}
+      aria-label="Flutter Project Tech Stack"
+    >
       <div className="tech-viewport" ref={vpRef}>
         {/* Background */}
         <div className="bg-wrap" aria-hidden="true">
@@ -180,11 +187,23 @@ export default function TechStackSection({
 
         {/* Content */}
         <div className="tech-content">
-          <h2 className="tech-title" data-reveal data-side="center" data-stagger>
+          <h2
+            className="tech-title title-aurora"
+            data-reveal
+            data-side="center"
+            data-stagger
+          >
             Tools and platforms I used to build the app
           </h2>
-          <p className="tech-sub" data-reveal data-side="center" data-stagger>
-            My development setup and workflow for creating the Flutter & Dart mobile application.
+
+          <p
+            className="tech-sub"
+            data-reveal
+            data-side="center"
+            data-stagger
+          >
+            My development setup and workflow for creating the Flutter &amp; Dart
+            mobile application.
           </p>
 
           <div className="tech-grid" role="list">

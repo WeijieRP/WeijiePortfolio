@@ -1,0 +1,299 @@
+/* top.css – Web CTA hero
+   Uses global tokens from styles.css:
+   --titleA–D, --body-bg, --body-ink, --body-muted, .title-aurora, .section-subtitle
+*/
+
+/* ===== SECTION WRAPPER ===== */
+.web-cta-section {
+  position: relative;
+  min-height: 100vh;
+  padding: 80px 20px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  isolation: isolate;
+
+  background: var(--body-bg, #050816);
+  color: var(--body-ink, #fbd2a0);
+  font-family: "Poppins", system-ui, -apple-system, Segoe UI, sans-serif;
+}
+
+/* ===== BACKGROUND IMAGE ===== */
+.web-cta-bg,
+.web-cta-bg-img {
+  position: absolute;
+  inset: 0;
+  background-image: var(--web-cta-bg);
+  background-size: cover;
+  background-position: center;
+  transform: scale(var(--web-bg-scale, 1)) translateY(var(--web-bg-ty, 0));
+  z-index: 0;
+}
+
+.web-cta-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Soft overlay so content pops */
+.web-cta-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.08),
+    rgba(0, 0, 0, 0.45)
+  );
+  z-index: 1;
+}
+
+/* Ambient glow + sparkles */
+.web-cta-ambient {
+  position: absolute;
+  inset: -20% -10%;
+  background:
+    radial-gradient(
+      260px 240px at 15% 20%,
+      rgba(113, 196, 255, 0.22),
+      transparent 60%
+    ),
+    radial-gradient(
+      260px 240px at 85% 25%,
+      rgba(197, 138, 232, 0.2),
+      transparent 60%
+    ),
+    radial-gradient(
+      280px 260px at 40% 90%,
+      rgba(255, 122, 181, 0.18),
+      transparent 65%
+    );
+  mix-blend-mode: screen;
+  filter: blur(2px);
+  animation: webAmbient 18s linear infinite alternate;
+  z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes webAmbient {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0) scale(1.02);
+  }
+  100% {
+    transform: translate3d(0, 6px, 0) scale(1);
+  }
+}
+
+.web-cta-sparkles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.web-cta-sparkles span {
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  left: calc(3% + 94% * var(--x, 0.5));
+  top: calc(4% + 92% * var(--y, 0.5));
+  background: radial-gradient(circle, #fff 0%, rgba(255, 255, 255, 0) 70%);
+  border-radius: 50%;
+  opacity: 0;
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.7));
+  animation: webSparkle 4.5s ease-in-out infinite;
+}
+
+.web-cta-sparkles span:nth-child(odd) {
+  --x: 0.2;
+  --y: 0.3;
+  animation-delay: -0.6s;
+}
+.web-cta-sparkles span:nth-child(even) {
+  --x: 0.75;
+  --y: 0.6;
+  animation-delay: -1.1s;
+}
+
+@keyframes webSparkle {
+  0%,
+  70% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+  75% {
+    opacity: 0.95;
+    transform: scale(1);
+  }
+  85% {
+    opacity: 0.35;
+    transform: scale(0.72);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+}
+
+/* ===== SINGLE GLASS PANEL ===== */
+.web-cta-panel {
+  position: relative;
+  z-index: 5;
+  width: min(900px, 92vw);
+  padding: clamp(24px, 4vw, 32px) clamp(20px, 4vw, 32px);
+  border-radius: 24px;
+
+  /* Softer glass; blends with background */
+  background:
+    linear-gradient(
+      140deg,
+      rgba(8, 12, 24, 0.76),
+      rgba(24, 34, 62, 0.58)
+    ),
+    radial-gradient(
+      circle at top left,
+      rgba(143, 191, 255, 0.18),
+      transparent 55%
+    );
+  background-blend-mode: overlay;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.55);
+
+  /* Reduced blur so it feels softer */
+  backdrop-filter: blur(8px) saturate(130%);
+  -webkit-backdrop-filter: blur(8px) saturate(130%);
+
+  text-align: center;
+
+  opacity: 0;
+  transform: translateY(16px);
+  animation: webPanelIn 0.8s ease forwards;
+}
+
+@keyframes webPanelIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== TITLE (uses global .title-aurora gradient) ===== */
+.web-cta-title {
+  margin: 0 0 0.8rem;
+  font-weight: 900;
+  line-height: 1.15;
+}
+
+/* ===== SUBTITLE (extends global .section-subtitle) ===== */
+.web-cta-sub.section-subtitle {
+  margin-bottom: 1.9rem;
+  color: var(--body-muted, #f6c28f);
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
+}
+
+.web-cta-sub.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== BUTTON ROW ===== */
+.web-cta-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.web-cta-btn {
+  padding: 14px 32px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    background 0.35s ease,
+    color 0.35s ease;
+}
+
+.web-cta-btn.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Primary button – uses global title gradient colors */
+.web-cta-btn.primary {
+  background: linear-gradient(135deg, var(--titleA), var(--titleD));
+  color: #04101c;
+  box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+}
+
+/* Secondary button – dark pill with peach text */
+.web-cta-btn.secondary {
+  background: rgba(5, 11, 20, 0.9);
+  color: var(--body-ink, #fbd2a0);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+/* Hover */
+.web-cta-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+/* ===== MOBILE ===== */
+@media (max-width: 640px) {
+  .web-cta-section {
+    padding: 64px 16px;
+  }
+
+  .web-cta-panel {
+    padding: 22px 16px;
+    border-radius: 20px;
+  }
+
+  .web-cta-buttons {
+    gap: 12px;
+  }
+
+  .web-cta-btn {
+    width: 100%;
+    max-width: 320px;
+    text-align: center;
+  }
+}
+
+/* Motion safety */
+@media (prefers-reduced-motion: reduce) {
+  .web-cta-section .web-cta-bg {
+    transform: none !important;
+  }
+
+  .web-cta-sub,
+  .web-cta-btn {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .web-cta-panel {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}

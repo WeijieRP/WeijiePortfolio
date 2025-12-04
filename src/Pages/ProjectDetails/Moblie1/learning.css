@@ -29,18 +29,54 @@
 }
 
 /* HEAD */
-.rl-head{ text-align:center; margin-bottom: clamp(20px,3vw,40px); }
+.rl-head{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  margin-bottom: clamp(20px,3vw,40px);
+}
+
+/* 🔶 Glass panel wrapping eyebrow + title + subtitle */
+.rl-headGlass{
+  display:inline-block;
+  max-width: min(900px, 100%);
+  margin: 0 auto;
+  padding: clamp(14px, 2.4vw, 20px) clamp(18px, 3vw, 26px);
+  background: var(--glass);
+  border: 1px solid var(--stroke);
+  border-radius: 18px;
+  box-shadow:
+    0 18px 44px rgba(0,0,0,.6),
+    0 0 0 1px rgba(255,255,255,.03) inset;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* keep text crisp inside panel */
+.rl-headGlass,
+.rl-headGlass *{
+  filter:none !important;
+  mix-blend-mode:normal !important;
+}
+
+/* eyebrow */
 .rl-eyebrow{
   letter-spacing:.28em;
   text-transform:uppercase;
   opacity:.9;
   font-size:clamp(10px,1vw,13px);
   color:var(--muted);
+  margin:0 0 4px;
 }
+
+/* Title – gradient + no cut-off on g/y/p */
 .rl-title{
-  margin:6px 0 0;
+  margin: 4px 0 0;
   font-weight:900;
-  line-height:1.05;
+  /* extra line-height + padding fixes clipping of descenders */
+  line-height:1.18;
+  padding-bottom:0.12em;
+
   font-size:clamp(26px,4vw,42px);
   background: linear-gradient(90deg, var(--accent), var(--muted));
   -webkit-background-clip:text;
@@ -48,8 +84,19 @@
   -webkit-text-fill-color:transparent;
 }
 
+/* Subtitle text inside glass */
+.rl-subtitle{
+  margin: 8px auto 0;
+  max-width: 40rem;
+  font-size: clamp(13px, 1.7vw, 16px);
+  line-height: 1.6;
+  color: var(--muted);
+}
+
 /* METRICS */
 .rl-metrics{
+  position:relative;
+  z-index:1;
   display:grid;
   grid-template-columns: repeat(4, minmax(0,1fr));
   gap:12px;
@@ -57,7 +104,9 @@
   padding:0;
   margin:0 0 18px;
 }
-@media (max-width:800px){ .rl-metrics{ grid-template-columns: repeat(2,1fr);} }
+@media (max-width:800px){
+  .rl-metrics{ grid-template-columns: repeat(2,1fr); }
+}
 .rl-metric{
   background:var(--glass);
   border:1px solid var(--stroke);
@@ -66,25 +115,40 @@
   text-align:center;
   backdrop-filter: blur(6px);
 }
-.rl-metric-value{ display:block; font-weight:900; font-size:22px; }
-.rl-metric-label{ display:block; color:var(--muted); font-size:12px; }
+.rl-metric-value{
+  display:block;
+  font-weight:900;
+  font-size:22px;
+}
+.rl-metric-label{
+  display:block;
+  color:var(--muted);
+  font-size:12px;
+}
 
 /* GRID */
 .rl-grid{
+  position:relative;
+  z-index:1;
   display:grid;
   grid-template-columns: repeat(2, minmax(0,1fr));
   gap:16px;
   margin-top:10px;
 }
+
 /* ✅ Make the last card span the full width (both columns) */
 .rl-grid .rl-card.wide{
   grid-column: 1 / -1;
 }
 
 @media (max-width:900px){
-  .rl-grid{ grid-template-columns:1fr; }
+  .rl-grid{
+    grid-template-columns:1fr;
+  }
   /* On small screens it’s naturally 1 column; keep wide spanning safely */
-  .rl-grid .rl-card.wide{ grid-column: 1 / -1; }
+  .rl-grid .rl-card.wide{
+    grid-column: 1 / -1;
+  }
 }
 
 .rl-card{
@@ -95,8 +159,17 @@
   backdrop-filter: blur(6px);
   transition: background .35s ease, border-color .35s ease;
 }
-.rl-card:hover{ background: rgba(255,255,255,.10); border-color: rgba(255,255,255,.18); }
-.rl-card-title{ margin:0 0 10px; font-size:16px; font-weight:800; }
+.rl-card:hover{
+  background: rgba(255,255,255,.10);
+  border-color: rgba(255,255,255,.18);
+}
+.rl-card-title{
+  margin:0 0 10px;
+  font-size:16px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+}
 
 /* Body copy inside cards */
 .rl-copy{

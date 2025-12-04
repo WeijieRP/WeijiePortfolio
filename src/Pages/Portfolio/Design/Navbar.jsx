@@ -6,13 +6,13 @@ const LINKS = [
   { to: "/", label: "Home", end: true },
   { to: "/about", label: "About" },
   {
-    to: "/portfolio", // normalize to lowercase
+    to: "/portfolio",
     label: "Portfolio",
     dropdown: [
       { to: "/portfolio/web", label: "Web Projects" },
       { to: "/portfolio/design", label: "Design Projects" },
-      {to:"/portfolio/VR", label:"Virtual Reality"},
-      {to :"/portfolio/Mobile", label:"Mobile Application Development"}
+      { to: "/portfolio/VR", label: "Virtual Reality" },
+      { to: "/portfolio/Mobile", label: "Mobile App Development" },
     ],
   },
   { to: "/contact", label: "Contact" },
@@ -52,11 +52,12 @@ export default function Navbar() {
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  // close on route change
+  // ✅ when route changes, wait a tick then scroll to top
   useEffect(() => {
-    setOpen(false);
-    setMobilePortfolioOpen(false);
-    window.scrollTo({ top: 0, behavior: "instant" });
+    const t = setTimeout(() => {
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    }, 10);
+    return () => clearTimeout(t);
   }, [location.pathname]);
 
   return (
@@ -75,7 +76,6 @@ export default function Navbar() {
           {LINKS.map((link) =>
             link.dropdown ? (
               <div key={link.label} className="wj-dropdown">
-                {/* Parent is a real NavLink so it navigates */}
                 <NavLink
                   to={link.to}
                   className={({ isActive }) =>
@@ -86,7 +86,6 @@ export default function Navbar() {
                   {link.label} <span className="caret">▾</span>
                 </NavLink>
 
-                {/* Submenu (opens on :hover / :focus-within via CSS) */}
                 <div className="wj-dropdown__menu" role="menu">
                   {link.dropdown.map((sub) => (
                     <NavLink
@@ -146,7 +145,6 @@ export default function Navbar() {
 
               {mobilePortfolioOpen && (
                 <div className="wj-drawer__submenu">
-                  {/* Also include a parent route link at top, if desired */}
                   <NavLink
                     to={link.to}
                     className={({ isActive }) =>
